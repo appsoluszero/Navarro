@@ -8,6 +8,8 @@ public class PlayerMovement : MonoBehaviour
     [SerializeField] private float jumpHeight = 4;
     [SerializeField] private float timeToMaxHeight = 0.4f;
     [SerializeField] private float moveSpeed = 6f;
+    [SerializeField] private float rollingSpeed = 7f;
+    [SerializeField] private float timeToFinishRoll = 0.5f;
 
     [SerializeField] private float accelerationTimeAirborne = 0.2f;
     [SerializeField] private float accelerationTimeGrounded = 0.1f;
@@ -20,6 +22,7 @@ public class PlayerMovement : MonoBehaviour
     
     float velocityXSmoothing;
     float targetVelocityX;
+    float timeRolling;
 
     Controller2D _controller;
 
@@ -32,10 +35,10 @@ public class PlayerMovement : MonoBehaviour
     }
 
     void Update() {
-
-        if(Input.GetKeyDown(InputManager.actionsMap["jumpingUp"]) && _controller.collision.below && !_controller.collision.slidingDownMaxSlope) {
+        if(Input.GetKeyDown(InputManager.actionsMap["jumpingUp"]) && _controller.collision.below && !_controller.collision.slidingDownMaxSlope && !_controller.collision.rolling) 
             velocity.y = jumpVelocity;
-        }
+        if(Input.GetKey(InputManager.actionsMap["dropDown"]) && _controller.collision.below) 
+            _controller.collision.droppingDown = true;
 
         Vector2 input = GetMovementInput();
         targetVelocityX = input.x * moveSpeed;
@@ -43,7 +46,25 @@ public class PlayerMovement : MonoBehaviour
 
     void FixedUpdate() {
         prevVelocity = velocity;
-        velocity.x = Mathf.SmoothDamp(velocity.x, targetVelocityX, ref velocityXSmoothing, (_controller.collision.below) ? accelerationTimeGrounded : accelerationTimeAirborne);
+
+        if(Input.GetKeyDown(InputManager.actionsMap["rollingDodge"]) && _controller.collision.below && !_controller.collision.rolling) {
+            _controller.collision.rolling = true;
+            timeRolling = 0;
+        }
+
+        if(_controller.collision.rolling) {
+            if(timeRolling > timeToFinishRoll) {
+                timeRolling = 0;
+                _controller.collision.rolling = false;
+            }
+            else {
+                timeRolling += Time.fixedDeltaTime;
+                velocity.x = rollingSpeed * _controller.collision.faceDir;
+            }
+        }
+        else 
+            velocity.x = Mathf.SmoothDamp(velocity.x, targetVelocityX, ref velocityXSmoothing, (_controller.collision.below) ? accelerationTimeGrounded : accelerationTimeAirborne);
+            
         velocity.y += gravityScale * Time.fixedDeltaTime;
         Vector3 deltaPosition = (prevVelocity + velocity) * 0.5f * Time.fixedDeltaTime;
         _controller.Move(deltaPosition);
