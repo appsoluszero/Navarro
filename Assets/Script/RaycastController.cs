@@ -5,14 +5,16 @@ using UnityEngine;
 [RequireComponent(typeof(BoxCollider2D))]
 public class RaycastController : MonoBehaviour
 {
+    [Header("Collision Detection")]
     public int horizontalRayCount = 4;
     public int verticalRayCount = 4;
+    public float skinWidth = .015f;
+
     [HideInInspector] public float horizontalRaySpacing;
     [HideInInspector] public float verticalRaySpacing;
     
     [HideInInspector] public BoxCollider2D _collider;
     [HideInInspector] public RaycastOrigin raycastOriginPos;
-    public float skinWidth = .015f;
 
     public virtual void Start() {
         _collider = GetComponent<BoxCollider2D>();

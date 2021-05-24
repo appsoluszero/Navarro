@@ -5,9 +5,12 @@ using UnityEngine;
 [RequireComponent(typeof(RaycastController))]
 public class Controller2D : RaycastController
 {
+    [Header("Layer Mask")]
     [SerializeField] public LayerMask levelMask;
     [SerializeField] public LayerMask platformMask;
-    [SerializeField] private float maxSlopeAngle = 60f;
+
+    [Header("Slope Handling")]
+    [SerializeField, Range(0f, 90f)] private float maxSlopeAngle = 50f;
     public CollisionInfo collision;
 
     public override void Start() {
@@ -25,7 +28,6 @@ public class Controller2D : RaycastController
             DescendSlope(ref velocity);
         if(velocity.x != 0)
             collision.faceDir = (int)Mathf.Sign(velocity.x);
-            
         HorizontalCollision(ref velocity);
         if(velocity.y != 0)
             VerticalCollision(ref velocity);
