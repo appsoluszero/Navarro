@@ -12,7 +12,7 @@ public class RaycastController : MonoBehaviour
     
     [HideInInspector] public BoxCollider2D _collider;
     [HideInInspector] public RaycastOrigin raycastOriginPos;
-    public const float skinWidth = .015f;
+    public float skinWidth = .015f;
 
     public virtual void Start() {
         _collider = GetComponent<BoxCollider2D>();
@@ -29,7 +29,7 @@ public class RaycastController : MonoBehaviour
         raycastOriginPos.topRight = new Vector2(bound.max.x, bound.max.y);
     }
 
-    void CalculateRaySpacing() {
+    public void CalculateRaySpacing() {
         Bounds bound = _collider.bounds;
         bound.Expand(skinWidth * -2);
 

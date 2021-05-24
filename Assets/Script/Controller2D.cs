@@ -2,10 +2,11 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 
+[RequireComponent(typeof(RaycastController))]
 public class Controller2D : RaycastController
 {
-    [SerializeField] private LayerMask levelMask;
-    [SerializeField] private LayerMask platformMask;
+    [SerializeField] public LayerMask levelMask;
+    [SerializeField] public LayerMask platformMask;
     [SerializeField] private float maxSlopeAngle = 60f;
     public CollisionInfo collision;
 
@@ -16,6 +17,7 @@ public class Controller2D : RaycastController
  
     public void Move(Vector3 velocity) {
         UpdateRaycastOrigin();
+
         collision.reset();
         collision.prevVelocity = velocity;
 
@@ -144,7 +146,6 @@ public class Controller2D : RaycastController
     }
 
     void DescendSlope(ref Vector3 velocity) {
-        
         RaycastHit2D maxSlopeHitLeft = Physics2D.Raycast(raycastOriginPos.bottomLeft, Vector2.down, Mathf.Abs(velocity.y) + skinWidth, levelMask);
         RaycastHit2D maxSlopeHitRight = Physics2D.Raycast(raycastOriginPos.bottomRight, Vector2.down, Mathf.Abs(velocity.y) + skinWidth, levelMask);
         SlideDownMaxSlope(maxSlopeHitLeft, ref velocity);
@@ -192,7 +193,7 @@ public class Controller2D : RaycastController
 
         public bool ascendingSlope, descendingSlope;
         public bool slidingDownMaxSlope;
-        public bool rolling, droppingDown;
+        public bool rolling, droppingDown, crouching;
 
         public float slopeAngle, prevSlopeAngle;
 

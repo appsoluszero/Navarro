@@ -14,6 +14,7 @@ public static class InputManager
         actionsMap["jumpingUp"] = KeyCode.W;
         actionsMap["rollingDodge"] = KeyCode.G;
         actionsMap["dropDown"] = KeyCode.S;
+        actionsMap["crouchDown"] = KeyCode.LeftControl;
     }
 
     //changing keybind associated with certain action
