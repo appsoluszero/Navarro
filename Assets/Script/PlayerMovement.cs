@@ -75,20 +75,29 @@ public class PlayerMovement : MonoBehaviour
             crouchingAction(true, false);
         }  
 
-        Vector2 input = Vector2.zero;
-        if(_status.playerState != State.Attack) {
-            input = GetMovementInput();
-            if(input != Vector2.zero) 
-                _status.playerState = State.Move;
-            else
-            _status.playerState = State.Idle;
+        Vector2 input = GetMovementInput();
+        if(_controller.collision.slidingDownMaxSlope) {
+            _status.playerState = State.Sliding;
         }
-
+        else if(_controller.collision.rolling) {
+            _status.playerState = State.Rolling;
+        }
+        else {
+            if(_status.playerState != State.Attack) {
+                if(input != Vector2.zero) 
+                    _status.playerState = State.Move;
+                else
+                _status.playerState = State.Idle;
+            }
+        }
         targetVelocityX = input.x * moveSpeed * crouchMultiplier;
     }
 
     void FixedUpdate() {
         prevVelocity = velocity;
+
+        if(_status.playerState == State.Attack && !_controller.collision.below) 
+                targetVelocityX = 0;
         
         if(!_controller.collision.rolling) 
             velocity.x = Mathf.SmoothDamp(velocity.x, targetVelocityX, ref velocityXSmoothing, (_controller.collision.below) ? accelTimeGrounded : accelTimeAirborne);
@@ -96,8 +105,8 @@ public class PlayerMovement : MonoBehaviour
         velocity.y += gravityScale * Time.fixedDeltaTime;
         Vector3 deltaPosition = (prevVelocity + velocity) * 0.5f * Time.fixedDeltaTime;
 
-        if(_status.playerState == State.Attack)
-            deltaPosition.x = 0;
+        if(_status.playerState == State.Attack && _controller.collision.below)
+                deltaPosition.x = 0;
 
         _controller.Move(deltaPosition);
 
@@ -155,6 +164,7 @@ public class PlayerMovement : MonoBehaviour
 
     IEnumerator rollingSequence() {
         velocity.x = rollingSpeed * _controller.collision.faceDir;
+        StartCoroutine(_status.decreaseStamina());
         yield return new WaitForSeconds(timeToFinishRoll);
         crouchingAction(true, false);
         _controller.collision.rolling = false;
