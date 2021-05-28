@@ -25,15 +25,18 @@ public class PlayerMovement : MonoBehaviour
 
     [Header("Airborne Parameters")]
     [SerializeField] private float accelTimeAirborne = 0.15f;
+    [Header("Platform Mask")]
+    [SerializeField] private LayerMask platformMask;
 
     float gravityScale;
     float jumpVelocity;
 
-    Vector3 velocity;
+    [SerializeField] Vector3 velocity;
     Vector3 prevVelocity;
     
     float velocityXSmoothing;
     float targetVelocityX;
+    Vector2 input;
     float crouchMultiplier;
 
     Controller2D _controller;
@@ -54,28 +57,41 @@ public class PlayerMovement : MonoBehaviour
     }
 
     void Update() {
-        if(_controller.collision.below && !_controller.collision.slidingDownMaxSlope && !_controller.collision.rolling) {
-            if(Input.GetKeyDown(InputManager.actionsMap["jumpingUp"]) && _status.playerState != State.Attack) {
+        if(_controller.collision.below && !_controller.collision.rolling && _status.playerState != State.Attack) {
+            if(Input.GetKeyDown(InputManager.actionsMap["jumpingUp"])) {
                 velocity.y = jumpVelocity;
                 crouchingAction(true, false);
             }
-            else if(Input.GetKeyDown(InputManager.actionsMap["rollingDodge"])) {
-                _controller.collision.rolling = true;
-                crouchingAction(false, true);
-                crouchMultiplier = 1f;
-                StartCoroutine(rollingSequence());
-            }
-            else if(Input.GetKeyDown(InputManager.actionsMap["crouchDown"])) {
-                crouchingAction(false, false);
+            if(!_controller.collision.slidingDownMaxSlope) {
+                if(Input.GetKeyDown(InputManager.actionsMap["rollingDodge"])) {
+                    _controller.collision.rolling = true;
+                    crouchingAction(false, true);
+                    crouchMultiplier = 1f;
+                    StartCoroutine(rollingSequence());
+                }
+                else if(Input.GetKeyDown(InputManager.actionsMap["crouchDown"])) {
+                    crouchingAction(false, false);
+                }
             }
         }
 
         if(Input.GetKey(InputManager.actionsMap["dropDown"]) && _controller.collision.below) {
             _controller.collision.droppingDown = true;
             crouchingAction(true, false);
-        }  
+            crouchMultiplier = 1f;
+        }
 
-        Vector2 input = GetMovementInput();
+        _status.worldState = State.Standing;
+        if(!_controller.collision.below) {
+            if(_controller.collision.crouching)
+                _status.worldState = State.Floating_Crouching;
+            else
+                _status.worldState = State.Floating_Standing;
+        }
+        else if(_controller.collision.crouching)
+            _status.worldState = State.Crouching;
+
+        input = GetMovementInput();
         if(_controller.collision.slidingDownMaxSlope) {
             _status.playerState = State.Sliding;
         }
@@ -87,9 +103,10 @@ public class PlayerMovement : MonoBehaviour
                 if(input != Vector2.zero) 
                     _status.playerState = State.Move;
                 else
-                _status.playerState = State.Idle;
+                    _status.playerState = State.Idle;
             }
         }
+
         targetVelocityX = input.x * moveSpeed * crouchMultiplier;
     }
 
@@ -97,9 +114,9 @@ public class PlayerMovement : MonoBehaviour
         prevVelocity = velocity;
 
         if(_status.playerState == State.Attack && !_controller.collision.below) 
-                targetVelocityX = 0;
+                velocity.x = 0;
         
-        if(!_controller.collision.rolling) 
+        if(!_controller.collision.rolling && !_controller.collision.slidingDownMaxSlope) 
             velocity.x = Mathf.SmoothDamp(velocity.x, targetVelocityX, ref velocityXSmoothing, (_controller.collision.below) ? accelTimeGrounded : accelTimeAirborne);
             
         velocity.y += gravityScale * Time.fixedDeltaTime;
@@ -114,7 +131,7 @@ public class PlayerMovement : MonoBehaviour
             if(_controller.collision.ascendingSlope && _controller.collision.above)
                 velocity.x = 0;
             if(!_controller.collision.slidingDownMaxSlope)
-                velocity.y = 0;
+                velocity.y = 0f;    
         }
 
         if(_controller.collision.left || _controller.collision.right) {
@@ -134,8 +151,8 @@ public class PlayerMovement : MonoBehaviour
             crouchMultiplier = crouchSpeedMultiplier;
         }
         else {
-            RaycastHit2D hit1 = Physics2D.Raycast(_controller.raycastOriginPos.topRight, Vector2.up, 1f + _controller.skinWidth, _controller.levelMask);
-            RaycastHit2D hit2 = Physics2D.Raycast(_controller.raycastOriginPos.topLeft, Vector2.up, 1f + _controller.skinWidth, _controller.levelMask);
+            RaycastHit2D hit1 = Physics2D.Raycast(_controller.raycastOriginPos.topRight, Vector2.up, 1f + _controller.skinWidth, _controller.collisionMask);
+            RaycastHit2D hit2 = Physics2D.Raycast(_controller.raycastOriginPos.topLeft, Vector2.up, 1f + _controller.skinWidth, _controller.collisionMask);
             if(!hit1 && !hit2) {
                 _controller.collision.crouching = false;
                 _collider.offset = new Vector2(0, 0.5f);
@@ -146,8 +163,6 @@ public class PlayerMovement : MonoBehaviour
                 _camController.ToggleCameraCrouch();
                 crouchMultiplier = 1f;
             }
-            else
-                crouchMultiplier = crouchSpeedMultiplier;
         }
     }
 

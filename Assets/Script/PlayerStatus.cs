@@ -14,8 +14,9 @@ public class PlayerStatus : MonoBehaviour
     [SerializeField] private float maxStamina;
 
     [Header("Current Status")]
-    public State playerState;
-    [SerializeField] private float currentHealth;
+    public State worldState = State.Standing;
+    public State playerState = State.Idle;
+    public float currentHealth;
     public float currentStamina;
 
     float healthImageSpeed;
@@ -42,6 +43,10 @@ public class PlayerStatus : MonoBehaviour
 }
 
 public enum State {
+    Standing,
+    Crouching,
+    Floating_Standing,
+    Floating_Crouching,
     Idle,
     Move,
     Attack,

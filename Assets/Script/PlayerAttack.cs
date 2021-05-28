@@ -13,13 +13,14 @@ public class PlayerAttack : MonoBehaviour
     }
 
     void Update() {
-        if(Input.GetKeyDown(KeyCode.Mouse0) && _status.playerState != State.Attack && !_controller.collision.rolling) {
+        if(Input.GetKeyDown(KeyCode.Mouse0) && _status.playerState != State.Attack && !_controller.collision.rolling && !_controller.collision.slidingDownMaxSlope) {
             StartCoroutine(attackSequence());
         } 
     }
 
     IEnumerator attackSequence() {
         _status.playerState = State.Attack;
+        print("ATTACK");
         yield return new WaitForSeconds(0.45f);
         _status.playerState = State.Idle;
     }
