@@ -75,7 +75,7 @@ public class PlayerMovement : MonoBehaviour
             }
         }
 
-        if(Input.GetKey(InputManager.actionsMap["dropDown"]) && _controller.collision.below) {
+        if(Input.GetKey(InputManager.actionsMap["dropDown"]) && _controller.collision.below && _controller.hitPlatform) {
             _controller.collision.droppingDown = true;
             crouchingAction(true, false);
             crouchMultiplier = 1f;

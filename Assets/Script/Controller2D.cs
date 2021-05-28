@@ -12,6 +12,7 @@ public class Controller2D : RaycastController
     [Header("Slope Handling")]
     [SerializeField, Range(0f, 90f)] private float maxSlopeAngle = 50f;
     public CollisionInfo collision;
+    public RaycastHit2D hitPlatform;
 
     //public RaycastHit2D maxSlopeHitLeft, maxSlopeHitRight;
 
@@ -103,7 +104,7 @@ public class Controller2D : RaycastController
             else
                 rayOrigin -= Vector2.right * (verticalRaySpacing * i - velocity.x);
             RaycastHit2D hit = Physics2D.Raycast(rayOrigin, Vector2.up * directionY, rayLength, levelMask);
-            RaycastHit2D hitPlatform = Physics2D.Raycast(rayOrigin, Vector2.up * directionY, rayLength, platformMask);
+            hitPlatform = Physics2D.Raycast(rayOrigin, Vector2.up * directionY, rayLength, platformMask);
 
             Debug.DrawRay(rayOrigin, Vector2.up * directionY, Color.red);
 
