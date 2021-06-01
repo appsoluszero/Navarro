@@ -11,9 +11,9 @@ public class PlayerCameraController : MonoBehaviour
     }
 
     public void ToggleCameraCrouch() {
-        if(_controller.collision.crouching) 
+        /*if(_co) 
             mainCamera.Follow = body;
         else
-            mainCamera.Follow = head;
+            mainCamera.Follow = head;*/
     }
 }

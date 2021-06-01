@@ -234,7 +234,7 @@ public class Controller2D : RaycastController
 
         public bool ascendingSlope, descendingSlope;
         public bool slidingDownMaxSlope, onPlatform;
-        public bool rolling, droppingDown, crouching;
+        public bool droppingDown;
 
         public float slopeAngle, prevSlopeAngle;
         public Vector2 slopeNormal;
