@@ -7,7 +7,11 @@ public class MovementAnimationController : MonoBehaviour
     private Animator _playerAnimation;
     [SerializeField] private PlayerStatus _status;
     [SerializeField] private Controller2D _controller;
+    
+    [Header("Floating Error Compensation")]
+    [SerializeField] private int targetCheckFrame = 5;
     private Transform _spriteTransform;
+    private bool startFloating;
     void Start()
     {
         _playerAnimation = GetComponent<Animator>();
@@ -19,8 +23,12 @@ public class MovementAnimationController : MonoBehaviour
         if(_status.playerState == State.Rolling)
             _playerAnimation.Play("Rolling");
         else if(_status.playerState != State.Attack) {
-            if(_status.worldState == State.Floating_Crouch || _status.worldState == State.Floating_Stand) 
-                _playerAnimation.Play(_status.worldState.ToString());
+            if(_status.worldState == State.Floating_Crouch || _status.worldState == State.Floating_Stand) {
+                if(!startFloating) {
+                    startFloating = true;
+                    StartCoroutine(floatingFrameCount());
+                } 
+            } 
             else {
                 if(_status.playerState == State.Move) {
                     if(_status.worldState == State.Crouch)
@@ -41,5 +49,20 @@ public class MovementAnimationController : MonoBehaviour
                 }
             }
         }
+    }
+
+    IEnumerator floatingFrameCount() {
+        int frameCount = 0;
+        while(frameCount < targetCheckFrame) {
+            print(frameCount);
+            if(_status.playerState == State.Attack || (_status.worldState != State.Floating_Crouch & _status.worldState != State.Floating_Stand)) {
+                break;
+            }
+            frameCount++;
+            yield return new WaitForEndOfFrame();
+        }
+        if(_status.playerState != State.Attack && frameCount == targetCheckFrame && (_status.worldState == State.Floating_Crouch || _status.worldState == State.Floating_Stand))
+            _playerAnimation.Play(_status.worldState.ToString());
+        startFloating = false;
     }
 }

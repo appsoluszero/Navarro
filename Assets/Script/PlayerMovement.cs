@@ -18,7 +18,7 @@ public class PlayerMovement : MonoBehaviour
     [SerializeField] private float accelTimeAirborne = 0.15f;
 
     float gravityScale;
-    public float jumpVelocity;
+    [HideInInspector] public float jumpVelocity;
 
     [HideInInspector] public Vector3 velocity;
     Vector3 prevVelocity;

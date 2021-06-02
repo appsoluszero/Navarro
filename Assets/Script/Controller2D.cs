@@ -124,9 +124,10 @@ public class Controller2D : RaycastController
             if(hitPlatform || collision.onPlatform) {
                 if(!collision.onPlatform) {
                     collision.onPlatform = true;
-                    if(directionY == -1 && !collision.droppingDown) 
+                    if(directionY == -1 && !collision.droppingDown) {
                         velocity.y = Mathf.Min(Mathf.Abs(velocity.y), (hitPlatform.distance - skinWidth)) * directionY;
                         collision.prevVelocity.y = velocity.y;
+                    }      
                 }
                 else {
                     if(directionY == -1 && !collision.droppingDown) 
