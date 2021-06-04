@@ -81,7 +81,7 @@ public class PlayerAction : MonoBehaviour
     void Crouching(bool ignoreSpeedChange) {
         _status.worldState = State.Crouch;
         _collider.offset = new Vector2(0, 0);
-        _collider.size = new Vector2(1, 1);
+        _collider.size = new Vector2(0.50f, 1.125f);
         _hitbox.offset = new Vector2(0, 0);
         _hitbox.size = new Vector2(1, 1);
         _controller.CalculateRaySpacing();
@@ -96,7 +96,7 @@ public class PlayerAction : MonoBehaviour
         if(!hit1 && !hit2) {
             _status.worldState = State.Stand;
             _collider.offset = new Vector2(0, 0.5f);
-            _collider.size = new Vector2(1, 2);
+            _collider.size = new Vector2(0.50f, 2.25f);
             _hitbox.offset = new Vector2(0, 0.5f);
             _hitbox.size = new Vector2(1, 2);
             _controller.CalculateRaySpacing();

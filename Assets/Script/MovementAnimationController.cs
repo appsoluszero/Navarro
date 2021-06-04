@@ -20,6 +20,7 @@ public class MovementAnimationController : MonoBehaviour
 
     void Update()
     {
+        transform.localScale = new Vector3(_controller.collision.faceDir, 1f, 1f);
         if(_status.playerState == State.Rolling)
             _playerAnimation.Play("Rolling");
         else if(_status.playerState != State.Attack) {
@@ -54,7 +55,6 @@ public class MovementAnimationController : MonoBehaviour
     IEnumerator floatingFrameCount() {
         int frameCount = 0;
         while(frameCount < targetCheckFrame) {
-            print(frameCount);
             if(_status.playerState == State.Attack || (_status.worldState != State.Floating_Crouch & _status.worldState != State.Floating_Stand)) {
                 break;
             }
