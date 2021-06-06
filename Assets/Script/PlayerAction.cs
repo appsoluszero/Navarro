@@ -95,7 +95,7 @@ public class PlayerAction : MonoBehaviour
         RaycastHit2D hit2 = Physics2D.Raycast(_controller.raycastOriginPos.topLeft, Vector2.up, 1f + _controller.skinWidth, _controller.levelMask);
         if(!hit1 && !hit2) {
             _status.worldState = State.Stand;
-            _collider.offset = new Vector2(0, 0.5f);
+            _collider.offset = new Vector2(0, 0.5625f);
             _collider.size = new Vector2(0.50f, 2.25f);
             _hitbox.offset = new Vector2(0, 0.5f);
             _hitbox.size = new Vector2(1, 2);
