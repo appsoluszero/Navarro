@@ -14,8 +14,10 @@ public class PlayerAction : MonoBehaviour
     [SerializeField] private float timeToFinishRoll = 0.5f;
     [SerializeField] private float staminaUsage = 20;
 
-     [Header("Crouching Parameters")]
+    [Header("Crouching Parameters")]
     [SerializeField] private float crouchSpeedMultiplier = 0.5f; 
+    [Header("Attack Parameters")]
+    [SerializeField] private int frameToNextAttack = 20;
 
     //Reference
     private PlayerMovement _movement;
@@ -24,6 +26,19 @@ public class PlayerAction : MonoBehaviour
     private BoxCollider2D _collider;
     private BoxCollider2D _hitbox;
     private PlayerCameraController _camController;
+
+    public event EventHandler jumpEventHandler;
+    public event EventHandler<ActionEventArgs> rollEventHandler;
+    public event EventHandler<ActionEventArgs> crouchEventHandler;
+    public event EventHandler dropDownEventHandler;
+    public event EventHandler<ActionEventArgs> attackEventHandler;
+    public class ActionEventArgs : EventArgs {
+        public float rollSpd;
+        public float timeRoll;
+        public float stamUsage;
+        public float crouchSpdMul;
+        public int frameNextAttack;
+    }
 
     public event EventHandler<PlayerStatus.StatDecreaseEventArgs> staminaBarHandler;
 
@@ -35,55 +50,73 @@ public class PlayerAction : MonoBehaviour
         _controller = GetComponent<Controller2D>();
         _status = GetComponent<PlayerStatus>();
         _camController = transform.GetChild(0).GetComponent<PlayerCameraController>();
+
+        //Assigning Event
+        jumpEventHandler += Jumping;
+        rollEventHandler += RollingDodge;
+        crouchEventHandler += CrouchToggle;
+        dropDownEventHandler += DropDownPlatform;
     }
 
     void Update() {
-        if(_status.playerState == State.Idle || _status.playerState == State.Move) {
-            if(Input.GetKeyDown(InputManager.actionsMap["rollingDodge"])) 
-                RollingDodge();
-            else if(Input.GetKeyDown(InputManager.actionsMap["jumpingUp"])) 
-                Jumping();
-            else if(Input.GetKeyDown(InputManager.actionsMap["crouchDown"])) {
-                CrouchToggle();
+        if(Input.GetKeyDown(InputManager.actionsMap["attack"]))
+            attackEventHandler?.Invoke(this, new ActionEventArgs {
+                frameNextAttack = frameToNextAttack
+            });
+        else {
+            if(_status.playerState == State.Idle || _status.playerState == State.Move) {
+                if(Input.GetKeyDown(InputManager.actionsMap["rollingDodge"])) 
+                    rollEventHandler?.Invoke(this, new ActionEventArgs {
+                        rollSpd = rollingSpeed,
+                        timeRoll = timeToFinishRoll,
+                        stamUsage = staminaUsage
+                    });
+                else if(Input.GetKeyDown(InputManager.actionsMap["jumpingUp"])) 
+                    jumpEventHandler?.Invoke(this, EventArgs.Empty);
+                else if(Input.GetKeyDown(InputManager.actionsMap["crouchDown"])) {
+                    crouchEventHandler?.Invoke(this, new ActionEventArgs {
+                        crouchSpdMul = crouchSpeedMultiplier
+                    });
+                }
             }
+            if(_status.playerState != State.Attack) 
+                if(Input.GetKey(InputManager.actionsMap["dropDown"])) 
+                    dropDownEventHandler?.Invoke(this, EventArgs.Empty);
         }
-        if(_status.playerState != State.Attack) 
-            if(Input.GetKey(InputManager.actionsMap["dropDown"])) 
-                DropDownPlatform();
     }
 
-    void Jumping() {
+    void RollingDodge(object sender, PlayerAction.ActionEventArgs e) {
+        if(_controller.collision.below) {
+            _status.playerState = State.Rolling;
+            Crouching(true, e.crouchSpdMul);
+            StartCoroutine(rollingSequence(e));
+        }
+    }
+
+    IEnumerator rollingSequence(PlayerAction.ActionEventArgs e) {
+        _movement.velocity.x = e.rollSpd * _controller.collision.faceDir;
+        staminaBarHandler?.Invoke(this, new PlayerStatus.StatDecreaseEventArgs { staminaUse = e.stamUsage });
+        yield return new WaitForSeconds(e.timeRoll);
+        Uncrouching(true);
+        //_movement.velocity.x = 0f;
+        _status.playerState = State.Idle;
+    }
+
+    void Jumping(object sender, EventArgs e) {
         if(_controller.collision.below) {
             _movement.velocity.y = _movement.jumpVelocity;
             Uncrouching(false);
         }
     }
 
-    void RollingDodge() {
-        if(_controller.collision.below) {
-            _status.playerState = State.Rolling;
-            Crouching(true);
-            StartCoroutine(rollingSequence());
-        }
-    }
-
-    IEnumerator rollingSequence() {
-        _movement.velocity.x = rollingSpeed * _controller.collision.faceDir;
-        staminaBarHandler?.Invoke(this, new PlayerStatus.StatDecreaseEventArgs { staminaUse = staminaUsage });
-        yield return new WaitForSeconds(timeToFinishRoll);
-        Uncrouching(true);
-        //_movement.velocity.x = 0f;
-        _status.playerState = State.Idle;
-    }
-
-    void CrouchToggle() {
+    void CrouchToggle(object sender, PlayerAction.ActionEventArgs e) {
         if(_status.worldState == State.Stand) 
-            Crouching(false);
+            Crouching(false, e.crouchSpdMul);
         else if(_status.worldState == State.Crouch) 
             Uncrouching(false);
     }
 
-    void Crouching(bool ignoreSpeedChange) {
+    void Crouching(bool ignoreSpeedChange, float spdMul) {
         _status.worldState = State.Crouch;
         _collider.offset = new Vector2(0, 0);
         _collider.size = new Vector2(0.50f, 1.125f);
@@ -92,7 +125,7 @@ public class PlayerAction : MonoBehaviour
         _controller.CalculateRaySpacing();
         _camController.ToggleCameraCrouch();
         if(!ignoreSpeedChange)
-            _movement.crouchMultiplier = crouchSpeedMultiplier;
+            _movement.crouchMultiplier = spdMul;
     }
 
     void Uncrouching(bool ignoreSpeedChange) {
@@ -111,7 +144,7 @@ public class PlayerAction : MonoBehaviour
         }
     }
 
-    void DropDownPlatform() {
+    void DropDownPlatform(object sender, EventArgs e) {
         if(_controller.collision.below && _controller.hitPlatform) {
             _controller.collision.droppingDown = true;
             if(_status.playerState != State.Rolling)

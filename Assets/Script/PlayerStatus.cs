@@ -20,9 +20,6 @@ public class PlayerStatus : MonoBehaviour
     public float currentHealth;
     public float currentStamina;
 
-    //Reference
-    private PlayerAction _action;
-
     public class StatDecreaseEventArgs : EventArgs {
         public float healthUse;
         public float staminaUse;
@@ -32,8 +29,7 @@ public class PlayerStatus : MonoBehaviour
     void Start() {
         currentHealth = maxPlayerHealth;
         currentStamina = maxStamina;
-        _action = GetComponent<PlayerAction>();
-        _action.staminaBarHandler += DecreaseStamina;
+        GetComponent<PlayerAction>().staminaBarHandler += DecreaseStamina;
     }
     
     void DecreaseStamina(object sender, StatDecreaseEventArgs e) {
