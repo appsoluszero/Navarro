@@ -757,7 +757,7 @@ MonoBehaviour:
   m_OnCullStateChanged:
     m_PersistentCalls:
       m_Calls: []
-  m_Sprite: {fileID: 7482667652216324306, guid: a67e093e61f41bf4d9e9d744d30aa676, type: 3}
+  m_Sprite: {fileID: 7482667652216324306, guid: 01cb3dc7bbb2b0243925716977eabf47, type: 3}
   m_Type: 3
   m_PreserveAspect: 0
   m_FillCenter: 1
@@ -1091,7 +1091,7 @@ GameObject:
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
-  m_IsActive: 0
+  m_IsActive: 1
 --- !u!114 &935422865
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -1608,7 +1608,7 @@ MonoBehaviour:
   m_OnCullStateChanged:
     m_PersistentCalls:
       m_Calls: []
-  m_Sprite: {fileID: 7482667652216324306, guid: a67e093e61f41bf4d9e9d744d30aa676, type: 3}
+  m_Sprite: {fileID: 7482667652216324306, guid: 01cb3dc7bbb2b0243925716977eabf47, type: 3}
   m_Type: 3
   m_PreserveAspect: 0
   m_FillCenter: 1
@@ -2687,6 +2687,7 @@ MonoBehaviour:
   timeToMaxHeight: 0.35
   rollingSpeed: 10
   timeToFinishRoll: 0.4
+  staminaUsage: 20
   crouchSpeedMultiplier: 0.5
 --- !u!1 &2099125266
 GameObject:

@@ -43,9 +43,6 @@ public class PlayerMovement : MonoBehaviour
     }
 
     void Update() {
-
-        _action.CheckForInputAction();
-
         if(!_controller.collision.below && !_controller.collision.above && !_controller.collision.onPlatform) {
             if(_status.worldState == State.Stand) 
                 _status.worldState = State.Floating_Stand;

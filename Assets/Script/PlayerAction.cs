@@ -1,3 +1,4 @@
+using System;
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
@@ -11,6 +12,7 @@ public class PlayerAction : MonoBehaviour
     [Header("Rolling Parameter")]
     [SerializeField] private float rollingSpeed = 7f;
     [SerializeField] private float timeToFinishRoll = 0.5f;
+    [SerializeField] private float staminaUsage = 20;
 
      [Header("Crouching Parameters")]
     [SerializeField] private float crouchSpeedMultiplier = 0.5f; 
@@ -23,6 +25,8 @@ public class PlayerAction : MonoBehaviour
     private BoxCollider2D _hitbox;
     private PlayerCameraController _camController;
 
+    public event EventHandler<PlayerStatus.StatDecreaseEventArgs> staminaBarHandler;
+
     void Start() {
         //initialize
         _collider = GetComponent<BoxCollider2D>();
@@ -32,7 +36,8 @@ public class PlayerAction : MonoBehaviour
         _status = GetComponent<PlayerStatus>();
         _camController = transform.GetChild(0).GetComponent<PlayerCameraController>();
     }
-    public void CheckForInputAction() {
+
+    void Update() {
         if(_status.playerState == State.Idle || _status.playerState == State.Move) {
             if(Input.GetKeyDown(InputManager.actionsMap["rollingDodge"])) 
                 RollingDodge();
@@ -64,7 +69,7 @@ public class PlayerAction : MonoBehaviour
 
     IEnumerator rollingSequence() {
         _movement.velocity.x = rollingSpeed * _controller.collision.faceDir;
-        StartCoroutine(_status.decreaseStamina());
+        staminaBarHandler?.Invoke(this, new PlayerStatus.StatDecreaseEventArgs { staminaUse = staminaUsage });
         yield return new WaitForSeconds(timeToFinishRoll);
         Uncrouching(true);
         //_movement.velocity.x = 0f;

@@ -1,3 +1,4 @@
+using System;
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
@@ -19,26 +20,25 @@ public class PlayerStatus : MonoBehaviour
     public float currentHealth;
     public float currentStamina;
 
-    float healthImageSpeed;
-    float staminaImageSpeed;
+    //Reference
+    private PlayerAction _action;
+
+    public class StatDecreaseEventArgs : EventArgs {
+        public float healthUse;
+        public float staminaUse;
+        
+    }
 
     void Start() {
         currentHealth = maxPlayerHealth;
         currentStamina = maxStamina;
+        _action = GetComponent<PlayerAction>();
+        _action.staminaBarHandler += DecreaseStamina;
     }
-
-    void Update() {
-        healthImage.fillAmount = Mathf.SmoothDamp(healthImage.fillAmount, currentHealth / maxPlayerHealth, ref healthImageSpeed, 0.2f, 2f);
-        healthImage.fillAmount = Mathf.Clamp(healthImage.fillAmount, 0, 1);
-    }
-
-    public IEnumerator decreaseStamina() {
-        currentStamina -= 20f;
-        while(staminaImage.fillAmount > currentStamina / maxStamina) {
-            staminaImage.fillAmount = Mathf.SmoothDamp(staminaImage.fillAmount, currentStamina/maxStamina, ref staminaImageSpeed, 0.2f, 3f);
-            staminaImage.fillAmount = Mathf.Clamp(staminaImage.fillAmount, 0, 1);
-            yield return new WaitForEndOfFrame();
-        }
+    
+    void DecreaseStamina(object sender, StatDecreaseEventArgs e) {
+        currentStamina -= e.staminaUse;
+        staminaImage.fillAmount = currentStamina / maxStamina;
     }
 }
 
