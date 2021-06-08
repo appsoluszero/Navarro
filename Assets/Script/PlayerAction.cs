@@ -5,6 +5,8 @@ using UnityEngine;
 
 public class PlayerAction : MonoBehaviour
 {
+    [Header("Reference")]
+    [SerializeField] private GameManager _manager;
     [Header("Jumping Parameters")]
     public float jumpHeight = 4;
     public float timeToMaxHeight = 0.4f;
@@ -59,29 +61,31 @@ public class PlayerAction : MonoBehaviour
     }
 
     void Update() {
-        if(Input.GetKeyDown(InputManager.actionsMap["attack"]))
-            attackEventHandler?.Invoke(this, new ActionEventArgs {
-                frameNextAttack = frameToNextAttack
-            });
-        else {
-            if(_status.playerState == State.Idle || _status.playerState == State.Move) {
-                if(Input.GetKeyDown(InputManager.actionsMap["rollingDodge"])) 
-                    rollEventHandler?.Invoke(this, new ActionEventArgs {
-                        rollSpd = rollingSpeed,
-                        timeRoll = timeToFinishRoll,
-                        stamUsage = staminaUsage
-                    });
-                else if(Input.GetKeyDown(InputManager.actionsMap["jumpingUp"])) 
-                    jumpEventHandler?.Invoke(this, EventArgs.Empty);
-                else if(Input.GetKeyDown(InputManager.actionsMap["crouchDown"])) {
-                    crouchEventHandler?.Invoke(this, new ActionEventArgs {
-                        crouchSpdMul = crouchSpeedMultiplier
-                    });
+        if(_manager.currentGameState == gameState.Gameplay) {
+            if(Input.GetKeyDown(InputManager.actionsMap["attack"]))
+                attackEventHandler?.Invoke(this, new ActionEventArgs {
+                    frameNextAttack = frameToNextAttack
+                });
+            else {
+                if(_status.playerState == State.Idle || _status.playerState == State.Move) {
+                    if(Input.GetKeyDown(InputManager.actionsMap["rollingDodge"])) 
+                        rollEventHandler?.Invoke(this, new ActionEventArgs {
+                            rollSpd = rollingSpeed,
+                            timeRoll = timeToFinishRoll,
+                            stamUsage = staminaUsage
+                        });
+                    else if(Input.GetKeyDown(InputManager.actionsMap["jumpingUp"])) 
+                        jumpEventHandler?.Invoke(this, EventArgs.Empty);
+                    else if(Input.GetKeyDown(InputManager.actionsMap["crouchDown"])) {
+                        crouchEventHandler?.Invoke(this, new ActionEventArgs {
+                            crouchSpdMul = crouchSpeedMultiplier
+                        });
+                    }
                 }
+                if(_status.playerState != State.Attack) 
+                    if(Input.GetKey(InputManager.actionsMap["dropDown"])) 
+                        dropDownEventHandler?.Invoke(this, EventArgs.Empty);
             }
-            if(_status.playerState != State.Attack) 
-                if(Input.GetKey(InputManager.actionsMap["dropDown"])) 
-                    dropDownEventHandler?.Invoke(this, EventArgs.Empty);
         }
     }
 

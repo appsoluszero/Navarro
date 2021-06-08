@@ -16,6 +16,8 @@ public class PlayerAttack : MonoBehaviour
     void Start() {
         _status = transform.parent.GetComponent<PlayerStatus>();
         _playerAnimator = GetComponent<Animator>();
+
+        //Assigning Event
         transform.parent.GetComponent<PlayerAction>().attackEventHandler += Attacking;
     }
 

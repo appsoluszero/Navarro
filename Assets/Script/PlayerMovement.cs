@@ -5,7 +5,8 @@ using UnityEngine;
 [RequireComponent(typeof(Controller2D))]
 public class PlayerMovement : MonoBehaviour
 {
-    
+    [Header("Reference")]
+    [SerializeField] private GameManager _manager;
     private PlayerStatus _status;
     private PlayerAction _action;
 
@@ -69,7 +70,7 @@ public class PlayerMovement : MonoBehaviour
             velocity.x = Mathf.SmoothDamp(velocity.x, targetVelocityX, ref velocityXSmoothing, (_controller.collision.below) ? accelTimeGrounded : accelTimeAirborne);
         }
 
-        if(_status.playerState == State.Attack && _controller.collision.below)
+        if((_status.playerState == State.Attack && _controller.collision.below) || _manager.currentGameState != gameState.Gameplay)
             velocity.x = 0;
             
         velocity.y += gravityScale * Time.fixedDeltaTime;

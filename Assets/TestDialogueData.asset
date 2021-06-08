@@ -12,5 +12,20 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 236e1b71a7b7cfd4f8ea3d15eb8324aa, type: 3}
   m_Name: TestDialogueData
   m_EditorClassIdentifier: 
-  speaker: []
-  data: []
+  speaker:
+  - name: Exusiai
+    sprite: {fileID: 21300000, guid: e38a0e9f7fd1b3d4bab08fd1ecf1a988, type: 3}
+  - name: Mostima
+    sprite: {fileID: 21300000, guid: 8e451a0dc2e7fb045bd85f8edbdc2dfb, type: 3}
+  data:
+  - speaker: 1
+    text: Hey, Mostima. How come you never show yourself around here? and you look
+      tired as hell.
+  - speaker: 2
+    text: ' You know, work and stuff.'
+  - speaker: 1
+    text: You are always like this.. working all the time.
+  - speaker: 2
+    text: ... I'm sorry
+  - speaker: 1
+    text: ... Never mind

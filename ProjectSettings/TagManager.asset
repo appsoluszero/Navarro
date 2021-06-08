@@ -3,7 +3,8 @@
 --- !u!78 &1
 TagManager:
   serializedVersion: 2
-  tags: []
+  tags:
+  - DialogueTrigger
   layers:
   - Default
   - TransparentFX
