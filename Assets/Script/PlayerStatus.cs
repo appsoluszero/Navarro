@@ -6,35 +6,73 @@ using UnityEngine.UI;
 
 public class PlayerStatus : MonoBehaviour
 {
-    [Header("User Interface")]
-    [SerializeField] private Image healthImage;
-    [SerializeField] private Image staminaImage;
-
     [Header("Player Base Status")]
-    [SerializeField] private float maxPlayerHealth; 
-    [SerializeField] private float maxStamina;
+    public int maxPlayerHealth = 5; 
+    public float maxStamina = 20;
 
     [Header("Current Status")]
     public State worldState = State.Stand;
     public State playerState = State.Idle;
-    public float currentHealth;
+    public int currentHealth;
     public float currentStamina;
 
-    public class StatDecreaseEventArgs : EventArgs {
-        public float healthUse;
+    [Header("Status Parameters")]
+    public float staminaRegenPerSecond = 2f;
+    public event EventHandler<StatChangeEventArgs> staminaDecreaseHandler;
+    public event EventHandler<StatChangeEventArgs> healthDecreaseHandler;
+    public event EventHandler<StatChangeEventArgs> healthIncreaseHandler;
+    public class StatChangeEventArgs : EventArgs {
+        public int healthUse;
         public float staminaUse;
-        
     }
+
+    [HideInInspector] public bool isStaminaRegenerating, waitingForNextTick;
 
     void Start() {
         currentHealth = maxPlayerHealth;
         currentStamina = maxStamina;
-        GetComponent<PlayerAction>().staminaBarHandler += DecreaseStamina;
+        GetComponent<PlayerAction>().staminaHandler += DecreaseStamina;
     }
+
+    void Update() {
+        if(Input.GetKeyDown(KeyCode.Keypad1)) 
+            DecreaseHealth(1);
+        else if(Input.GetKeyDown(KeyCode.Keypad2))
+            IncreaseHealth(1);
+    }
+
+    void FixedUpdate() {
+        if(isStaminaRegenerating) {
+            currentStamina = Mathf.Clamp(currentStamina + (staminaRegenPerSecond / (1 / Time.fixedDeltaTime)) , 0, maxStamina);
+        }
+    }
+
+    void DecreaseHealth(int amt) {
+        if(currentHealth > 0) {
+            healthDecreaseHandler?.Invoke(this, new StatChangeEventArgs {
+                healthUse = amt
+            });
+        }
+        currentHealth = Mathf.Clamp(currentHealth - amt, 0, maxPlayerHealth);
+    }
+
+    void IncreaseHealth(int amt) {
+        if(currentHealth < maxPlayerHealth) {
+            healthIncreaseHandler?.Invoke(this, new StatChangeEventArgs {
+                healthUse = amt
+            });
+        }
+        currentHealth = Mathf.Clamp(currentHealth + amt, 0, maxPlayerHealth);
+    }
+
     
-    void DecreaseStamina(object sender, StatDecreaseEventArgs e) {
-        currentStamina -= e.staminaUse;
-        staminaImage.fillAmount = currentStamina / maxStamina;
+    
+    void DecreaseStamina(object sender, StatChangeEventArgs e) {
+        isStaminaRegenerating = false;
+        staminaDecreaseHandler?.Invoke(this, new StatChangeEventArgs {
+            staminaUse = e.staminaUse
+        });
+        currentStamina = Mathf.Clamp(currentStamina - e.staminaUse, 0, maxStamina);
     }
 }
 
@@ -46,6 +84,5 @@ public enum State {
     Idle,
     Move,
     Attack,
-    Rolling,
-    Sliding
+    Rolling
 }

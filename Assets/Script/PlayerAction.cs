@@ -13,7 +13,7 @@ public class PlayerAction : MonoBehaviour
 
     [Header("Rolling Parameter")]
     [SerializeField] private float rollingSpeed = 7f;
-    [SerializeField] private float timeToFinishRoll = 0.5f;
+    public float timeToFinishRoll = 0.5f;
     [SerializeField] private float staminaUsage = 20;
 
     [Header("Crouching Parameters")]
@@ -42,7 +42,7 @@ public class PlayerAction : MonoBehaviour
         public int frameNextAttack;
     }
 
-    public event EventHandler<PlayerStatus.StatDecreaseEventArgs> staminaBarHandler;
+    public event EventHandler<PlayerStatus.StatChangeEventArgs> staminaHandler;
 
     void Start() {
         //initialize
@@ -90,17 +90,17 @@ public class PlayerAction : MonoBehaviour
     }
 
     void RollingDodge(object sender, PlayerAction.ActionEventArgs e) {
-        if(_controller.collision.below) {
+        if(_controller.collision.below && _status.currentStamina - e.stamUsage >= 0) {
             _status.playerState = State.Rolling;
             Crouching(true, e.crouchSpdMul);
-            StartCoroutine(rollingSequence(e));
+            StartCoroutine(rollingSequence(e.rollSpd, e.stamUsage, e.timeRoll));
         }
     }
 
-    IEnumerator rollingSequence(PlayerAction.ActionEventArgs e) {
-        _movement.velocity.x = e.rollSpd * _controller.collision.faceDir;
-        staminaBarHandler?.Invoke(this, new PlayerStatus.StatDecreaseEventArgs { staminaUse = e.stamUsage });
-        yield return new WaitForSeconds(e.timeRoll);
+    IEnumerator rollingSequence(float rollSpd, float stamUsage, float timeRoll) {
+        _movement.velocity.x = rollSpd * _controller.collision.faceDir;
+        staminaHandler?.Invoke(this, new PlayerStatus.StatChangeEventArgs { staminaUse = stamUsage });
+        yield return new WaitForSeconds(timeRoll);
         Uncrouching(true);
         //_movement.velocity.x = 0f;
         _status.playerState = State.Idle;
@@ -127,7 +127,7 @@ public class PlayerAction : MonoBehaviour
         _hitbox.offset = new Vector2(0, 0);
         _hitbox.size = new Vector2(1, 1);
         _controller.CalculateRaySpacing();
-        _camController.ToggleCameraCrouch();
+        //_camController.ToggleCameraCrouch();
         if(!ignoreSpeedChange)
             _movement.crouchMultiplier = spdMul;
     }
@@ -142,7 +142,7 @@ public class PlayerAction : MonoBehaviour
             _hitbox.offset = new Vector2(0, 0.5f);
             _hitbox.size = new Vector2(1, 2);
             _controller.CalculateRaySpacing();
-            _camController.ToggleCameraCrouch();
+            //_camController.ToggleCameraCrouch();
             if(!ignoreSpeedChange)
                 _movement.crouchMultiplier = 1f;
         }

@@ -7,19 +7,20 @@ using TMPro;
 
 public class DialogueHandler : MonoBehaviour
 {
-    public DialogueData currentDialogueSet;
-    [SerializeField] private int currentPage = 1;
-    public event EventHandler dialogueInteractEvent;
-    public event EventHandler dialogueUninteractEvent;
-
     [Header("Reference")]
     [SerializeField] private GameManager _manager;
-    [SerializeField] private Transform gameplayUI;
+    [SerializeField] private Animator gameplayUI;
     [SerializeField] private Transform dialogueUI;
     [SerializeField] private TextMeshProUGUI speakerName;
     [SerializeField] private TextMeshProUGUI textContent;
     [SerializeField] private Image characterSprite;
 
+    [Header("Dialogue")]
+    public DialogueData currentDialogueSet;
+    [SerializeField] private int currentPage = 1;
+    public event EventHandler dialogueInteractEvent;
+    public event EventHandler dialogueUninteractEvent;
+    
     void Start() {
         dialogueInteractEvent += enableDialogue;
         dialogueUninteractEvent += disableDialogue;
@@ -37,7 +38,7 @@ public class DialogueHandler : MonoBehaviour
 
     void enableDialogue(object sender, EventArgs e) {
         dialogueUI.gameObject.SetActive(true);
-        gameplayUI.gameObject.SetActive(false);
+        gameplayUI.Play("GameplayUI_FadeOut");
         dialogueInteractEvent -= enableDialogue;
         dialogueInteractEvent += updateDialogue;
         currentPage = 1;
@@ -47,7 +48,7 @@ public class DialogueHandler : MonoBehaviour
     }
 
     void disableDialogue(object sender, EventArgs e) {
-        gameplayUI.gameObject.SetActive(true);
+        gameplayUI.Play("GameplayUI_FadeIn");
         dialogueUI.gameObject.SetActive(false);
         dialogueInteractEvent += enableDialogue;
         dialogueInteractEvent -= updateDialogue;
