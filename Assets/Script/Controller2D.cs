@@ -108,7 +108,11 @@ public class Controller2D : RaycastController
                 rayOrigin += Vector2.right * (verticalRaySpacing * i + velocity.x);
             else
                 rayOrigin -= Vector2.right * (verticalRaySpacing * i - velocity.x);
-            RaycastHit2D hit = Physics2D.Raycast(rayOrigin, Vector2.up * directionY, rayLength, levelMask);
+            RaycastHit2D hit;
+            if(GetComponent<PlayerStatus>().playerState == State.Rolling)
+                hit = Physics2D.Raycast(rayOrigin, Vector2.up * directionY, rayLength, levelMask);
+            else
+                hit = Physics2D.Raycast(rayOrigin, Vector2.up * directionY, rayLength, levelAndCharacterMask);
             hitPlatform = Physics2D.Raycast(rayOrigin, Vector2.up * directionY, rayLength, platformMask);
 
             Debug.DrawRay(rayOrigin, Vector2.up * directionY, Color.red);
