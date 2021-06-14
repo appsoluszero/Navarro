@@ -8,6 +8,7 @@ public class Controller2D : RaycastController
     [SerializeField] public LayerMask collisionMask;
     [SerializeField] public LayerMask platformMask;
     [SerializeField] public LayerMask levelMask;
+    [SerializeField] public LayerMask levelAndCharacterMask;
 
     [Header("Slope Handling")]
     [SerializeField, Range(0f, 90f)] private float maxSlopeAngle = 50f;
@@ -51,7 +52,11 @@ public class Controller2D : RaycastController
         for(int i = 0 ; i < horizontalRayCount ; ++i) {
             Vector2 rayOrigin = (directionX == -1) ? raycastOriginPos.bottomLeft : raycastOriginPos.bottomRight;
             rayOrigin += Vector2.up * (horizontalRaySpacing * i);
-            RaycastHit2D hit = Physics2D.Raycast(rayOrigin, Vector2.right * directionX, rayLength, levelMask);
+            RaycastHit2D hit;
+            if(GetComponent<PlayerStatus>().playerState == State.Rolling)
+                hit = Physics2D.Raycast(rayOrigin, Vector2.right * directionX, rayLength, levelMask);
+            else
+                hit = Physics2D.Raycast(rayOrigin, Vector2.right * directionX, rayLength, levelAndCharacterMask);
 
             Debug.DrawRay(rayOrigin, Vector2.right * directionX, Color.red);
 

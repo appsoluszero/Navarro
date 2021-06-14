@@ -38,6 +38,8 @@ public class PlayerAction : MonoBehaviour
         public float rollSpd;
         public float timeRoll;
         public float stamUsage;
+        public State thisCrouchAction;
+        public bool forceUncrouch;
         public float crouchSpdMul;
         public int frameNextAttack;
     }
@@ -47,7 +49,7 @@ public class PlayerAction : MonoBehaviour
     void Start() {
         //initialize
         _collider = GetComponent<BoxCollider2D>();
-        _hitbox = transform.GetChild(1).GetComponent<BoxCollider2D>();
+        _hitbox = transform.GetChild(2).GetChild(0).GetComponent<BoxCollider2D>();
         _movement = GetComponent<PlayerMovement>();
         _controller = GetComponent<Controller2D>();
         _status = GetComponent<PlayerStatus>();
@@ -127,7 +129,7 @@ public class PlayerAction : MonoBehaviour
         _hitbox.offset = new Vector2(0, 0);
         _hitbox.size = new Vector2(1, 1);
         _controller.CalculateRaySpacing();
-        //_camController.ToggleCameraCrouch();
+        _camController.ToggleCameraCrouch();
         if(!ignoreSpeedChange)
             _movement.crouchMultiplier = spdMul;
     }
@@ -142,7 +144,7 @@ public class PlayerAction : MonoBehaviour
             _hitbox.offset = new Vector2(0, 0.5f);
             _hitbox.size = new Vector2(1, 2);
             _controller.CalculateRaySpacing();
-            //_camController.ToggleCameraCrouch();
+            _camController.ToggleCameraCrouch();
             if(!ignoreSpeedChange)
                 _movement.crouchMultiplier = 1f;
         }

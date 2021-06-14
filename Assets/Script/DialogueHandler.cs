@@ -20,14 +20,16 @@ public class DialogueHandler : MonoBehaviour
     [SerializeField] private int currentPage = 1;
     public event EventHandler dialogueInteractEvent;
     public event EventHandler dialogueUninteractEvent;
+    private PlayerCameraController _camController;
     
     void Start() {
+        _camController = transform.GetChild(0).GetComponent<PlayerCameraController>();
         dialogueInteractEvent += enableDialogue;
         dialogueUninteractEvent += disableDialogue;
     }
 
     void Update() {
-        if(Input.GetKeyDown(KeyCode.E)) {
+        if(_manager.currentGameState == gameState.Dialogue && Input.GetKeyDown(KeyCode.E)) {
             CallEvent();
         }
     }
@@ -40,6 +42,7 @@ public class DialogueHandler : MonoBehaviour
         dialogueUI.gameObject.SetActive(true);
         gameplayUI.Play("GameplayUI_FadeOut");
         dialogueInteractEvent -= enableDialogue;
+        dialogueInteractEvent -= _camController.DialogueStateCamera;
         dialogueInteractEvent += updateDialogue;
         currentPage = 1;
         speakerName.text = currentDialogueSet.speaker[currentDialogueSet.data[currentPage-1].speaker-1].name;
@@ -50,8 +53,9 @@ public class DialogueHandler : MonoBehaviour
     void disableDialogue(object sender, EventArgs e) {
         gameplayUI.Play("GameplayUI_FadeIn");
         dialogueUI.gameObject.SetActive(false);
-        dialogueInteractEvent += enableDialogue;
         dialogueInteractEvent -= updateDialogue;
+        dialogueInteractEvent += enableDialogue;
+        dialogueInteractEvent += _camController.DialogueStateCamera;
     }
 
     void updateDialogue(object sender, EventArgs e) {
