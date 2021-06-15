@@ -10,7 +10,7 @@ public class DialogueHandler : MonoBehaviour
     [Header("Reference")]
     [SerializeField] private GameManager _manager;
     [SerializeField] private Animator gameplayUI;
-    [SerializeField] private Transform dialogueUI;
+    [SerializeField] private Animator dialogueUI;
     [SerializeField] private TextMeshProUGUI speakerName;
     [SerializeField] private TextMeshProUGUI textContent;
     [SerializeField] private Image characterSprite;
@@ -39,7 +39,7 @@ public class DialogueHandler : MonoBehaviour
     }
 
     void enableDialogue(object sender, EventArgs e) {
-        dialogueUI.gameObject.SetActive(true);
+        dialogueUI.Play("DialogueUI_FadeIn");
         gameplayUI.Play("GameplayUI_FadeOut");
         dialogueInteractEvent -= enableDialogue;
         dialogueInteractEvent -= _camController.DialogueStateCamera;
@@ -51,8 +51,8 @@ public class DialogueHandler : MonoBehaviour
     }
 
     void disableDialogue(object sender, EventArgs e) {
+        dialogueUI.Play("DialogueUI_FadeOut");
         gameplayUI.Play("GameplayUI_FadeIn");
-        dialogueUI.gameObject.SetActive(false);
         dialogueInteractEvent -= updateDialogue;
         dialogueInteractEvent += enableDialogue;
         dialogueInteractEvent += _camController.DialogueStateCamera;
