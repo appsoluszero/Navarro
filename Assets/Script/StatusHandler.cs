@@ -86,18 +86,16 @@ public class StatusHandler : MonoBehaviour
     }
 
     void SetUpHealthBar() {
-        GameObject obj_bg = new GameObject();
-        GameObject obj = new GameObject();
         for(int i = 1 ; i < _status.maxPlayerHealth - 1 ; ++i) {
-            obj_bg = Instantiate(healthBackground_Prefab, health_Background);
-            obj = Instantiate(healthForeground_Prefab, health_Foreground);
+            GameObject obj_bg = Instantiate(healthBackground_Prefab, health_Background);
+            GameObject obj = Instantiate(healthForeground_Prefab, health_Foreground);
             obj_bg.transform.SetSiblingIndex(i);
             obj.transform.SetSiblingIndex(i);
             obj_bg.GetComponent<RectTransform>().localPosition = health_Background.GetChild(0).GetComponent<RectTransform>().localPosition + new Vector3(0, (health_Background.GetChild(0).GetComponent<RectTransform>().sizeDelta.x / 2f) + (obj_bg.GetComponent<RectTransform>().sizeDelta.x / 2f * (2*i - 1)), 0);
             obj.GetComponent<RectTransform>().localPosition = health_Foreground.GetChild(0).GetComponent<RectTransform>().localPosition + new Vector3(0, (health_Foreground.GetChild(0).GetComponent<RectTransform>().sizeDelta.x / 2f) + (obj.GetComponent<RectTransform>().sizeDelta.x / 2f * (2*i - 1)), 0);
+            health_Background.GetChild(health_Background.childCount - 1).GetComponent<RectTransform>().localPosition = obj_bg.transform.GetComponent<RectTransform>().localPosition + new Vector3(0, (obj_bg.GetComponent<RectTransform>().sizeDelta.x / 2f) + (health_Background.GetChild(health_Background.childCount - 1).GetComponent<RectTransform>().sizeDelta.x / 2f), 0);
+            health_Foreground.GetChild(health_Foreground.childCount - 1).GetComponent<RectTransform>().localPosition = obj.transform.GetComponent<RectTransform>().localPosition + new Vector3(0, (obj_bg.GetComponent<RectTransform>().sizeDelta.x / 2f) + (health_Foreground.GetChild(health_Foreground.childCount - 1).GetComponent<RectTransform>().sizeDelta.x / 2f), 0);
         }
-        health_Background.GetChild(_status.maxPlayerHealth - 1).GetComponent<RectTransform>().localPosition = obj_bg.transform.GetComponent<RectTransform>().localPosition + new Vector3(0, (obj_bg.GetComponent<RectTransform>().sizeDelta.x / 2f) + (health_Background.GetChild(_status.maxPlayerHealth - 1).GetComponent<RectTransform>().sizeDelta.x / 2f), 0);
-        health_Foreground.GetChild(_status.maxPlayerHealth - 1).GetComponent<RectTransform>().localPosition = obj.transform.GetComponent<RectTransform>().localPosition + new Vector3(0, (obj_bg.GetComponent<RectTransform>().sizeDelta.x / 2f) + (health_Foreground.GetChild(_status.maxPlayerHealth - 1).GetComponent<RectTransform>().sizeDelta.x / 2f), 0);
     }
 
     IEnumerator startHealthChange(int type) {
