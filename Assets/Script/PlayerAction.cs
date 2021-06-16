@@ -18,8 +18,11 @@ public class PlayerAction : MonoBehaviour
 
     [Header("Crouching Parameters")]
     [SerializeField] private float crouchSpeedMultiplier = 0.5f; 
-    [Header("Attack Parameters")]
+    [Header("Melee Attack Parameters")]
     [SerializeField] private int frameToNextAttack = 20;
+    [Header("Ranged Attack Parameters")]
+    [SerializeField] private float attackRange = 25f;
+    [SerializeField] private float forceRangedAttack = 20f;
 
     //Reference
     private PlayerMovement _movement;
@@ -33,7 +36,8 @@ public class PlayerAction : MonoBehaviour
     public event EventHandler<ActionEventArgs> rollEventHandler;
     public event EventHandler<ActionEventArgs> crouchEventHandler;
     public event EventHandler dropDownEventHandler;
-    public event EventHandler<ActionEventArgs> attackEventHandler;
+    public event EventHandler<ActionEventArgs> meleeAttackEventHandler;
+    public event EventHandler<ActionEventArgs> rangedAttackEventHandler;
     public class ActionEventArgs : EventArgs {
         public float rollSpd;
         public float timeRoll;
@@ -41,6 +45,8 @@ public class PlayerAction : MonoBehaviour
         public State thisCrouchAction;
         public bool forceUncrouch;
         public float crouchSpdMul;
+        public float rangedAttackRange;
+        public float rangedAttackForce;
         public int frameNextAttack;
     }
 
@@ -64,9 +70,14 @@ public class PlayerAction : MonoBehaviour
 
     void Update() {
         if(_manager.currentGameState == gameState.Gameplay) {
-            if(Input.GetKeyDown(InputManager.actionsMap["attack"]))
-                attackEventHandler?.Invoke(this, new ActionEventArgs {
+            if(Input.GetKeyDown(InputManager.actionsMap["attack"])) 
+                meleeAttackEventHandler?.Invoke(this, new ActionEventArgs {
                     frameNextAttack = frameToNextAttack
+                });
+            else if(Input.GetKeyDown(InputManager.actionsMap["attackRanged"]))
+                rangedAttackEventHandler?.Invoke(this, new ActionEventArgs {
+                    rangedAttackRange = attackRange,
+                    rangedAttackForce = forceRangedAttack
                 });
             else {
                 if(_status.playerState == State.Idle || _status.playerState == State.Move) {

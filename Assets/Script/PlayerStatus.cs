@@ -15,6 +15,7 @@ public class PlayerStatus : MonoBehaviour
     public State playerState = State.Idle;
     public int currentHealth;
     public float currentStamina;
+    public int bulletCount = 5;
 
     [Header("Status Parameters")]
     public float staminaRegenPerSecond = 2f;
@@ -34,20 +35,13 @@ public class PlayerStatus : MonoBehaviour
         GetComponent<PlayerAction>().staminaHandler += DecreaseStamina;
     }
 
-    void Update() {
-        if(Input.GetKeyDown(KeyCode.Keypad1)) 
-            DecreaseHealth(1);
-        else if(Input.GetKeyDown(KeyCode.Keypad2))
-            IncreaseHealth(1);
-    }
-
     void FixedUpdate() {
         if(isStaminaRegenerating) {
             currentStamina = Mathf.Clamp(currentStamina + (staminaRegenPerSecond / (1 / Time.fixedDeltaTime)) , 0, maxStamina);
         }
     }
 
-    void DecreaseHealth(int amt) {
+    public void DecreaseHealth(int amt) {
         if(currentHealth > 0) {
             healthDecreaseHandler?.Invoke(this, new StatChangeEventArgs {
                 healthUse = amt

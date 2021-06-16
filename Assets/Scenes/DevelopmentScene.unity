@@ -435,12 +435,12 @@ SpriteRenderer:
   m_SortingLayerID: 0
   m_SortingLayer: 0
   m_SortingOrder: 1
-  m_Sprite: {fileID: 1128536255889676007, guid: 7e1a171b23bfebe4982cba1a5fe69634, type: 3}
+  m_Sprite: {fileID: -4540473288008283278, guid: 06c6845949acf514ba6b99de58a55725, type: 3}
   m_Color: {r: 1, g: 1, b: 1, a: 1}
   m_FlipX: 0
   m_FlipY: 0
   m_DrawMode: 0
-  m_Size: {x: 1, y: 1}
+  m_Size: {x: 1.2, y: 2.45}
   m_AdaptiveModeThreshold: 0.5
   m_SpriteTileMode: 0
   m_WasSpriteAssigned: 1
@@ -479,7 +479,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   _status: {fileID: 1822301129}
   _controller: {fileID: 1822301127}
-  targetCheckFrame: 5
+  targetCheckFrame: 4
 --- !u!114 &192201654
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -1626,7 +1626,7 @@ GameObject:
   - component: {fileID: 845850306}
   - component: {fileID: 845850307}
   m_Layer: 9
-  m_Name: Attack_Hitbox
+  m_Name: MeleeAttack_Hitbox
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -3014,9 +3014,9 @@ BoxCollider2D:
   m_Offset: {x: -0.03860569, y: 0.59194565}
   m_SpriteTilingProperty:
     border: {x: 0, y: 0, z: 0, w: 0}
-    pivot: {x: 0.57, y: 0.25}
-    oldSize: {x: 1.75, y: 2.45}
-    newSize: {x: 10.24, y: 10.24}
+    pivot: {x: 0.59, y: 0.23}
+    oldSize: {x: 1.2, y: 2.45}
+    newSize: {x: 1.05, y: 2.4}
     adaptiveTilingThreshold: 0.5
     drawMode: 0
     adaptiveTiling: 0
@@ -3099,12 +3099,12 @@ SpriteRenderer:
   m_SortingLayerID: 0
   m_SortingLayer: 0
   m_SortingOrder: 0
-  m_Sprite: {fileID: -2321079010312025059, guid: 7e1a171b23bfebe4982cba1a5fe69634, type: 3}
+  m_Sprite: {fileID: -1412767788897618436, guid: f3b49bc19b6e5704099b385ab0061813, type: 3}
   m_Color: {r: 1, g: 1, b: 1, a: 1}
   m_FlipX: 0
   m_FlipY: 0
   m_DrawMode: 0
-  m_Size: {x: 10.24, y: 10.24}
+  m_Size: {x: 1.05, y: 2.4}
   m_AdaptiveModeThreshold: 0.5
   m_SpriteTileMode: 0
   m_WasSpriteAssigned: 1
@@ -3517,6 +3517,7 @@ MonoBehaviour:
   playerState: 4
   currentHealth: 0
   currentStamina: 0
+  bulletCount: 0
   staminaRegenPerSecond: 4
   isStaminaRegenerating: 0
   waitingForNextTick: 0
@@ -3538,7 +3539,6 @@ MonoBehaviour:
   speakerName: {fileID: 787083077}
   textContent: {fileID: 1812206817}
   characterSprite: {fileID: 1318900639}
-  currentDialogueSet: {fileID: 11400000, guid: 3c928b3cc0269dd4699bc7c79bf62904, type: 2}
   currentPage: 1
 --- !u!114 &1822301131
 MonoBehaviour:
@@ -3560,6 +3560,8 @@ MonoBehaviour:
   staminaUsage: 30
   crouchSpeedMultiplier: 0.5
   frameToNextAttack: 30
+  attackRange: 25
+  forceRangedAttack: 20
 --- !u!114 &1822301133
 MonoBehaviour:
   m_ObjectHideFlags: 0

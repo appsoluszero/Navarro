@@ -20,7 +20,8 @@ public class MovementAnimationController : MonoBehaviour
 
     void Update()
     {
-        transform.localScale = new Vector3(_controller.collision.faceDir, 1f, 1f);
+        if(_status.playerState != State.Attack)
+            transform.localScale = new Vector3(_controller.collision.faceDir, 1f, 1f);
         if(_status.playerState == State.Rolling)
             _playerAnimation.Play("Rolling");
         else if(_status.playerState != State.Attack) {
@@ -61,8 +62,16 @@ public class MovementAnimationController : MonoBehaviour
             frameCount++;
             yield return new WaitForEndOfFrame();
         }
-        if(_status.playerState != State.Attack && frameCount == targetCheckFrame && (_status.worldState == State.Floating_Crouch || _status.worldState == State.Floating_Stand))
-            _playerAnimation.Play(_status.worldState.ToString());
+        if(_status.playerState != State.Attack && frameCount == targetCheckFrame) {
+            if(_status.worldState == State.Floating_Stand) {
+                if(_controller.collision.verticalDir == 1) 
+                    _playerAnimation.Play("FloatingUp_Stand");
+                else if(_controller.collision.verticalDir == -1) 
+                    _playerAnimation.Play("FloatingDown_Stand");
+            }
+            else if(_status.worldState == State.Floating_Crouch) 
+                _playerAnimation.Play("FloatingUp_Crouch");
+        }
         startFloating = false;
     }
 }

@@ -20,6 +20,7 @@ public class Controller2D : RaycastController
     public override void Start() {
         base.Start();
         collision.faceDir = 1;
+        collision.verticalDir = -1;
     }
  
     public void Move(Vector3 velocity) {
@@ -36,8 +37,11 @@ public class Controller2D : RaycastController
 
         HorizontalCollision(ref velocity);
 
-        if(velocity.y != 0)
+        if(velocity.y != 0) {
+            collision.verticalDir = (int)Mathf.Sign(velocity.y);
             VerticalCollision(ref velocity);
+        }
+            
 
         transform.Translate(velocity);
     }
@@ -251,6 +255,7 @@ public class Controller2D : RaycastController
 
         public Vector3 prevVelocity;
         public int faceDir;
+        public int verticalDir;
 
         public void reset() {
             above = below = false;
