@@ -17,9 +17,13 @@ public class RunnerAI : MonoBehaviour
     public float jumpModifier = 0.3f;
     public float jumpCheckOffset = 0.1f;
 
+    public float fallingForce = 10f;
+
     [Header("Custom Behavior")]
 
     public float attackDistance = 1f;
+
+    public float attackRange = 1f;
     public bool followEnabled = true;
     public bool jumpEnabled = true;
     public bool directionLookEnabled = true;
@@ -42,6 +46,10 @@ public class RunnerAI : MonoBehaviour
 
     private void FixedUpdate()
     {
+        if (!isGrounded)
+        {
+            rb.AddForce(Vector2.down * fallingForce);
+        }
         if (TargetInDistance() && followEnabled && !isAttacking)
         {
             PathFollow();
@@ -86,7 +94,7 @@ public class RunnerAI : MonoBehaviour
         {
             if (direction.y > jumpNodeHeightRequirement)
             {
-                rb.AddForce(Vector2.up * speed * jumpModifier);
+                rb.AddForce(Vector2.up * speed * jumpModifier, ForceMode2D.Impulse);
             }
         }
 
@@ -124,6 +132,11 @@ public class RunnerAI : MonoBehaviour
         return Vector2.Distance(transform.position, target.transform.position) <= attackDistance;
     }
 
+    private bool TargetInAttackRange()
+    {
+        return Vector2.Distance(transform.position, target.transform.position) <= attackRange;
+    }
+
 
     private void OnPathComplete(Path p)
     {
@@ -146,8 +159,15 @@ public class RunnerAI : MonoBehaviour
     IEnumerator AttackRoutine()
     {
         yield return new WaitForSeconds(1f);
-        target.GetComponent<PlayerStatus>().DecreaseHealth(1);
-        print("Health after attacked: " + target.GetComponent<PlayerStatus>().currentHealth);
+        if (TargetInAttackRange())
+        {
+            target.GetComponent<PlayerStatus>().DecreaseHealth(1);
+            print("Health after attacked: " + target.GetComponent<PlayerStatus>().currentHealth);
+        }
+        else
+        {
+            print("Runner missed");
+        }
         isAttacking = false;
     }
 }
