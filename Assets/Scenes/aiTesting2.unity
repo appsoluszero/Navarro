@@ -2836,7 +2836,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   version: 1
   drawGizmos: 1
-  detailedGizmos: 0
+  detailedGizmos: 1
   startEndModifier:
     addPoints: 0
     exactStartPoint: 3
@@ -2865,7 +2865,7 @@ MonoBehaviour:
   target: {fileID: 1448779387}
   activateDistance: 50
   pathUpdateSeconds: 0.5
-  speed: 200
+  speed: 700
   nextWaypointDistance: 3
   jumpNodeHeightRequirement: 0.8
   jumpModifier: 0.3

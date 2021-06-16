@@ -18,9 +18,13 @@ public class RunnerAI : MonoBehaviour
     public float jumpCheckOffset = 0.1f;
 
     [Header("Custom Behavior")]
+
+    public float attackDistance = 1f;
     public bool followEnabled = true;
     public bool jumpEnabled = true;
     public bool directionLookEnabled = true;
+
+    public bool isAttacking = false;
 
     private Path path;
     private int currentWaypoint = 0;
@@ -38,9 +42,13 @@ public class RunnerAI : MonoBehaviour
 
     private void FixedUpdate()
     {
-        if (TargetInDistance() && followEnabled)
+        if (TargetInDistance() && followEnabled && !isAttacking)
         {
             PathFollow();
+            if (TargetInAttackDistance())
+            {
+                Attack();
+            }
         }
     }
 
@@ -111,6 +119,12 @@ public class RunnerAI : MonoBehaviour
         return Vector2.Distance(transform.position, target.transform.position) < activateDistance;
     }
 
+    private bool TargetInAttackDistance()
+    {
+        return Vector2.Distance(transform.position, target.transform.position) <= attackDistance;
+    }
+
+
     private void OnPathComplete(Path p)
     {
         if (!p.error)
@@ -118,5 +132,22 @@ public class RunnerAI : MonoBehaviour
             path = p;
             currentWaypoint = 0;
         }
+    }
+
+    private void Attack()
+    {
+        print("Beginning to attack");
+        isAttacking = true;
+        // Attack stuffs
+        StartCoroutine(AttackRoutine());
+
+    }
+
+    IEnumerator AttackRoutine()
+    {
+        yield return new WaitForSeconds(1f);
+        target.GetComponent<PlayerStatus>().DecreaseHealth(1);
+        print("Health after attacked: " + target.GetComponent<PlayerStatus>().currentHealth);
+        isAttacking = false;
     }
 }
