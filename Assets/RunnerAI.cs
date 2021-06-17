@@ -16,8 +16,10 @@ public class RunnerAI : MonoBehaviour
     public float jumpNodeHeightRequirement = 0.8f;
     public float jumpModifier = 0.3f;
     public float jumpCheckOffset = 0.1f;
-
     public float fallingForce = 10f;
+    public float shakeForce = 3f;
+
+    public Bounds bounds;
 
     [Header("Custom Behavior")]
 
@@ -29,9 +31,11 @@ public class RunnerAI : MonoBehaviour
     public bool directionLookEnabled = true;
 
     public bool isAttacking = false;
+    public float xBoundMultiplier = 1.3f;
 
     private Path path;
     private int currentWaypoint = 0;
+
     RaycastHit2D isGrounded;
     Seeker seeker;
     Rigidbody2D rb;
@@ -46,6 +50,10 @@ public class RunnerAI : MonoBehaviour
 
     private void FixedUpdate()
     {
+        bounds = this.GetComponent<BoxCollider2D>().bounds;
+        // print("top: " + TargetOnTop());
+        // print("under: " + TargetUnderFeet());
+        ShakeOff();
         if (!isGrounded)
         {
             rb.AddForce(Vector2.down * fallingForce);
@@ -137,6 +145,55 @@ public class RunnerAI : MonoBehaviour
         return Vector2.Distance(transform.position, target.transform.position) <= attackRange;
     }
 
+    private bool TargetOnTop()
+    {
+        // If player position is in Runner's x-axis collider
+        if (target.position.x <= bounds.center.x + bounds.extents.x * xBoundMultiplier && target.position.x >= bounds.center.x - bounds.extents.x * xBoundMultiplier)
+        {
+            // If player is above Runner
+            if (target.position.y >= bounds.center.y + bounds.extents.y)
+            {
+                return true;
+            }
+        }
+        return false;
+    }
+
+    private bool TargetUnderFeet()
+    {
+        // If player position is in Runner's x-axis collider
+        if (target.position.x <= bounds.center.x + bounds.extents.x * xBoundMultiplier && target.position.x >= bounds.center.x - bounds.extents.x * xBoundMultiplier)
+        {
+            // If player is under Runner
+            if (target.position.y <= bounds.center.y - bounds.extents.y)
+            {
+                return true;
+            }
+        }
+        return false;
+    }
+
+    private void ShakeOff()
+    {
+        if (TargetOnTop() || TargetUnderFeet())
+        {
+            // 0 for left, 1 for right
+            int direction = Random.Range(0, 2);
+
+            switch (direction)
+            {
+                case 0:
+                    rb.AddForce(Vector2.left * shakeForce, ForceMode2D.Impulse);
+                    break;
+                case 1:
+                    rb.AddForce(Vector2.right * shakeForce, ForceMode2D.Impulse);
+                    break;
+                default:
+                    break;
+            }
+
+        }
+    }
 
     private void OnPathComplete(Path p)
     {
