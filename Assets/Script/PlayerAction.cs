@@ -88,7 +88,8 @@ public class PlayerAction : MonoBehaviour
                         rollEventHandler?.Invoke(this, new ActionEventArgs {
                             rollSpd = rollingSpeed,
                             timeRoll = timeToFinishRoll,
-                            stamUsage = staminaUsage
+                            stamUsage = staminaUsage,
+                            crouchSpdMul = crouchSpeedMultiplier
                         });
                     else if(Input.GetKeyDown(InputManager.actionsMap["jumpingUp"])) 
                         jumpEventHandler?.Invoke(this, EventArgs.Empty);
@@ -108,7 +109,7 @@ public class PlayerAction : MonoBehaviour
     void RollingDodge(object sender, PlayerAction.ActionEventArgs e) {
         if(_controller.collision.below && _status.currentStamina - e.stamUsage >= 0) {
             _status.playerState = State.Rolling;
-            Crouching(true, e.crouchSpdMul);
+            Crouching(e.crouchSpdMul);
             StartCoroutine(rollingSequence(e.rollSpd, e.stamUsage, e.timeRoll));
         }
     }
@@ -117,26 +118,26 @@ public class PlayerAction : MonoBehaviour
         _movement.velocity.x = rollSpd * _controller.collision.faceDir;
         staminaHandler?.Invoke(this, new PlayerStatus.StatChangeEventArgs { staminaUse = stamUsage });
         yield return new WaitForSeconds(timeRoll);
-        Uncrouching(true);
-        //_movement.velocity.x = 0f;
+        Uncrouching();
+        _movement.velocity.x = 0f;
         _status.playerState = State.Idle;
     }
 
     void Jumping(object sender, EventArgs e) {
         if(_controller.collision.below) {
             _movement.velocity.y = _movement.jumpVelocity;
-            Uncrouching(false);
+            Uncrouching();
         }
     }
 
     void CrouchToggle(object sender, PlayerAction.ActionEventArgs e) {
         if(_status.worldState == State.Stand) 
-            Crouching(false, e.crouchSpdMul);
+            Crouching(e.crouchSpdMul);
         else if(_status.worldState == State.Crouch) 
-            Uncrouching(false);
+            Uncrouching();
     }
 
-    void Crouching(bool ignoreSpeedChange, float spdMul) {
+    void Crouching(float spdMul) {
         _status.worldState = State.Crouch;
         _collider.offset = new Vector2(0, 0);
         _collider.size = new Vector2(0.50f, 1.125f);
@@ -144,13 +145,12 @@ public class PlayerAction : MonoBehaviour
         _hitbox.size = new Vector2(1, 1);
         _controller.CalculateRaySpacing();
         _camController.ToggleCameraCrouch();
-        if(!ignoreSpeedChange)
-            _movement.crouchMultiplier = spdMul;
+        _movement.crouchMultiplier = spdMul;
     }
 
-    void Uncrouching(bool ignoreSpeedChange) {
-        RaycastHit2D hit1 = Physics2D.Raycast(_controller.raycastOriginPos.topRight, Vector2.up, 1f + _controller.skinWidth, _controller.levelMask);
-        RaycastHit2D hit2 = Physics2D.Raycast(_controller.raycastOriginPos.topLeft, Vector2.up, 1f + _controller.skinWidth, _controller.levelMask);
+    void Uncrouching() {
+        RaycastHit2D hit1 = Physics2D.Raycast(_controller.raycastOriginPos.topRight, Vector2.up, 1.125f + _controller.skinWidth, _controller.levelMask);
+        RaycastHit2D hit2 = Physics2D.Raycast(_controller.raycastOriginPos.topLeft, Vector2.up, 1.125f + _controller.skinWidth, _controller.levelMask);
         if(!hit1 && !hit2) {
             _status.worldState = State.Stand;
             _collider.offset = new Vector2(0, 0.5625f);
@@ -159,8 +159,7 @@ public class PlayerAction : MonoBehaviour
             _hitbox.size = new Vector2(1, 2);
             _controller.CalculateRaySpacing();
             _camController.ToggleCameraCrouch();
-            if(!ignoreSpeedChange)
-                _movement.crouchMultiplier = 1f;
+            _movement.crouchMultiplier = 1f;
         }
     }
 
@@ -168,7 +167,7 @@ public class PlayerAction : MonoBehaviour
         if(_controller.collision.below && _controller.hitPlatform) {
             _controller.collision.droppingDown = true;
             if(_status.playerState != State.Rolling)
-                Uncrouching(false);
+                Uncrouching();
         }
     }
 }

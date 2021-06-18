@@ -5,12 +5,14 @@ using UnityEngine;
 
 public class AttackDetection : MonoBehaviour
 {
+    [SerializeField] private Transform playerTransform;
     [SerializeField] private LayerMask enemyLayerMask;
     [SerializeField] private LayerMask collisionMask;
     //Melee detection
     void OnTriggerEnter2D(Collider2D col) {
         if(col.gameObject.tag == "Enemy" && ((enemyLayerMask & 1 << col.gameObject.layer) != 0)) {
-            print("attack!");
+            Vector2 dir = new Vector2(col.transform.position.x - playerTransform.position.x, 0f).normalized;
+            col.transform.GetComponent<Rigidbody2D>().AddForce(Vector2.right * dir * 1.25f, ForceMode2D.Impulse);
         }
     }
 
@@ -31,7 +33,7 @@ public class AttackDetection : MonoBehaviour
         foreach(RaycastHit2D e in enemyHit) {
             print(e.transform.gameObject.name);
             Rigidbody2D rb_this = e.transform.GetComponent<Rigidbody2D>();
-            Vector2 dir = new Vector2(e.transform.position.x - transform.position.x, 0f).normalized;
+            Vector2 dir = new Vector2(e.transform.position.x - playerTransform.position.x, 0f).normalized;
             rb_this.AddForce(Vector2.right * dir * 2.25f, ForceMode2D.Impulse);
         }
     }

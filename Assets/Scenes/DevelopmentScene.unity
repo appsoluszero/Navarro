@@ -147,7 +147,7 @@ Transform:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 18248073}
   m_LocalRotation: {x: -0, y: -0, z: -0, w: 1}
-  m_LocalPosition: {x: 0, y: 1.173, z: 0}
+  m_LocalPosition: {x: 0, y: 0.6105, z: 0}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_Children: []
   m_Father: {fileID: 1378112935}
@@ -1076,7 +1076,7 @@ Transform:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 519420028}
   m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
-  m_LocalPosition: {x: -7.1000004, y: 4.013, z: -10}
+  m_LocalPosition: {x: 0.47999975, y: 6.5829997, z: -10}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_Children: []
   m_Father: {fileID: 0}
@@ -1757,7 +1757,7 @@ GameObject:
   - component: {fileID: 845850305}
   - component: {fileID: 845850307}
   - component: {fileID: 845850306}
-  m_Layer: 9
+  m_Layer: 0
   m_Name: MeleeAttack_Hitbox
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -1790,6 +1790,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 3aba676f981fbb94aad10825113d1b2a, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  playerTransform: {fileID: 1378112935}
   enemyLayerMask:
     serializedVersion: 2
     m_Bits: 64
@@ -1846,7 +1847,7 @@ Transform:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 893424405}
   m_LocalRotation: {x: -0, y: -0, z: -0, w: 1}
-  m_LocalPosition: {x: 0, y: 0, z: 0}
+  m_LocalPosition: {x: 0, y: -0.5625, z: 0}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_Children: []
   m_Father: {fileID: 1378112935}
@@ -2363,7 +2364,7 @@ Transform:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 1248118337}
   m_LocalRotation: {x: -0, y: -0, z: -0, w: 1}
-  m_LocalPosition: {x: -0.00000047683716, y: 1.1730001, z: -10}
+  m_LocalPosition: {x: -0.00000023841858, y: 1.1729999, z: -10}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_Children:
   - {fileID: 1064879741}
@@ -2575,7 +2576,7 @@ GameObject:
   m_Component:
   - component: {fileID: 1378112935}
   m_Layer: 9
-  m_Name: BodyPart
+  m_Name: Player_Body
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -2589,7 +2590,7 @@ Transform:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 1378112934}
   m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
-  m_LocalPosition: {x: 0, y: 0, z: 0}
+  m_LocalPosition: {x: 0, y: 0.5625, z: 0}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_Children:
   - {fileID: 18248074}
@@ -2703,7 +2704,7 @@ Transform:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 1380744227}
   m_LocalRotation: {x: -0, y: -0, z: -0, w: 1}
-  m_LocalPosition: {x: -14.739999, y: -10.457765, z: 0.8322865}
+  m_LocalPosition: {x: -14.739999, y: -8.88, z: 0}
   m_LocalScale: {x: 25.932194, y: 1, z: 1}
   m_Children: []
   m_Father: {fileID: 2129386632}
@@ -3273,7 +3274,7 @@ Transform:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 1649185277}
   m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
-  m_LocalPosition: {x: 0.98, y: 0.81, z: 0}
+  m_LocalPosition: {x: 0, y: 0.81, z: 0}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_Children: []
   m_Father: {fileID: 192201650}
@@ -3291,6 +3292,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 3aba676f981fbb94aad10825113d1b2a, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  playerTransform: {fileID: 1378112935}
   enemyLayerMask:
     serializedVersion: 2
     m_Bits: 64
@@ -3601,7 +3603,7 @@ Transform:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 1822301124}
   m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
-  m_LocalPosition: {x: -7.1, y: 2.84, z: 0}
+  m_LocalPosition: {x: 0.48, y: 5.41, z: 0}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_Children:
   - {fileID: 1248118339}
@@ -3647,7 +3649,7 @@ MonoBehaviour:
   horizontalRaySpacing: 0
   verticalRaySpacing: 0
   _collider: {fileID: 0}
-  collisionMask:
+  levelAndPlatformMask:
     serializedVersion: 2
     m_Bits: 384
   platformMask:
@@ -3993,7 +3995,7 @@ Transform:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 2033377037}
   m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
-  m_LocalPosition: {x: 1.74, y: 12.31, z: 0}
+  m_LocalPosition: {x: 2.07, y: 12.01, z: 0}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_Children: []
   m_Father: {fileID: 0}

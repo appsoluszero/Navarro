@@ -21,7 +21,7 @@ public class PlayerMovement : MonoBehaviour
     float gravityScale;
     [HideInInspector] public float jumpVelocity;
 
-    [HideInInspector] public Vector3 velocity;
+    public Vector3 velocity;
     Vector3 prevVelocity;
     
     float velocityXSmoothing;
@@ -74,19 +74,20 @@ public class PlayerMovement : MonoBehaviour
             velocity.x = 0;
             
         velocity.y += gravityScale * Time.fixedDeltaTime;
+        //Vector3 deltaPosition = velocity * Time.fixedDeltaTime;
         Vector3 deltaPosition = (prevVelocity + velocity) * 0.5f * Time.fixedDeltaTime;
 
         _controller.Move(deltaPosition);
 
         if(_controller.collision.above || _controller.collision.below) {
-            if(_controller.collision.ascendingSlope && _controller.collision.above)
+            if(_controller.collision.ascendingSlope && _controller.collision.above) {
                 velocity.x = 0;
-            velocity.y = 0f;    
+            }
+            velocity.y = 0;    
         }
 
-        if(_controller.collision.left || _controller.collision.right) {
+        if(_controller.collision.left || _controller.collision.right)
             velocity.x = 0;
-        }
 
         if(Mathf.Abs(velocity.x) >= 1E-2 && _status.playerState == State.Idle) 
             _status.playerState = State.Move;
