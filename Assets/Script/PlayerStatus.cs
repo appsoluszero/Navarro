@@ -50,7 +50,7 @@ public class PlayerStatus : MonoBehaviour
         currentHealth = Mathf.Clamp(currentHealth - amt, 0, maxPlayerHealth);
     }
 
-    void IncreaseHealth(int amt) {
+    public void IncreaseHealth(int amt) {
         if(currentHealth < maxPlayerHealth) {
             healthIncreaseHandler?.Invoke(this, new StatChangeEventArgs {
                 healthUse = amt
