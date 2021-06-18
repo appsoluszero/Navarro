@@ -59,14 +59,16 @@ public class PlayerStatus : MonoBehaviour
         currentHealth = Mathf.Clamp(currentHealth + amt, 0, maxPlayerHealth);
     }
 
-    
-    
     void DecreaseStamina(object sender, StatChangeEventArgs e) {
         isStaminaRegenerating = false;
         staminaDecreaseHandler?.Invoke(this, new StatChangeEventArgs {
             staminaUse = e.staminaUse
         });
         currentStamina = Mathf.Clamp(currentStamina - e.staminaUse, 0, maxStamina);
+    }
+
+    public void DecreaseBullet() {
+        bulletCount--;
     }
 }
 

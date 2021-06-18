@@ -1,4 +1,5 @@
 using System;
+using System.Threading.Tasks;
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
@@ -14,6 +15,7 @@ public class PlayerAttack : MonoBehaviour
     [SerializeField] int attackPhase = 1;
 
     float range, force;
+    int penetrate;
 
     void Start() {
         _status = transform.parent.GetComponent<PlayerStatus>();
@@ -22,6 +24,17 @@ public class PlayerAttack : MonoBehaviour
         //Assigning Event
         transform.parent.GetComponent<PlayerAction>().meleeAttackEventHandler += MeleeAttacking;
         transform.parent.GetComponent<PlayerAction>().rangedAttackEventHandler += RangedAttacking;
+    }
+ 
+    IEnumerator ResetAttackState() {
+        _status.playerState = State.Idle;
+        yield return new WaitForSeconds(0.25f); //small delay to let the animation do its work
+        waitingForInput = true;
+        attackPhase = 1;
+    }
+
+    public void StartResetCoroutine() {
+        StartCoroutine(ResetAttackState());
     }
 
     #region Melee
@@ -49,12 +62,6 @@ public class PlayerAttack : MonoBehaviour
         }
     }
 
-    public void ResetAttackState() {
-        waitingForInput = true;
-        _status.playerState = State.Idle;
-        attackPhase = 1;
-    }
-
     public void StartAttackCoroutine() {
         StartCoroutine(MeleeAttackSequence());
     }
@@ -76,32 +83,35 @@ public class PlayerAttack : MonoBehaviour
             attackPhase++;
             _playerAnimator.Play("Attack"+attackPhase.ToString()+"_"+_status.worldState.ToString());
         }
+        else
+            StartResetCoroutine();
     }
     #endregion
 
     #region Ranged
     public void RangedAttacking(object sender, PlayerAction.ActionEventArgs e) {
-        force = e.rangedAttackForce;
-        range = e.rangedAttackRange;
-        if(waitingForInput) {
-            if(_status.playerState == State.Idle || _status.playerState == State.Move) {
-                waitingForInput = false;
-                _status.playerState = State.Attack;
-                if(_status.worldState == State.Stand)
-                    _playerAnimator.Play("RangedAttack_Stand");
-                else if(_status.worldState == State.Crouch)
-                    _playerAnimator.Play("RangedAttack_Crouch");
-                else if(_status.worldState == State.Floating_Stand) 
-                    _playerAnimator.Play("RangedAttack_FloatStand");
-                else 
-                    _playerAnimator.Play("RangedAttack_FloatCrouch");
-            }
+        if(waitingForInput && (_status.playerState == State.Idle || _status.playerState == State.Move) && _status.bulletCount > 0) {
+            force = e.rangedAttackForce;
+            range = e.rangedAttackRange;
+            penetrate = e.rangedAttackPenetration;
+            waitingForInput = false;
+            _status.playerState = State.Attack;
+            _status.DecreaseBullet();
+            if(_status.worldState == State.Stand) 
+                _playerAnimator.Play("RangedAttack_Stand");
+            else if(_status.worldState == State.Crouch)
+                _playerAnimator.Play("RangedAttack_Crouch");
+            else if(_status.worldState == State.Floating_Stand) 
+                _playerAnimator.Play("RangedAttack_FloatStand");
+            else 
+                _playerAnimator.Play("RangedAttack_FloatCrouch");
         }
     }
 
     public void DetectWeaponRange() {
-        Debug.DrawRay(transform.parent.position, Vector3.right * transform.parent.GetComponent<Controller2D>().collision.faceDir * range, Color.green, 20f);
-        transform.parent.GetComponent<PlayerMovement>().velocity.x = -transform.parent.GetComponent<Controller2D>().collision.faceDir * force;
+        transform.GetChild(1).GetComponent<AttackDetection>().HitscanCheck(range, penetrate);
+        if(_status.worldState == State.Floating_Crouch || _status.worldState == State.Floating_Stand)
+            transform.parent.GetComponent<PlayerMovement>().velocity.x = -transform.parent.GetComponent<Controller2D>().collision.faceDir * force;
     }
     #endregion
 }

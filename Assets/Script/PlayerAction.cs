@@ -21,7 +21,8 @@ public class PlayerAction : MonoBehaviour
     [Header("Melee Attack Parameters")]
     [SerializeField] private int frameToNextAttack = 20;
     [Header("Ranged Attack Parameters")]
-    [SerializeField] private float attackRange = 25f;
+    [SerializeField] private float maxAttackRange = 25f;
+    [SerializeField] private int maxPenetration = 3;
     [SerializeField] private float forceRangedAttack = 20f;
 
     //Reference
@@ -47,6 +48,7 @@ public class PlayerAction : MonoBehaviour
         public float crouchSpdMul;
         public float rangedAttackRange;
         public float rangedAttackForce;
+        public int rangedAttackPenetration;
         public int frameNextAttack;
     }
 
@@ -76,8 +78,9 @@ public class PlayerAction : MonoBehaviour
                 });
             else if(Input.GetKeyDown(InputManager.actionsMap["attackRanged"]))
                 rangedAttackEventHandler?.Invoke(this, new ActionEventArgs {
-                    rangedAttackRange = attackRange,
-                    rangedAttackForce = forceRangedAttack
+                    rangedAttackRange = maxAttackRange,
+                    rangedAttackForce = forceRangedAttack,
+                    rangedAttackPenetration = maxPenetration
                 });
             else {
                 if(_status.playerState == State.Idle || _status.playerState == State.Move) {

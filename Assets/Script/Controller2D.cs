@@ -32,7 +32,7 @@ public class Controller2D : RaycastController
         if(velocity.y < 0) 
             DescendSlope(ref velocity);
 
-        if(velocity.x != 0) 
+        if(Mathf.Abs(velocity.x) > 1E-2) 
             collision.faceDir = (int)Mathf.Sign(velocity.x);
 
         HorizontalCollision(ref velocity);
