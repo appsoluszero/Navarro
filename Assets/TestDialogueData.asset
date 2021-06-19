@@ -14,7 +14,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   speaker:
   - name: Exusiai
-    sprite: {fileID: 21300000, guid: e38a0e9f7fd1b3d4bab08fd1ecf1a988, type: 3}
+    sprite: {fileID: 21300000, guid: 57c51e29c1f0b2b40993522a5be29a42, type: 3}
   - name: Mostima
     sprite: {fileID: 21300000, guid: 8e451a0dc2e7fb045bd85f8edbdc2dfb, type: 3}
   data:

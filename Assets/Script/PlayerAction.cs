@@ -57,7 +57,7 @@ public class PlayerAction : MonoBehaviour
     void Start() {
         //initialize
         _collider = GetComponent<BoxCollider2D>();
-        _hitbox = transform.GetChild(2).GetChild(0).GetComponent<BoxCollider2D>();
+        //_hitbox = transform.GetChild(2).GetChild(0).GetComponent<BoxCollider2D>();
         _movement = GetComponent<PlayerMovement>();
         _controller = GetComponent<Controller2D>();
         _status = GetComponent<PlayerStatus>();
@@ -141,8 +141,8 @@ public class PlayerAction : MonoBehaviour
         _status.worldState = State.Crouch;
         _collider.offset = new Vector2(0, 0);
         _collider.size = new Vector2(0.50f, 1.125f);
-        _hitbox.offset = new Vector2(0, 0);
-        _hitbox.size = new Vector2(1, 1);
+        //_hitbox.offset = new Vector2(0, 0);
+        //_hitbox.size = new Vector2(1, 1);
         _controller.CalculateRaySpacing();
         _camController.ToggleCameraCrouch();
         _movement.crouchMultiplier = spdMul;
@@ -155,8 +155,8 @@ public class PlayerAction : MonoBehaviour
             _status.worldState = State.Stand;
             _collider.offset = new Vector2(0, 0.5625f);
             _collider.size = new Vector2(0.50f, 2.25f);
-            _hitbox.offset = new Vector2(0, 0.5f);
-            _hitbox.size = new Vector2(1, 2);
+            //_hitbox.offset = new Vector2(0, 0.5f);
+            //_hitbox.size = new Vector2(1, 2);
             _controller.CalculateRaySpacing();
             _camController.ToggleCameraCrouch();
             _movement.crouchMultiplier = 1f;

@@ -6,6 +6,7 @@ using UnityEngine.UI;
 
 public class PlayerStatus : MonoBehaviour
 {
+    [SerializeField] private GameManager _manager;
     [Header("Player Base Status")]
     public int maxPlayerHealth = 5; 
     public float maxStamina = 20;
@@ -27,12 +28,24 @@ public class PlayerStatus : MonoBehaviour
         public float staminaUse;
     }
 
+    [SerializeField] private bool debugModeActivated;
+
     [HideInInspector] public bool isStaminaRegenerating, waitingForNextTick;
+    private Animator _playerAnimation;
 
     void Start() {
         currentHealth = maxPlayerHealth;
         currentStamina = maxStamina;
+        _playerAnimation = transform.GetChild(2).GetComponent<Animator>();
         GetComponent<PlayerAction>().staminaHandler += DecreaseStamina;
+    }
+
+    void Update() {
+        if(debugModeActivated) {
+            if(Input.GetKeyDown(KeyCode.Keypad1)) {
+                DecreaseHealth(1);
+            }
+        }
     }
 
     void FixedUpdate() {
@@ -48,6 +61,8 @@ public class PlayerStatus : MonoBehaviour
             });
         }
         currentHealth = Mathf.Clamp(currentHealth - amt, 0, maxPlayerHealth);
+        if(currentHealth == 0) 
+            PlayerDieEvent();
     }
 
     void IncreaseHealth(int amt) {
@@ -70,6 +85,13 @@ public class PlayerStatus : MonoBehaviour
     public void DecreaseBullet() {
         bulletCount--;
     }
+
+    void PlayerDieEvent() {
+        GetComponent<PlayerStatus>().playerState = State.Death;
+        _manager.currentGameState = gameState.Ending;
+        _playerAnimation.Play("Dying");
+        transform.GetChild(3).gameObject.SetActive(true);
+    }
 }
 
 public enum State {
@@ -80,5 +102,6 @@ public enum State {
     Idle,
     Move,
     Attack,
-    Rolling
+    Rolling,
+    Death
 }

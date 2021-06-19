@@ -65,16 +65,15 @@ public class PlayerMovement : MonoBehaviour
     void FixedUpdate() {
         prevVelocity = velocity;
         
-        if(_status.playerState != State.Rolling && _status.playerState != State.Attack) {
+        if(_status.playerState != State.Rolling && _status.playerState != State.Attack && _status.playerState != State.Death) {
             _status.playerState = State.Idle;
             velocity.x = Mathf.SmoothDamp(velocity.x, targetVelocityX, ref velocityXSmoothing, (_controller.collision.below) ? accelTimeGrounded : accelTimeAirborne);
         }
 
-        if((_status.playerState == State.Attack && _controller.collision.below) || _manager.currentGameState != gameState.Gameplay)
+        if((_status.playerState == State.Attack && _controller.collision.below) || _manager.currentGameState != gameState.Gameplay || _status.playerState == State.Death)
             velocity.x = 0;
             
         velocity.y += gravityScale * Time.fixedDeltaTime;
-        //Vector3 deltaPosition = velocity * Time.fixedDeltaTime;
         Vector3 deltaPosition = (prevVelocity + velocity) * 0.5f * Time.fixedDeltaTime;
 
         _controller.Move(deltaPosition);
