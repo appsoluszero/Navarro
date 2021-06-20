@@ -72,36 +72,38 @@ public class PlayerAction : MonoBehaviour
 
     void Update() {
         if(_manager.currentGameState == gameState.Gameplay) {
-            if(Input.GetKeyDown(InputManager.actionsMap["attack"])) 
-                meleeAttackEventHandler?.Invoke(this, new ActionEventArgs {
-                    frameNextAttack = frameToNextAttack
-                });
-            else if(Input.GetKeyDown(InputManager.actionsMap["attackRanged"]))
-                rangedAttackEventHandler?.Invoke(this, new ActionEventArgs {
-                    rangedAttackRange = maxAttackRange,
-                    rangedAttackForce = forceRangedAttack,
-                    rangedAttackPenetration = maxPenetration
-                });
-            else {
-                if(_status.playerState == State.Idle || _status.playerState == State.Move) {
-                    if(Input.GetKeyDown(InputManager.actionsMap["rollingDodge"])) 
-                        rollEventHandler?.Invoke(this, new ActionEventArgs {
-                            rollSpd = rollingSpeed,
-                            timeRoll = timeToFinishRoll,
-                            stamUsage = staminaUsage,
-                            crouchSpdMul = crouchSpeedMultiplier
-                        });
-                    else if(Input.GetKeyDown(InputManager.actionsMap["jumpingUp"])) 
-                        jumpEventHandler?.Invoke(this, EventArgs.Empty);
-                    else if(Input.GetKeyDown(InputManager.actionsMap["crouchDown"])) {
-                        crouchEventHandler?.Invoke(this, new ActionEventArgs {
-                            crouchSpdMul = crouchSpeedMultiplier
-                        });
+            if(_status.playerState != State.Hurt) {
+                if(Input.GetKeyDown(InputManager.actionsMap["attack"])) 
+                    meleeAttackEventHandler?.Invoke(this, new ActionEventArgs {
+                        frameNextAttack = frameToNextAttack
+                    });
+                else if(Input.GetKeyDown(InputManager.actionsMap["attackRanged"]))
+                    rangedAttackEventHandler?.Invoke(this, new ActionEventArgs {
+                        rangedAttackRange = maxAttackRange,
+                        rangedAttackForce = forceRangedAttack,
+                        rangedAttackPenetration = maxPenetration
+                    });
+                else {
+                    if(_status.playerState == State.Idle || _status.playerState == State.Move) {
+                        if(Input.GetKeyDown(InputManager.actionsMap["rollingDodge"])) 
+                            rollEventHandler?.Invoke(this, new ActionEventArgs {
+                                rollSpd = rollingSpeed,
+                                timeRoll = timeToFinishRoll,
+                                stamUsage = staminaUsage,
+                                crouchSpdMul = crouchSpeedMultiplier
+                            });
+                        else if(Input.GetKeyDown(InputManager.actionsMap["jumpingUp"])) 
+                            jumpEventHandler?.Invoke(this, EventArgs.Empty);
+                        else if(Input.GetKeyDown(InputManager.actionsMap["crouchDown"])) {
+                            crouchEventHandler?.Invoke(this, new ActionEventArgs {
+                                crouchSpdMul = crouchSpeedMultiplier
+                            });
+                        }
                     }
+                    if(_status.playerState != State.Attack) 
+                        if(Input.GetKey(InputManager.actionsMap["dropDown"])) 
+                            dropDownEventHandler?.Invoke(this, EventArgs.Empty);
                 }
-                if(_status.playerState != State.Attack) 
-                    if(Input.GetKey(InputManager.actionsMap["dropDown"])) 
-                        dropDownEventHandler?.Invoke(this, EventArgs.Empty);
             }
         }
     }

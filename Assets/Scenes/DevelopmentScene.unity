@@ -494,8 +494,11 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   waitingForInput: 1
+  goingNextPhase: 0
   isRunning: 0
   attackPhase: 1
+  isHurt: 0
+  delayBetweenAttack: 0.25
 --- !u!1 &270389662
 GameObject:
   m_ObjectHideFlags: 0
@@ -1917,7 +1920,7 @@ BoxCollider2D:
   m_IsTrigger: 1
   m_UsedByEffector: 0
   m_UsedByComposite: 0
-  m_Offset: {x: 0, y: 0}
+  m_Offset: {x: 0.060834646, y: -0.060834408}
   m_SpriteTilingProperty:
     border: {x: 0, y: 0, z: 0, w: 0}
     pivot: {x: 0, y: 0}
@@ -1928,7 +1931,7 @@ BoxCollider2D:
     adaptiveTiling: 0
   m_AutoTiling: 0
   serializedVersion: 2
-  m_Size: {x: 1, y: 1}
+  m_Size: {x: 2.1558576, y: 0.33081913}
   m_EdgeRadius: 0
 --- !u!1 &893424405
 GameObject:
@@ -3858,7 +3861,7 @@ MonoBehaviour:
   timeToFinishRoll: 0.4
   staminaUsage: 30
   crouchSpeedMultiplier: 0.5
-  frameToNextAttack: 20
+  frameToNextAttack: 12
   maxAttackRange: 25
   maxPenetration: 3
   forceRangedAttack: 13

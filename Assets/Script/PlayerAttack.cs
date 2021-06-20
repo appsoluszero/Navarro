@@ -10,12 +10,15 @@ public class PlayerAttack : MonoBehaviour
     private PlayerStatus _status;
     private Animator _playerAnimator;
 
-    [SerializeField] bool waitingForInput = true;
+    public bool waitingForInput = true;
+    public bool goingNextPhase = false;
     [SerializeField] bool isRunning = false;
     [SerializeField] int attackPhase = 1;
 
     float range, force;
     int penetrate;
+    [SerializeField] public bool isHurt;
+    [SerializeField] private float delayBetweenAttack;
 
     void Start() {
         _status = transform.parent.GetComponent<PlayerStatus>();
@@ -28,7 +31,7 @@ public class PlayerAttack : MonoBehaviour
  
     IEnumerator ResetAttackState() {
         _status.playerState = State.Idle;
-        yield return new WaitForSeconds(0.25f); //small delay to let the animation do its work
+        yield return new WaitForSeconds(delayBetweenAttack); //small delay to let the animation do its work
         waitingForInput = true;
         attackPhase = 1;
     }
@@ -43,7 +46,7 @@ public class PlayerAttack : MonoBehaviour
             frameNextAttack = e.frameNextAttack;
             //for checking between attack phase
             if(isRunning)
-                waitingForInput = false;
+                goingNextPhase = true;
             //start the attack phase from the first phase
             else if(attackPhase == 1) {
                 if(_status.playerState == State.Idle || _status.playerState == State.Move) {
@@ -72,14 +75,21 @@ public class PlayerAttack : MonoBehaviour
         isRunning = true;
         int frameCount = 0;
         while(frameCount < frameNextAttack) {
-            if(!waitingForInput)
+            if(isHurt) {
+                isRunning = false;
+                _playerAnimator.speed = 1f;
+                StopAllCoroutines();
+            }  
+            if(goingNextPhase)
                 break;
             frameCount++;
             yield return new WaitForEndOfFrame();
         }
+        waitingForInput = false;
         isRunning = false;
         _playerAnimator.speed = 1f;
-        if(!waitingForInput) {
+        if(goingNextPhase) {
+            goingNextPhase = false;
             attackPhase++;
             _playerAnimator.Play("Attack"+attackPhase.ToString()+"_"+_status.worldState.ToString());
         }

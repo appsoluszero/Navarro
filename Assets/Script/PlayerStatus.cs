@@ -103,5 +103,6 @@ public enum State {
     Move,
     Attack,
     Rolling,
-    Death
+    Death,
+    Hurt
 }

@@ -16,16 +16,16 @@ public class MovementAnimationController : MonoBehaviour
     {
         _playerAnimation = GetComponent<Animator>();
         _spriteTransform = GetComponent<Transform>();
+        _status.healthDecreaseHandler += HurtAnimation;
     }
 
     void Update()
     {
-        if(_status.playerState != State.Death) {
-            if(_status.playerState != State.Attack)
-                transform.localScale = new Vector3(_controller.collision.faceDir, 1f, 1f);
+        if(_status.playerState != State.Death && _status.playerState != State.Attack && _status.playerState != State.Hurt) {
+            transform.localScale = new Vector3(_controller.collision.faceDir, 1f, 1f);
             if(_status.playerState == State.Rolling)
                 _playerAnimation.Play("Rolling");
-            else if(_status.playerState != State.Attack) {
+            else if(_status.playerState != State.Attack && _status.playerState != State.Hurt) {
                 if(_status.worldState == State.Floating_Crouch || _status.worldState == State.Floating_Stand) {
                     if(!startFloating) {
                         startFloating = true;
@@ -75,5 +75,18 @@ public class MovementAnimationController : MonoBehaviour
                 _playerAnimation.Play("FloatingUp_Crouch");
         }
         startFloating = false;
+    }
+
+    public void ClearHurtEvent() {
+        GetComponent<PlayerAttack>().isHurt = false;
+        GetComponent<PlayerAttack>().waitingForInput = true;
+        GetComponent<PlayerAttack>().goingNextPhase = false;
+        _status.playerState = State.Idle;
+    }
+
+    public void HurtAnimation(object sender, PlayerStatus.StatChangeEventArgs e) {
+        GetComponent<PlayerAttack>().isHurt = true;
+        _playerAnimation.Play("Hurt_Stand");
+        _status.playerState = State.Hurt;
     }
 }
