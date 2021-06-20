@@ -1,12 +1,10 @@
 using System.Collections;
-using System.Collections.Generic;
 using UnityEngine;
-using UnityEngine.UIElements;
 
-public class Boss_Attack_SlimeBlock : MonoBehaviour
+public class Boss_Attack_SlimeBlock : MonoBehaviour, IBossAttack
 {
     [SerializeField] private float timeToReachTarget = 0.75f;
-    [Range(0f, 2f)][SerializeField] private float timeInBetween = 1f;
+    [SerializeField] private float timeInBetween = 1f;
     public struct slimeBlock {
         public Transform block;
         public Vector3 startPos, targetPos;
@@ -25,58 +23,59 @@ public class Boss_Attack_SlimeBlock : MonoBehaviour
             block.position = startPos;
         }
     }
-
-    public slimeBlock block1, block2;
-    bool isRunning;
-    float timerBetween = 0;
+    public slimeBlock[] blockNow;
+    public int queue = 1;
 
     void Start() {
-        block1 = new slimeBlock(transform.GetChild(0), transform.GetChild(2).position);
-        block2 = new slimeBlock(transform.GetChild(1), transform.GetChild(3).position);
+        blockNow = new slimeBlock[transform.childCount / 2];
+        for(int i = 0 ; i < blockNow.Length ; ++i) {
+            blockNow[i] = new slimeBlock(transform.GetChild(i), transform.GetChild(i+2).position);
+        }
     }
 
-    void Update() {
-        if(Input.GetKeyDown(KeyCode.Space) && !block1.isRunning && !block2.isRunning) {
-            block1.isRunning = true;
-            isRunning = true;
+    public void AttackLogicRunner() {
+        bool isAllSleep = true;
+        foreach(slimeBlock k in blockNow) {
+            if(k.isRunning)
+                isAllSleep = false;
         }
-
-        if(timerBetween >= timeInBetween && isRunning) {
-            block2.isRunning = true;
-            isRunning = false;
-            timerBetween = 0f;
+        if(Input.GetKeyDown(KeyCode.Space) && isAllSleep) {
+            blockNow[0].isRunning = true;
+            StartCoroutine(countDownEachBlock());
         }
+        for(int i = 0 ; i < blockNow.Length ; ++i) {
+            if(blockNow[i].timer >= timeToReachTarget) {
+                blockNow[i].isRunning = false;
+                blockNow[i].timer = 0f;
+                blockNow[i].returnToStart();
+            }
+            if(blockNow[i].isRunning) {
+                blockNow[i].timer += Time.deltaTime;
+                blockNow[i].timer = Mathf.Clamp(blockNow[i].timer, 0f, timeToReachTarget);
+                AttackSequence(blockNow[i]);
+            }
+        } 
+    }
 
-        if(isRunning) 
-            timerBetween += Time.deltaTime;
-
-        if(block1.timer >= timeToReachTarget) {
-            block1.isRunning = false;
-            block1.timer = 0f;
-            block1.returnToStart();
+    IEnumerator countDownEachBlock() {
+        yield return new WaitForSeconds(timeInBetween);
+        if(blockNow.Length > queue) {
+            blockNow[queue].isRunning = true;
+            queue++;
+            StartCoroutine(countDownEachBlock());
         }
-
-        if(block2.timer >= timeToReachTarget) {
-            block2.isRunning = false;
-            block2.timer = 0f;
-            block2.returnToStart();
-        }
-
-        if(block1.isRunning) {
-            block1.timer += Time.deltaTime;
-            block1.timer = Mathf.Clamp(block1.timer, 0f, timeToReachTarget);
-            AttackSequence(block1);
-        }
-
-        if(block2.isRunning) {
-            block2.timer += Time.deltaTime;
-            block2.timer = Mathf.Clamp(block2.timer, 0f, timeToReachTarget);
-            AttackSequence(block2);
-        }
+        else
+            queue = 1;
     }
 
     void AttackSequence(slimeBlock block) {
         float progress = block.timer / timeToReachTarget;
         block.block.position = Vector3.Lerp(block.startPos, block.targetPos, progress);
+    }
+
+    public void PlayerHit(int num) {
+        blockNow[num-1].returnToStart();
+        blockNow[num-1].isRunning = false;
+        blockNow[num-1].timer = 0f;
     }
 }

@@ -6,6 +6,9 @@ TagManager:
   tags:
   - DialogueTrigger
   - Enemy
+  - Boss
+  - SlimeBlock
+  - FallingObject
   layers:
   - Default
   - TransparentFX
@@ -17,7 +20,7 @@ TagManager:
   - Level
   - Platform
   - Player
-  - 
+  - Effect
   - 
   - 
   - 

@@ -4,20 +4,16 @@ using UnityEngine;
 
 public class DamageDetection : MonoBehaviour
 {
+    [SerializeField] private bool isDamagePlayer;
     void OnTriggerEnter2D(Collider2D col) {
-        if(col.gameObject.tag == "Enemy") {
-            if(col.gameObject.name == "Block1") {
-                col.transform.parent.GetComponent<Boss_Attack_SlimeBlock>().block1.returnToStart();
-                col.transform.parent.GetComponent<Boss_Attack_SlimeBlock>().block1.isRunning = false;
-                col.transform.parent.GetComponent<Boss_Attack_SlimeBlock>().block1.timer = 0f;
-            }
-            else {
-                col.transform.parent.GetComponent<Boss_Attack_SlimeBlock>().block2.block.position = col.transform.parent.GetComponent<Boss_Attack_SlimeBlock>().block2.startPos;
-                col.transform.parent.GetComponent<Boss_Attack_SlimeBlock>().block2.isRunning = false;
-                col.transform.parent.GetComponent<Boss_Attack_SlimeBlock>().block2.timer = 0f;
-            }
-                
-            GetComponent<PlayerStatus>().DecreaseHealth(1);
+        if(col.gameObject.tag == "SlimeBlock") {
+            int num = int.Parse(col.gameObject.name.Substring(5));
+            col.transform.parent.GetComponent<Boss_Attack_SlimeBlock>().PlayerHit(num);
         }
+        else if(col.gameObject.tag == "FallingObject") {
+            col.transform.GetComponentInParent<Boss_Attack_ObjectFall>().ReturnObjectToSpawn(col.gameObject);
+        }
+        if(isDamagePlayer)
+            GetComponent<PlayerStatus>().DecreaseHealth(1);
     }
 }
