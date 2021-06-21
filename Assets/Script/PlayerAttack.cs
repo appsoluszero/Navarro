@@ -8,25 +8,35 @@ public class PlayerAttack : MonoBehaviour
 {
     private int frameNextAttack;
     private PlayerStatus _status;
+    private PlayerAction _action;
+    private PlayerMovement _movement;
+    private Controller2D _controller;
+    private AttackDetection _rangedDetection;
+    private PlayerCameraController _camController;
     private Animator _playerAnimator;
 
     public bool waitingForInput = true;
-    public bool goingNextPhase = false;
-    [SerializeField] bool isRunning = false;
+    [HideInInspector] public bool goingNextPhase = false;
+    bool isRunning = false;
     [SerializeField] int attackPhase = 1;
 
     float range, force;
     int penetrate;
-    [SerializeField] public bool isHurt;
+    public bool isHurt;
     [SerializeField] private float delayBetweenAttack;
 
     void Start() {
-        _status = transform.parent.GetComponent<PlayerStatus>();
+        _status = transform.GetComponentInParent<PlayerStatus>();
+        _action = transform.GetComponentInParent<PlayerAction>();
+        _movement = transform.GetComponentInParent<PlayerMovement>();
+        _rangedDetection = transform.GetChild(1).GetComponent<AttackDetection>();
+        _controller = transform.GetComponentInParent<Controller2D>();
         _playerAnimator = GetComponent<Animator>();
+        _camController = transform.parent.GetComponentInChildren<PlayerCameraController>();
 
         //Assigning Event
-        transform.parent.GetComponent<PlayerAction>().meleeAttackEventHandler += MeleeAttacking;
-        transform.parent.GetComponent<PlayerAction>().rangedAttackEventHandler += RangedAttacking;
+        _action.meleeAttackEventHandler += MeleeAttacking;
+        _action.rangedAttackEventHandler += RangedAttacking;
     }
  
     IEnumerator ResetAttackState() {
@@ -42,27 +52,23 @@ public class PlayerAttack : MonoBehaviour
 
     #region Melee
     void MeleeAttacking(object sender, PlayerAction.ActionEventArgs e) {
-        if(waitingForInput) {
-            frameNextAttack = e.frameNextAttack;
-            //for checking between attack phase
-            if(isRunning)
-                goingNextPhase = true;
-            //start the attack phase from the first phase
-            else if(attackPhase == 1) {
-                if(_status.playerState == State.Idle || _status.playerState == State.Move) {
-                    waitingForInput = false;
-                    _status.playerState = State.Attack;
-                    if(_status.worldState == State.Stand)
-                        _playerAnimator.Play("Attack1_Stand");
-                    else if(_status.worldState == State.Crouch)
-                        _playerAnimator.Play("Attack1_Crouch");
-                    else if(_status.worldState == State.Floating_Stand)
-                        _playerAnimator.Play("Attack_Stand");
-                    else
-                        _playerAnimator.Play("Attack_Crouch");
-                }  
-            } 
-        }
+        frameNextAttack = e.frameNextAttack;
+        if(isRunning)
+            goingNextPhase = true;
+        else if(attackPhase == 1) {
+            if(_status.playerState == State.Idle || _status.playerState == State.Move) {
+                waitingForInput = false;
+                _status.playerState = State.MeleeAttack;
+                if(_status.worldState == State.Stand)
+                    _playerAnimator.Play("Attack1_Stand");
+                else if(_status.worldState == State.Crouch)
+                    _playerAnimator.Play("Attack1_Crouch");
+                else if(_status.worldState == State.Floating_Stand)
+                    _playerAnimator.Play("Attack_Stand");
+                else
+                    _playerAnimator.Play("Attack_Crouch");
+            }  
+        } 
     }
 
     public void StartAttackCoroutine() {
@@ -100,28 +106,27 @@ public class PlayerAttack : MonoBehaviour
 
     #region Ranged
     public void RangedAttacking(object sender, PlayerAction.ActionEventArgs e) {
-        if(waitingForInput && (_status.playerState == State.Idle || _status.playerState == State.Move) && _status.bulletCount > 0) {
-            force = e.rangedAttackForce;
-            range = e.rangedAttackRange;
-            penetrate = e.rangedAttackPenetration;
-            waitingForInput = false;
-            _status.playerState = State.Attack;
-            _status.DecreaseBullet();
-            if(_status.worldState == State.Stand) 
-                _playerAnimator.Play("RangedAttack_Stand");
-            else if(_status.worldState == State.Crouch)
-                _playerAnimator.Play("RangedAttack_Crouch");
-            else if(_status.worldState == State.Floating_Stand) 
-                _playerAnimator.Play("RangedAttack_FloatStand");
-            else 
-                _playerAnimator.Play("RangedAttack_FloatCrouch");
-        }
+        force = e.rangedAttackForce;
+        range = e.rangedAttackRange;
+        penetrate = e.rangedAttackPenetration;
+        waitingForInput = false;
+        _status.playerState = State.RangedAttack;
+        _status.DecreaseBullet();
+        if(_status.worldState == State.Stand) 
+            _playerAnimator.Play("RangedAttack_Stand");
+        else if(_status.worldState == State.Crouch)
+            _playerAnimator.Play("RangedAttack_Crouch");
+        else if(_status.worldState == State.Floating_Stand) 
+            _playerAnimator.Play("RangedAttack_FloatStand");
+        else 
+            _playerAnimator.Play("RangedAttack_FloatCrouch");
     }
 
     public void DetectWeaponRange() {
-        transform.GetChild(1).GetComponent<AttackDetection>().HitscanCheck(range, penetrate);
+        _rangedDetection.HitscanCheck(range, penetrate);
+        _camController.AttackCameraShake(false);
         if(_status.worldState == State.Floating_Crouch || _status.worldState == State.Floating_Stand)
-            transform.parent.GetComponent<PlayerMovement>().velocity.x = -transform.parent.GetComponent<Controller2D>().collision.faceDir * force;
+            _movement.velocity.x = -_controller.collision.faceDir * force;
     }
     #endregion
 }

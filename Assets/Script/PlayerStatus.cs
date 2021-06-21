@@ -101,8 +101,9 @@ public enum State {
     Floating_Crouch,
     Idle,
     Move,
-    Attack,
     Rolling,
     Death,
-    Hurt
+    Hurt,
+    MeleeAttack,
+    RangedAttack
 }

@@ -21,11 +21,11 @@ public class MovementAnimationController : MonoBehaviour
 
     void Update()
     {
-        if(_status.playerState != State.Death && _status.playerState != State.Attack && _status.playerState != State.Hurt) {
+        if(_status.playerState != State.Death && _status.playerState != State.MeleeAttack && _status.playerState != State.RangedAttack && _status.playerState != State.Hurt) {
             transform.localScale = new Vector3(_controller.collision.faceDir, 1f, 1f);
             if(_status.playerState == State.Rolling)
                 _playerAnimation.Play("Rolling");
-            else if(_status.playerState != State.Attack && _status.playerState != State.Hurt) {
+            else if(_status.playerState != State.MeleeAttack && _status.playerState != State.RangedAttack && _status.playerState != State.Hurt) {
                 if(_status.worldState == State.Floating_Crouch || _status.worldState == State.Floating_Stand) {
                     if(!startFloating) {
                         startFloating = true;
@@ -58,13 +58,13 @@ public class MovementAnimationController : MonoBehaviour
     IEnumerator floatingFrameCount() {
         int frameCount = 0;
         while(frameCount < targetCheckFrame) {
-            if(_status.playerState == State.Attack || (_status.worldState != State.Floating_Crouch & _status.worldState != State.Floating_Stand)) {
+            if(_status.playerState == State.MeleeAttack || _status.playerState == State.RangedAttack || (_status.worldState != State.Floating_Crouch & _status.worldState != State.Floating_Stand)) {
                 break;
             }
             frameCount++;
             yield return new WaitForEndOfFrame();
         }
-        if(_status.playerState != State.Attack && frameCount == targetCheckFrame) {
+        if(_status.playerState != State.MeleeAttack && _status.playerState != State.RangedAttack && frameCount == targetCheckFrame) {
             if(_status.worldState == State.Floating_Stand) {
                 if(_controller.collision.verticalDir == 1) 
                     _playerAnimation.Play("FloatingUp_Stand");

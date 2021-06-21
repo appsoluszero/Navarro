@@ -65,13 +65,16 @@ public class PlayerMovement : MonoBehaviour
     void FixedUpdate() {
         prevVelocity = velocity;
         
-        if(_status.playerState != State.Rolling && _status.playerState != State.Attack && _status.playerState != State.Death && _status.playerState != State.Hurt) {
+        if(_status.playerState != State.Rolling && _status.playerState != State.MeleeAttack && _status.playerState != State.RangedAttack && _status.playerState != State.Death && _status.playerState != State.Hurt) {
             _status.playerState = State.Idle;
             velocity.x = Mathf.SmoothDamp(velocity.x, targetVelocityX, ref velocityXSmoothing, (_controller.collision.below) ? accelTimeGrounded : accelTimeAirborne);
         }
 
-        if((_status.playerState == State.Attack && _controller.collision.below) || _manager.currentGameState != gameState.Gameplay || _status.playerState == State.Death || _status.playerState == State.Hurt)
+        if((_status.playerState == State.RangedAttack && _controller.collision.below) || _manager.currentGameState != gameState.Gameplay || _status.playerState == State.Death || _status.playerState == State.Hurt) 
             velocity.x = 0;
+
+        if((_status.playerState == State.MeleeAttack && _controller.collision.below))
+            velocity.x = Mathf.SmoothDamp(velocity.x, 0, ref velocityXSmoothing, 0.08f);
             
         velocity.y += gravityScale * Time.fixedDeltaTime;
         Vector3 deltaPosition = (prevVelocity + velocity) * 0.5f * Time.fixedDeltaTime;

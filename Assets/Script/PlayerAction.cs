@@ -27,6 +27,7 @@ public class PlayerAction : MonoBehaviour
 
     //Reference
     private PlayerMovement _movement;
+    private PlayerAttack _attack;
     private Controller2D _controller;
     private PlayerStatus _status;
     private BoxCollider2D _collider;
@@ -62,6 +63,7 @@ public class PlayerAction : MonoBehaviour
         _controller = GetComponent<Controller2D>();
         _status = GetComponent<PlayerStatus>();
         _camController = transform.GetChild(0).GetComponent<PlayerCameraController>();
+        _attack = GetComponentInChildren<PlayerAttack>();
 
         //Assigning Event
         jumpEventHandler += Jumping;
@@ -73,47 +75,53 @@ public class PlayerAction : MonoBehaviour
     void Update() {
         if(_manager.currentGameState == gameState.Gameplay) {
             if(_status.playerState != State.Hurt) {
-                if(Input.GetKeyDown(InputManager.actionsMap["attack"])) 
-                    meleeAttackEventHandler?.Invoke(this, new ActionEventArgs {
-                        frameNextAttack = frameToNextAttack
-                    });
-                else if(Input.GetKeyDown(InputManager.actionsMap["attackRanged"]))
-                    rangedAttackEventHandler?.Invoke(this, new ActionEventArgs {
-                        rangedAttackRange = maxAttackRange,
-                        rangedAttackForce = forceRangedAttack,
-                        rangedAttackPenetration = maxPenetration
-                    });
+                if(Input.GetKeyDown(InputManager.actionsMap["attack"])) {
+                    if(_attack.waitingForInput) 
+                        meleeAttackEventHandler?.Invoke(this, new ActionEventArgs {
+                            frameNextAttack = frameToNextAttack
+                        });
+                } 
+                else if(Input.GetKeyDown(InputManager.actionsMap["attackRanged"])) {
+                    if(_attack.waitingForInput && _status.bulletCount > 0) 
+                        rangedAttackEventHandler?.Invoke(this, new ActionEventArgs {
+                            rangedAttackRange = maxAttackRange,
+                            rangedAttackForce = forceRangedAttack,
+                            rangedAttackPenetration = maxPenetration
+                        });
+                } 
                 else {
                     if(_status.playerState == State.Idle || _status.playerState == State.Move) {
-                        if(Input.GetKeyDown(InputManager.actionsMap["rollingDodge"])) 
-                            rollEventHandler?.Invoke(this, new ActionEventArgs {
+                        if(Input.GetKeyDown(InputManager.actionsMap["rollingDodge"])) {
+                            if(_controller.collision.below && _status.currentStamina - staminaUsage >= 0) 
+                                rollEventHandler?.Invoke(this, new ActionEventArgs {
                                 rollSpd = rollingSpeed,
                                 timeRoll = timeToFinishRoll,
                                 stamUsage = staminaUsage,
                                 crouchSpdMul = crouchSpeedMultiplier
                             });
+                        }   
                         else if(Input.GetKeyDown(InputManager.actionsMap["jumpingUp"])) 
                             jumpEventHandler?.Invoke(this, EventArgs.Empty);
-                        else if(Input.GetKeyDown(InputManager.actionsMap["crouchDown"])) {
+                        else if(Input.GetKeyDown(InputManager.actionsMap["crouchDown"]))
                             crouchEventHandler?.Invoke(this, new ActionEventArgs {
                                 crouchSpdMul = crouchSpeedMultiplier
                             });
-                        }
                     }
-                    if(_status.playerState != State.Attack) 
-                        if(Input.GetKey(InputManager.actionsMap["dropDown"])) 
-                            dropDownEventHandler?.Invoke(this, EventArgs.Empty);
+                    if(_status.playerState != State.MeleeAttack && _status.playerState != State.RangedAttack) {
+                        if(Input.GetKey(InputManager.actionsMap["dropDown"])) {
+                            if(_controller.collision.below && _controller.hitPlatform)
+                                dropDownEventHandler?.Invoke(this, EventArgs.Empty);
+                        } 
+                    }         
                 }
             }
         }
     }
 
     void RollingDodge(object sender, PlayerAction.ActionEventArgs e) {
-        if(_controller.collision.below && _status.currentStamina - e.stamUsage >= 0) {
-            _status.playerState = State.Rolling;
-            Crouching(e.crouchSpdMul);
-            StartCoroutine(rollingSequence(e.rollSpd, e.stamUsage, e.timeRoll));
-        }
+        _status.playerState = State.Rolling;
+        Crouching(e.crouchSpdMul);
+        StartCoroutine(rollingSequence(e.rollSpd, e.stamUsage, e.timeRoll));
     }
 
     IEnumerator rollingSequence(float rollSpd, float stamUsage, float timeRoll) {
@@ -166,10 +174,8 @@ public class PlayerAction : MonoBehaviour
     }
 
     void DropDownPlatform(object sender, EventArgs e) {
-        if(_controller.collision.below && _controller.hitPlatform) {
-            _controller.collision.droppingDown = true;
-            if(_status.playerState != State.Rolling)
-                Uncrouching();
-        }
+        _controller.collision.droppingDown = true;
+        if(_status.playerState != State.Rolling)
+            Uncrouching();
     }
 }

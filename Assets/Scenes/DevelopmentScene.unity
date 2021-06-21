@@ -495,10 +495,9 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   waitingForInput: 1
   goingNextPhase: 0
-  isRunning: 0
   attackPhase: 1
   isHurt: 0
-  delayBetweenAttack: 0.25
+  delayBetweenAttack: 0.15
 --- !u!1 &270389662
 GameObject:
   m_ObjectHideFlags: 0
@@ -624,7 +623,7 @@ Transform:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 270389662}
   m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
-  m_LocalPosition: {x: 4.03, y: 12.22, z: 0}
+  m_LocalPosition: {x: 11.05, y: 11.86, z: 0}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_Children: []
   m_Father: {fileID: 0}
@@ -2187,6 +2186,7 @@ GameObject:
   - component: {fileID: 1064879741}
   - component: {fileID: 1064879744}
   - component: {fileID: 1064879742}
+  - component: {fileID: 1064879743}
   m_Layer: 9
   m_Name: cm
   m_TagString: Untagged
@@ -2251,6 +2251,23 @@ MonoBehaviour:
   m_MaximumFOV: 60
   m_MinimumOrthoSize: 1
   m_MaximumOrthoSize: 5000
+--- !u!114 &1064879743
+MonoBehaviour:
+  m_ObjectHideFlags: 3
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1064879740}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 68bb026fafb42b14791938953eaace77, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  m_NoiseProfile: {fileID: 11400000, guid: 69ce8388f6785dd4c8c39915efece2f4, type: 2}
+  m_PivotOffset: {x: 0, y: 0, z: 0}
+  m_AmplitudeGain: 0
+  m_FrequencyGain: 3.5
+  mNoiseOffsets: {x: 0, y: 0, z: 0}
 --- !u!114 &1064879744
 MonoBehaviour:
   m_ObjectHideFlags: 3
@@ -2508,6 +2525,9 @@ MonoBehaviour:
   head: {fileID: 18248074}
   body: {fileID: 893424406}
   _manager: {fileID: 734724929}
+  meleeShakeAmplitude: 2
+  rangedShakeAmplitude: 5
+  CameraFallbackTime: 0.2
 --- !u!1 &1261983795
 GameObject:
   m_ObjectHideFlags: 0
@@ -3818,7 +3838,7 @@ MonoBehaviour:
   playerState: 4
   currentHealth: 0
   currentStamina: 0
-  bulletCount: 5
+  bulletCount: 100
   staminaRegenPerSecond: 4
   debugModeActivated: 1
   isStaminaRegenerating: 0
@@ -3861,7 +3881,7 @@ MonoBehaviour:
   timeToFinishRoll: 0.4
   staminaUsage: 30
   crouchSpeedMultiplier: 0.5
-  frameToNextAttack: 12
+  frameToNextAttack: 15
   maxAttackRange: 25
   maxPenetration: 3
   forceRangedAttack: 13
@@ -4108,7 +4128,7 @@ Transform:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 2033377037}
   m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
-  m_LocalPosition: {x: 2.07, y: 12.01, z: 0}
+  m_LocalPosition: {x: 11.05, y: 11.86, z: 0}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_Children: []
   m_Father: {fileID: 0}
@@ -4239,7 +4259,7 @@ Transform:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 2065264888}
   m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
-  m_LocalPosition: {x: 6.46, y: 12.13, z: 0}
+  m_LocalPosition: {x: 11.05, y: 11.86, z: 0}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_Children: []
   m_Father: {fileID: 0}
@@ -4370,7 +4390,7 @@ Transform:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 2093343534}
   m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
-  m_LocalPosition: {x: 8.71, y: 11.95, z: 0}
+  m_LocalPosition: {x: 11.05, y: 11.86, z: 0}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_Children: []
   m_Father: {fileID: 0}
