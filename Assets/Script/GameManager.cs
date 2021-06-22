@@ -9,7 +9,7 @@ public class GameManager : MonoBehaviour
     public gameState currentGameState;
     void Start()
     {
-        currentGameState = gameState.Gameplay;
+        currentGameState = gameState.Intro;
         Application.targetFrameRate = targetFrameRate;
 
         _dialogue.dialogueInteractEvent += ChangeStateToDialogue;
@@ -29,5 +29,6 @@ public enum gameState {
     Menu,
     Gameplay,
     Dialogue,
-    Ending
+    Ending,
+    Intro
 }

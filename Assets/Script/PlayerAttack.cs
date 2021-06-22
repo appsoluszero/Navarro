@@ -32,7 +32,7 @@ public class PlayerAttack : MonoBehaviour
         _rangedDetection = transform.GetChild(1).GetComponent<AttackDetection>();
         _controller = transform.GetComponentInParent<Controller2D>();
         _playerAnimator = GetComponent<Animator>();
-        _camController = transform.parent.GetComponentInChildren<PlayerCameraController>();
+        _camController = transform.parent.GetChild(0).GetComponent<PlayerCameraController>();
 
         //Assigning Event
         _action.meleeAttackEventHandler += MeleeAttacking;
