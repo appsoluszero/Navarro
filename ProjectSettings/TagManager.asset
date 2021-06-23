@@ -6,6 +6,8 @@ TagManager:
   tags:
   - DialogueTrigger
   - Enemy
+  - Level_Concrete
+  - Level_Dirt
   layers:
   - Default
   - TransparentFX

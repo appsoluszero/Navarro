@@ -15,6 +15,14 @@ public class PlayerAttack : MonoBehaviour
     private PlayerCameraController _camController;
     private Animator _playerAnimator;
 
+    [Header("Sound Effect")]
+    [SerializeField] private AudioSource _audio;
+    [SerializeField] private AudioClip gunshot_SFX;
+
+    [Header("Attack Parameters")]
+    [SerializeField] private float delayBetweenAttack;
+
+    [Header("Backend Attack System (DO NOT TOUCH)")]
     public bool waitingForInput = true;
     [HideInInspector] public bool goingNextPhase = false;
     bool isRunning = false;
@@ -23,7 +31,7 @@ public class PlayerAttack : MonoBehaviour
     float range, force;
     int penetrate;
     public bool isHurt;
-    [SerializeField] private float delayBetweenAttack;
+    
 
     void Start() {
         _status = transform.GetComponentInParent<PlayerStatus>();
@@ -125,6 +133,8 @@ public class PlayerAttack : MonoBehaviour
     public void DetectWeaponRange() {
         _rangedDetection.HitscanCheck(range, penetrate);
         _camController.AttackCameraShake(false);
+        //_audio.clip = gunshot_SFX;
+        _audio.PlayOneShot(gunshot_SFX, 1f);
         if(_status.worldState == State.Floating_Crouch || _status.worldState == State.Floating_Stand)
             _movement.velocity.x = -_controller.collision.faceDir * force;
     }
