@@ -36,7 +36,7 @@ public class Grass : MonoBehaviour
         {
             this.material.SetFloat("_InfulencePower", (playerPos.velocity.x + 0.01f) * infulencePower);
             this.material.SetVector("_PlayerPos", playerPos.transform.position);
-            yield return new WaitForFixedUpdate();
+            yield return new WaitForSeconds(updateFrequency);
         }
     }
 }
