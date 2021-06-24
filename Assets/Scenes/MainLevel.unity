@@ -4124,7 +4124,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   _audio: {fileID: 861694098}
-  gunshot_SFX: {fileID: 8300000, guid: 25e4ea620ee3c7441a7ea28a63fad438, type: 3}
+  gunshot_SFX: {fileID: 8300000, guid: abf441dbd3991a947a76a73155b57746, type: 3}
   delayBetweenAttack: 0.15
   waitingForInput: 1
   goingNextPhase: 0
@@ -4859,10 +4859,10 @@ MonoBehaviour:
   m_ShapeLightFalloffSize: 0.5
   m_ShapeLightFalloffOffset: {x: 0, y: 0}
   m_ShapePath:
-  - {x: 0.47073781, y: -7.525241, z: 0}
-  - {x: 16.802202, y: -7.4181523, z: 0}
-  - {x: 10.817979, y: 2.803018, z: 0}
-  - {x: 5.802491, y: 2.7502966, z: 0}
+  - {x: -5.7884593, y: -8.526712, z: 0}
+  - {x: 50.768772, y: -9.254183, z: 0}
+  - {x: 51.377567, y: 3.1368418, z: 0}
+  - {x: -6.048253, y: 3.417944, z: 0}
 --- !u!4 &1917609786
 Transform:
   m_ObjectHideFlags: 0
