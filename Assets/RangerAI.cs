@@ -30,7 +30,7 @@ public class RangerAI : MonoBehaviour
 
     public float xBoundMultiplier = 1.3f;
     public float fleeSpeed = 1000f;
-    public int fleeDuration = 60;
+    public int fleeDuration = 200;
     public int fleeDurationCount = 0;
     public bool isFleeing = false;
     public float fleeRange = 4f;
@@ -75,19 +75,22 @@ public class RangerAI : MonoBehaviour
         {
             rb.AddForce(Vector2.down * fallingForce);
         }
+        // Detected
         if (TargetInDistance() && followEnabled && !isAttacking && !isShooting)
         {
-            if (!TargetInShootDistance())
+            // Too far
+            if (!TargetInShootDistance() || isFleeing)
             {
                 PathFollow();
             }
-
-            if (TargetInAttackDistance())
+            // Can melee (close range)
+            else if (TargetInAttackDistance())
             {
                 Attack();
                 Flee();
 
             }
+            // Can shoot (normal distance)
             else if (canShoot && shootCooldown == 60)
             {
                 Shoot();

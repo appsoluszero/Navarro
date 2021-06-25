@@ -968,13 +968,13 @@ MonoBehaviour:
   target: {fileID: 1448779387}
   activateDistance: 50
   pathUpdateSeconds: 0.5
-  speed: 200
+  speed: 700
   nextWaypointDistance: 3
   jumpNodeHeightRequirement: 0.8
-  jumpModifier: 0.3
+  jumpModifier: 0.01
   jumpCheckOffset: 0.1
   fallingForce: 10
-  shakeForce: 3
+  shakeForce: 2
   bounds:
     m_Center: {x: 0, y: 0, z: 0}
     m_Extent: {x: 0, y: 0, z: 0}
@@ -984,7 +984,7 @@ MonoBehaviour:
   jumpEnabled: 1
   directionLookEnabled: 1
   isAttacking: 0
-  xBoundMultiplier: 1.3
+  xBoundMultiplier: 1.4
 --- !u!61 &558375744
 BoxCollider2D:
   m_ObjectHideFlags: 0
@@ -1804,7 +1804,7 @@ Transform:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 978663185}
   m_LocalRotation: {x: -0, y: -0, z: -0, w: 1}
-  m_LocalPosition: {x: 23.29, y: -0.21, z: 0}
+  m_LocalPosition: {x: 26.07, y: -0.6, z: 0}
   m_LocalScale: {x: 0.99334, y: 0.99334, z: 0.99334}
   m_Children: []
   m_Father: {fileID: 0}
@@ -1826,29 +1826,36 @@ MonoBehaviour:
   activateDistance: 50
   pathUpdateSeconds: 0.5
   directionLookEnabled: 1
-  speed: 200
+  speed: 700
   nextWaypointDistance: 3
   jumpNodeHeightRequirement: 0.8
-  jumpModifier: 0.3
+  jumpModifier: 0.01
   jumpCheckOffset: 0.1
   fallingForce: 10
-  shakeForce: 3
+  shakeForce: 2
   bounds:
     m_Center: {x: 0, y: 0, z: 0}
     m_Extent: {x: 0, y: 0, z: 0}
   followEnabled: 1
   jumpEnabled: 1
-  xBoundMultiplier: 1.3
+  xBoundMultiplier: 1.4
+  fleeSpeed: 1000
+  fleeDuration: 60
+  fleeDurationCount: 0
+  isFleeing: 0
+  fleeRange: 4
   detectRange: 10
   collisionMask:
     serializedVersion: 2
-    m_Bits: 0
-  attackDistance: 1
-  attackRange: 1
+    m_Bits: 512
+  attackDistance: 2
+  attackRange: 2
   shootDistance: 10
   shootRange: 12
   isAttacking: 0
   isShooting: 0
+  shootCooldown: 60
+  shootCooldownCount: 60
 --- !u!1 &1056227996
 GameObject:
   m_ObjectHideFlags: 0
@@ -3326,7 +3333,7 @@ MonoBehaviour:
   jumpEnabled: 1
   directionLookEnabled: 1
   isAttacking: 0
-  xBoundMultiplier: 1.3
+  xBoundMultiplier: 1.4
 --- !u!50 &6210975841211175020
 Rigidbody2D:
   serializedVersion: 4
