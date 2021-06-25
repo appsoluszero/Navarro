@@ -8,6 +8,7 @@ public class Grass : MonoBehaviour
     private Material material;
     public float updateFrequency = 0.5f;
     public float infulencePower = 0.1f;
+    private Transform body;
 
     // Start is called before the first frame update
     void Start()
@@ -17,6 +18,7 @@ public class Grass : MonoBehaviour
             var player =  GameObject.FindGameObjectWithTag("Player");
             if (player != null) {
                 this.playerPos = player.GetComponent<PlayerMovement>();
+                this.body = this.playerPos.transform.Find("BodyPart");
             }
             else {
                 Debug.LogError("playerPos is not set and cannot find object with tag `Player`");
@@ -28,7 +30,7 @@ public class Grass : MonoBehaviour
     // Update is called once per frame
     void Update()
     {
-        this.material.SetVector("_PlayerPos", playerPos.transform.position);
+        this.material.SetVector("_PlayerPos", this.body.position);
         this.material.SetVector("_PlayerVelocity", playerPos.velocity);
     }
 
