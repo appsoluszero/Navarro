@@ -4,11 +4,9 @@ using UnityEngine;
 
 public class Grass : MonoBehaviour
 {
-    public PlayerMovement playerPos;
+    public Transform playerPos;
     private Material material;
     public float updateFrequency = 0.5f;
-    public float infulencePower = 0.1f;
-    private Transform body;
 
     // Start is called before the first frame update
     void Start()
@@ -17,28 +15,25 @@ public class Grass : MonoBehaviour
         if (this.playerPos == null) {
             var player =  GameObject.FindGameObjectWithTag("Player");
             if (player != null) {
-                this.playerPos = player.GetComponent<PlayerMovement>();
-                this.body = this.playerPos.transform.Find("BodyPart");
+                this.playerPos = player.transform.Find("BodyPart");
             }
             else {
                 Debug.LogError("playerPos is not set and cannot find object with tag `Player`");
             }
         }
-        // StartCoroutine(UpdatePlayerPosRoutine());
+        StartCoroutine(UpdatePlayerPosRoutine());
     }
 
     // Update is called once per frame
     void Update()
     {
-        this.material.SetVector("_PlayerPos", this.body.position);
-        this.material.SetVector("_PlayerVelocity", playerPos.velocity);
     }
 
     IEnumerator UpdatePlayerPosRoutine() {
         while (true)
         {
-            this.material.SetVector("_PlayerPos", playerPos.transform.position);
-            this.material.SetVector("_PlayerVelocity", playerPos.velocity);
+            this.material.SetVector("_PlayerPos", this.playerPos.position);
+            
             yield return new WaitForFixedUpdate();
         }
     }

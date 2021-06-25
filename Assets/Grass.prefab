@@ -97,4 +97,4 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   playerPos: {fileID: 0}
   updateFrequency: 0.2
-  infulencePower: 0.01
+  keepAliveRadius: 2
