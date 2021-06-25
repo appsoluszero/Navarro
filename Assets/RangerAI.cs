@@ -14,13 +14,13 @@ public class RangerAI : MonoBehaviour
     public bool directionLookEnabled = true;
 
     [Header("Physics")]
-    public float speed = 200f;
+    public float speed = 700f;
     public float nextWaypointDistance = 3f;
     public float jumpNodeHeightRequirement = 0.8f;
-    public float jumpModifier = 0.3f;
+    public float jumpModifier = 0.01f;
     public float jumpCheckOffset = 0.1f;
     public float fallingForce = 10f;
-    public float shakeForce = 3f;
+    public float shakeForce = 2f;
 
     public Bounds bounds;
 
@@ -29,6 +29,11 @@ public class RangerAI : MonoBehaviour
     public bool jumpEnabled = true;
 
     public float xBoundMultiplier = 1.3f;
+    public float fleeSpeed = 1000f;
+    public int fleeDuration = 60;
+    public int fleeDurationCount = 0;
+    public bool isFleeing = false;
+    public float fleeRange = 4f;
 
     [Header("Detect Behavior")]
     public float detectRange = 10f;
@@ -41,6 +46,8 @@ public class RangerAI : MonoBehaviour
     public float shootRange = 12f;
     public bool isAttacking = false;
     public bool isShooting = false;
+    public int shootCooldown = 60;
+    public int shootCooldownCount = 60;
 
     private RaycastHit2D canShoot;
 
@@ -59,24 +66,32 @@ public class RangerAI : MonoBehaviour
     private void FixedUpdate()
     {
         bounds = this.GetComponent<BoxCollider2D>().bounds;
-        canShoot = Physics2D.Raycast(this.GetComponent<Transform>().position, target.GetComponent<Transform>().position - this.GetComponent<Transform>().position, shootDistance, collisionMask);
+        canShoot = Physics2D.Raycast(this.GetComponent<Transform>().position, (target.GetComponent<Transform>().position - this.GetComponent<Transform>().position).normalized, shootDistance, collisionMask);
         // print("top: " + TargetOnTop());
         // print("under: " + TargetUnderFeet());
         ShakeOff();
+        Countdown();
         if (!isGrounded)
         {
             rb.AddForce(Vector2.down * fallingForce);
         }
-        if (TargetInDistance() && followEnabled && !isAttacking)
+        if (TargetInDistance() && followEnabled && !isAttacking && !isShooting)
         {
-            PathFollow();
+            if (!TargetInShootDistance())
+            {
+                PathFollow();
+            }
+
             if (TargetInAttackDistance())
             {
                 Attack();
+                Flee();
+
             }
-            else if (canShoot)
+            else if (canShoot && shootCooldown == 60)
             {
                 Shoot();
+                shootCooldownCount = 0;
             }
         }
     }
@@ -108,6 +123,10 @@ public class RangerAI : MonoBehaviour
 
         // Direction Calculation
         Vector2 direction = ((Vector2)path.vectorPath[currentWaypoint] - rb.position).normalized;
+        if (isFleeing)
+        {
+            direction *= -1;
+        }
         Vector2 force = direction * speed * Time.deltaTime;
 
         // Jump
@@ -160,7 +179,7 @@ public class RangerAI : MonoBehaviour
 
     private bool TargetInShootDistance()
     {
-        return Vector2.Distance(transform.position, target.transform.position) <= shootRange;
+        return Vector2.Distance(transform.position, target.transform.position) <= shootDistance;
     }
 
     private bool TargetOnTop()
@@ -235,8 +254,31 @@ public class RangerAI : MonoBehaviour
     {
         print("Shoot");
         isShooting = true;
+        // Shooting stuffs
         StartCoroutine(ShootRoutine());
 
+    }
+
+    private void Flee()
+    {
+        isFleeing = true;
+        fleeDurationCount = 0;
+    }
+
+    private void Countdown()
+    {
+        if (shootCooldownCount < shootCooldown)
+        {
+            shootCooldown++;
+        }
+        if (fleeDurationCount < fleeDuration)
+        {
+            fleeDurationCount++;
+        }
+        if (fleeDurationCount == fleeDuration)
+        {
+            isFleeing = false;
+        }
     }
 
     IEnumerator AttackRoutine()

@@ -11,13 +11,13 @@ public class RunnerAI : MonoBehaviour
     public float pathUpdateSeconds = 0.5f;
 
     [Header("Physics")]
-    public float speed = 200f;
+    public float speed = 700f;
     public float nextWaypointDistance = 3f;
     public float jumpNodeHeightRequirement = 0.8f;
-    public float jumpModifier = 0.3f;
+    public float jumpModifier = 0.01f;
     public float jumpCheckOffset = 0.1f;
     public float fallingForce = 10f;
-    public float shakeForce = 3f;
+    public float shakeForce = 2f;
 
     public Bounds bounds;
 
