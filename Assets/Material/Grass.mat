@@ -68,7 +68,8 @@ Material:
     - Vector1_06928073dadb4a39aff6a12fe6e4e2d1: 0
     - Vector1_3763c86ad63243f3a193ef5b9506347c: 0.2
     - Vector1_a1abee41aac74642a6f68590584e4214: 0.1
-    - Vector1_eae29b5c7b4e42bc810afc7f440d6ba2: 0.001
+    - Vector1_eae29b5c7b4e42bc810afc7f440d6ba2: 0.1
+    - Vector1_eb3b084da07147c499303b4c694f01a0: 0.015
     - _AlphaClip: 0
     - _Blend: 0
     - _Cull: 2
@@ -87,5 +88,6 @@ Material:
     - _Color: {r: 0.5, g: 0.5, b: 0.5, a: 1}
     - _Flip: {r: 1, g: 1, b: 1, a: 1}
     - _PlayerPos: {r: 0, g: 0, b: 0, a: 0}
+    - _PlayerVelocity: {r: 0, g: 0, b: 0, a: 0}
     - _RendererColor: {r: 1, g: 1, b: 1, a: 1}
   m_BuildTextureStacks: []

@@ -22,20 +22,21 @@ public class Grass : MonoBehaviour
                 Debug.LogError("playerPos is not set and cannot find object with tag `Player`");
             }
         }
-        StartCoroutine(UpdatePlayerPosRoutine());
+        // StartCoroutine(UpdatePlayerPosRoutine());
     }
 
     // Update is called once per frame
     void Update()
     {
-        
+        this.material.SetVector("_PlayerPos", playerPos.transform.position);
+        this.material.SetVector("_PlayerVelocity", playerPos.velocity);
     }
 
     IEnumerator UpdatePlayerPosRoutine() {
         while (true)
         {
-            this.material.SetFloat("_InfulencePower", (playerPos.velocity.x + 0.01f) * infulencePower);
             this.material.SetVector("_PlayerPos", playerPos.transform.position);
+            this.material.SetVector("_PlayerVelocity", playerPos.velocity);
             yield return new WaitForFixedUpdate();
         }
     }
