@@ -13,7 +13,7 @@ GameObject:
   - component: {fileID: 7494436881463635509}
   - component: {fileID: 3662866281361216357}
   - component: {fileID: -2383594022320858990}
-  m_Layer: 0
+  m_Layer: 10
   m_Name: Grass
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -101,6 +101,9 @@ MonoBehaviour:
   updateInterval: 1
   keepAliveRadius: 2.5
   staticMaterial: {fileID: 2100000, guid: a97c105638bdf8b4a8650670310a4cd3, type: 2}
+  grassLayer:
+    serializedVersion: 2
+    m_Bits: 1024
 --- !u!61 &3662866281361216357
 BoxCollider2D:
   m_ObjectHideFlags: 0

@@ -38,7 +38,7 @@ Material:
     m_Floats:
     - BOOLEAN_3D4A9595ED3D4FCE8ADA178B81CF2647: 1
     - Vector1_cb6dc4848466489592f1d7c25d0c5bac: 1
-    - Vector1_e4fa182045bd42e4a8450a835ea35d31: 3
+    - Vector1_e4fa182045bd42e4a8450a835ea35d31: 2
     - Vector1_eb3b084da07147c499303b4c694f01a0: 0.8
     m_Colors:
     - _PlayerPos: {r: 0, g: 0, b: 0, a: 0}

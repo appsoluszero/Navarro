@@ -13,6 +13,7 @@ public class Grass : MonoBehaviour
     private Material defaultMat;
     [Tooltip("Material used when grass is not active")]
     public Material staticMaterial;
+    public LayerMask grassLayer;
     private Coroutine updaterRoutine;
 
     // Start is called before the first frame update
@@ -65,8 +66,18 @@ public class Grass : MonoBehaviour
     }
 
     private void OnTriggerEnter2D(Collider2D other) {
-        Debug.Log(other);
-        this.TriggerRoutine();
+        if(other.CompareTag("Player")) {
+            this.TriggerRoutine();
+            var nearbyGrass = Physics2D.OverlapCircleAll(transform.position, keepAliveRadius, grassLayer);
+            foreach (var grass in nearbyGrass)
+            {
+                var grassComponent = grass.GetComponent<Grass>();
+                if(grassComponent == null) {
+                    continue;
+                }
+                grassComponent.TriggerRoutine();
+            }
+        }
     }
 
     private void OnDrawGizmosSelected() {
