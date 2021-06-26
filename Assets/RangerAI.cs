@@ -128,7 +128,9 @@ public class RangerAI : MonoBehaviour
         Vector2 direction = ((Vector2)path.vectorPath[currentWaypoint] - rb.position).normalized;
         if (isFleeing)
         {
+            print("fleeing");
             direction *= -1;
+            print(direction);
         }
         Vector2 force = direction * speed * Time.deltaTime;
 
@@ -272,7 +274,7 @@ public class RangerAI : MonoBehaviour
     {
         if (shootCooldownCount < shootCooldown)
         {
-            shootCooldown++;
+            shootCooldownCount++;
         }
         if (fleeDurationCount < fleeDuration)
         {
@@ -282,6 +284,7 @@ public class RangerAI : MonoBehaviour
         {
             isFleeing = false;
         }
+
     }
 
     IEnumerator AttackRoutine()
