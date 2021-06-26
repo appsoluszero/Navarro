@@ -5,13 +5,21 @@ using UnityEngine;
 public class Grass : MonoBehaviour
 {
     public Transform playerPos;
-    private Material material;
-    public float updateFrequency = 0.5f;
+    private SpriteRenderer sprite;
+    [Tooltip("Number of fixed update between when that the shader sync player postion")]
+    public int updateInterval = 1;
+    [Tooltip("Radius that player has to be nearby for the grass to be consider active")]
+    public float keepAliveRadius = 0.2f;
+    private Material defaultMat;
+    [Tooltip("Material used when grass is not active")]
+    public Material staticMaterial;
+    private Coroutine updaterRoutine;
 
     // Start is called before the first frame update
     void Start()
     {
-        this.material = GetComponent<SpriteRenderer>().material;
+        this.sprite = GetComponent<SpriteRenderer>();
+        this.defaultMat = this.sprite.material;
         if (this.playerPos == null) {
             var player =  GameObject.FindGameObjectWithTag("Player");
             if (player != null) {
@@ -21,7 +29,13 @@ public class Grass : MonoBehaviour
                 Debug.LogError("playerPos is not set and cannot find object with tag `Player`");
             }
         }
-        StartCoroutine(UpdatePlayerPosRoutine());
+        TriggerRoutine();
+    }
+
+    private void TriggerRoutine() {
+        if(updaterRoutine == null) {
+            this.updaterRoutine = StartCoroutine(UpdatePlayerPosRoutine());
+        }
     }
 
     // Update is called once per frame
@@ -30,11 +44,32 @@ public class Grass : MonoBehaviour
     }
 
     IEnumerator UpdatePlayerPosRoutine() {
+        this.sprite.material = this.defaultMat;
+        var mat = this.sprite.material;
         while (true)
         {
-            this.material.SetVector("_PlayerPos", this.playerPos.position);
-            
-            yield return new WaitForFixedUpdate();
+            var pos = this.playerPos.position;
+            mat.SetVector("_PlayerPos", pos);
+
+            if(Vector2.Distance(transform.position, pos) > this.keepAliveRadius) {
+                break;
+            }
+
+            for (int i = 0; i < this.updateInterval; i++)
+            {
+                yield return new WaitForFixedUpdate();   
+            }
         }
+        this.sprite.material = this.staticMaterial;
+        this.updaterRoutine = null;
+    }
+
+    private void OnTriggerEnter2D(Collider2D other) {
+        Debug.Log(other);
+        this.TriggerRoutine();
+    }
+
+    private void OnDrawGizmosSelected() {
+        Gizmos.DrawWireSphere(transform.position, keepAliveRadius);
     }
 }

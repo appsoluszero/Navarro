@@ -22,7 +22,7 @@ Material:
   m_PrefabAsset: {fileID: 0}
   m_Name: WindyGrass
   m_Shader: {fileID: -6465566751694194690, guid: c5e596078c02d33448b4c5e43e241cec, type: 3}
-  m_ShaderKeywords: 
+  m_ShaderKeywords: BOOLEAN_3D4A9595ED3D4FCE8ADA178B81CF2647_ON
   m_LightmapFlags: 4
   m_EnableInstancingVariants: 0
   m_DoubleSidedGI: 0
@@ -65,6 +65,7 @@ Material:
         m_Scale: {x: 1, y: 1}
         m_Offset: {x: 0, y: 0}
     m_Floats:
+    - BOOLEAN_3D4A9595ED3D4FCE8ADA178B81CF2647: 1
     - Vector1_06928073dadb4a39aff6a12fe6e4e2d1: 0.2
     - Vector1_0d9cd8f94f94479dac45823177a3eb07: 0.1
     - Vector1_3763c86ad63243f3a193ef5b9506347c: 0.2
