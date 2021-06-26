@@ -11,8 +11,10 @@ public class PlayerFootstepSound : MonoBehaviour
 
     public void PlayFootStep() {
         RaycastHit2D hit = Physics2D.Raycast(transform.parent.position, Vector2.down, Mathf.Infinity, levelAndPlatformMask);
-        if(hit.transform.gameObject.tag == "Level_Concrete") {
-            _audio.PlayOneShot(footStepConcrete[Random.Range(0, footStepConcrete.Length)], 1f);
+        if(hit) {
+            if(hit.transform.gameObject.CompareTag("Level_Concrete")) {
+                _audio.PlayOneShot(footStepConcrete[Random.Range(0, footStepConcrete.Length)], 1f);
+            }
         }
     }
 }

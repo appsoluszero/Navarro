@@ -76,13 +76,13 @@ public class PlayerAction : MonoBehaviour
         if(_manager.currentGameState == gameState.Gameplay) {
             if(_status.playerState != State.Hurt) {
                 if(Input.GetKeyDown(InputManager.actionsMap["attack"])) {
-                    if(_attack.waitingForInput) 
+                    if(_attack.waitingForInput && _status.playerState != State.RangedAttack) 
                         meleeAttackEventHandler?.Invoke(this, new ActionEventArgs {
                             frameNextAttack = frameToNextAttack
                         });
                 } 
                 else if(Input.GetKeyDown(InputManager.actionsMap["attackRanged"])) {
-                    if(_attack.waitingForInput && _status.bulletCount > 0) 
+                    if(_attack.waitingForInput && _status.bulletCount > 0 && _status.playerState != State.MeleeAttack) 
                         rangedAttackEventHandler?.Invoke(this, new ActionEventArgs {
                             rangedAttackRange = maxAttackRange,
                             rangedAttackForce = forceRangedAttack,

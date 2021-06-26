@@ -600,6 +600,8 @@ PlayableDirector:
     value: {fileID: 1465610244}
   - key: {fileID: -4235819423385289158, guid: 4b6dfb71bed72b5408a373c6bd959e78, type: 2}
     value: {fileID: 1465610244}
+  - key: {fileID: 8211137430188758390, guid: 1241db170b2864842a51126bfbab10e6, type: 2}
+    value: {fileID: 1721856918}
   m_ExposedReferences:
     m_References:
     - fd858477bf3fa1549bcb2c8a55ae611c: {fileID: 847427124}
@@ -1457,8 +1459,8 @@ MonoBehaviour:
   _manager: {fileID: 1594599646}
   jumpHeight: 3
   timeToMaxHeight: 0.35
-  rollingSpeed: 10
-  timeToFinishRoll: 0.4
+  rollingSpeed: 15
+  timeToFinishRoll: 0.5
   staminaUsage: 30
   crouchSpeedMultiplier: 0.5
   frameToNextAttack: 15
@@ -1485,7 +1487,7 @@ MonoBehaviour:
   currentHealth: 0
   currentStamina: 0
   bulletCount: 100
-  staminaRegenPerSecond: 4
+  staminaRegenPerSecond: 10
   debugModeActivated: 1
   isStaminaRegenerating: 0
   waitingForNextTick: 0
@@ -2015,7 +2017,7 @@ Transform:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 915193909}
   m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
-  m_LocalPosition: {x: -50, y: 50, z: -10}
+  m_LocalPosition: {x: 100, y: 50, z: -10}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_Children: []
   m_Father: {fileID: 0}
@@ -3456,7 +3458,7 @@ Transform:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 1465610241}
   m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
-  m_LocalPosition: {x: -50, y: 50, z: 0}
+  m_LocalPosition: {x: 100, y: 50, z: 0}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_Children:
   - {fileID: 119846065}
@@ -3809,6 +3811,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   _dialogue: {fileID: 861694091}
   targetFrameRate: 100
+  isDebugMode: 0
   currentGameState: 0
 --- !u!4 &1594599647
 Transform:
@@ -4142,8 +4145,15 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 8546e2ea8ce2f654cbb218441daf3559, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  _status: {fileID: 861694093}
-  _controller: {fileID: 861694095}
+  rollingSprite:
+  - {fileID: 5931365568400398091, guid: 51d4331e971189844a601f438a464db0, type: 3}
+  - {fileID: -468465718263242241, guid: 51d4331e971189844a601f438a464db0, type: 3}
+  - {fileID: -3344906359314192158, guid: 51d4331e971189844a601f438a464db0, type: 3}
+  - {fileID: -5247850893332071786, guid: 51d4331e971189844a601f438a464db0, type: 3}
+  - {fileID: -6086890860381304025, guid: 51d4331e971189844a601f438a464db0, type: 3}
+  - {fileID: -8241738784841091196, guid: 51d4331e971189844a601f438a464db0, type: 3}
+  - {fileID: 2087505350031710860, guid: 51d4331e971189844a601f438a464db0, type: 3}
+  rollingFrame: 15
   targetCheckFrame: 4
 --- !u!95 &1643544054
 Animator:
@@ -4429,12 +4439,12 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   textEachLine:
-  - LabOS V0.92
+  - VenturiusOS V0.92
   - 'OPERATION : Pest Control'
   - 'Objective : Retrieve sample HR-452'
   - 'Subject : Codename ''Lunette'''
   - 'EXCEPTION : DataInvalidException'
-  - (LabOS_DateAndTime.cs, 426)
+  - (VenturiusOS_DateAndTime.cs, 426)
   - '*** DATA CORRUPTED ***'
   - Please contact the administrator
   timeEachLetter: 0.07
@@ -4461,12 +4471,27 @@ MonoBehaviour:
   m_Events:
     m_Signals:
     - {fileID: 11400000, guid: 16823873830ad4043865a138c9abd952, type: 2}
+    - {fileID: 11400000, guid: 4d13c85d525ce4b4ca7c1d0a800a4c68, type: 2}
     m_Events:
     - m_PersistentCalls:
         m_Calls:
         - m_Target: {fileID: 1721856916}
           m_TargetAssemblyTypeName: IntroText_Sequence, Assembly-CSharp
           m_MethodName: StartIntroText
+          m_Mode: 1
+          m_Arguments:
+            m_ObjectArgument: {fileID: 0}
+            m_ObjectArgumentAssemblyTypeName: UnityEngine.Object, UnityEngine
+            m_IntArgument: 0
+            m_FloatArgument: 0
+            m_StringArgument: 
+            m_BoolArgument: 0
+          m_CallState: 2
+    - m_PersistentCalls:
+        m_Calls:
+        - m_Target: {fileID: 1721856916}
+          m_TargetAssemblyTypeName: IntroText_Sequence, Assembly-CSharp
+          m_MethodName: StopIntroText
           m_Mode: 1
           m_Arguments:
             m_ObjectArgument: {fileID: 0}
@@ -4536,10 +4561,10 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   m_LightType: 4
-  m_BlendStyleIndex: 0
+  m_BlendStyleIndex: 1
   m_FalloffIntensity: 0.5
   m_Color: {r: 0.007843138, g: 0.007843138, b: 0.007843138, a: 1}
-  m_Intensity: 1
+  m_Intensity: 1.5
   m_LightVolumeOpacity: 0
   m_ApplyToSortingLayers: 00000000
   m_LightCookieSprite: {fileID: 0}

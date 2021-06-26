@@ -32,11 +32,13 @@ public class PlayerStatus : MonoBehaviour
 
     [HideInInspector] public bool isStaminaRegenerating, waitingForNextTick;
     private Animator _playerAnimation;
+    private Controller2D _controller;
 
     void Start() {
         currentHealth = maxPlayerHealth;
         currentStamina = maxStamina;
         _playerAnimation = transform.GetChild(2).GetComponent<Animator>();
+        _controller = GetComponent<Controller2D>();
         GetComponent<PlayerAction>().staminaHandler += DecreaseStamina;
     }
 
@@ -91,6 +93,8 @@ public class PlayerStatus : MonoBehaviour
         _manager.currentGameState = gameState.Ending;
         _playerAnimation.Play("Dying");
         transform.GetChild(3).gameObject.SetActive(true);
+        transform.GetChild(3).localScale = new Vector3(_controller.collision.faceDir, 1f, 1f);
+        transform.GetChild(4).gameObject.SetActive(true);
     }
 }
 
