@@ -99,7 +99,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   playerPos: {fileID: 0}
   updateInterval: 1
-  keepAliveRadius: 2
+  keepAliveRadius: 2.5
   staticMaterial: {fileID: 2100000, guid: a97c105638bdf8b4a8650670310a4cd3, type: 2}
 --- !u!61 &3662866281361216357
 BoxCollider2D:
