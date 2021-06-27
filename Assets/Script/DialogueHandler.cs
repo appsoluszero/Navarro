@@ -16,9 +16,14 @@ public class DialogueHandler : MonoBehaviour
     [SerializeField] private Image characterSprite;
 
     [Header("Dialogue")]
-    public DialogueData currentDialogueSet;
     [SerializeField] private int currentPage = 1;
-    public event EventHandler dialogueInteractEvent;
+
+    public class dialogueDataEventArgs : EventArgs {
+        public DialogueData dialogue;
+    }
+    public dialogueDataEventArgs dialogueEventArgs;
+
+    public event EventHandler<dialogueDataEventArgs> dialogueInteractEvent;
     public event EventHandler dialogueUninteractEvent;
     private PlayerCameraController _camController;
     
@@ -26,28 +31,32 @@ public class DialogueHandler : MonoBehaviour
         _camController = transform.GetChild(0).GetComponent<PlayerCameraController>();
         dialogueInteractEvent += enableDialogue;
         dialogueUninteractEvent += disableDialogue;
+        dialogueEventArgs = new dialogueDataEventArgs();
     }
 
     void Update() {
         if(_manager.currentGameState == gameState.Dialogue && Input.GetKeyDown(KeyCode.E)) {
-            CallEvent();
+            CallEvent(null);
         }
     }
 
-    public void CallEvent() {
-        dialogueInteractEvent?.Invoke(this, EventArgs.Empty);
+    public void CallEvent(DialogueData thisData) {
+        if(thisData != null) {
+            dialogueEventArgs.dialogue = thisData;
+        }
+        dialogueInteractEvent?.Invoke(this, dialogueEventArgs);
     }
 
-    void enableDialogue(object sender, EventArgs e) {
+    void enableDialogue(object sender, dialogueDataEventArgs e) {
         dialogueUI.Play("DialogueUI_FadeIn");
         gameplayUI.Play("GameplayUI_FadeOut");
         dialogueInteractEvent -= enableDialogue;
         dialogueInteractEvent -= _camController.DialogueStateCamera;
         dialogueInteractEvent += updateDialogue;
         currentPage = 1;
-        speakerName.text = currentDialogueSet.speaker[currentDialogueSet.data[currentPage-1].speaker-1].name;
-        textContent.text = currentDialogueSet.data[currentPage-1].text;
-        characterSprite.sprite = currentDialogueSet.speaker[currentDialogueSet.data[currentPage-1].speaker-1].sprite;
+        speakerName.text = e.dialogue.speaker[e.dialogue.data[currentPage-1].speaker-1].name;
+        textContent.text = e.dialogue.data[currentPage-1].text;
+        characterSprite.sprite = e.dialogue.speaker[e.dialogue.data[currentPage-1].speaker-1].sprite;
     }
 
     void disableDialogue(object sender, EventArgs e) {
@@ -58,23 +67,22 @@ public class DialogueHandler : MonoBehaviour
         dialogueInteractEvent += _camController.DialogueStateCamera;
     }
 
-    void updateDialogue(object sender, EventArgs e) {
-        if(currentPage == currentDialogueSet.data.Length) {
+    void updateDialogue(object sender, dialogueDataEventArgs e) {
+        if(currentPage == e.dialogue.data.Length) {
             dialogueUninteractEvent?.Invoke(this, EventArgs.Empty);
         }
         else {
             currentPage++;
-            currentPage = Mathf.Clamp(currentPage, 1, currentDialogueSet.data.Length);
-            speakerName.text = currentDialogueSet.speaker[currentDialogueSet.data[currentPage-1].speaker-1].name;
-            textContent.text = currentDialogueSet.data[currentPage-1].text;
-            characterSprite.sprite = currentDialogueSet.speaker[currentDialogueSet.data[currentPage-1].speaker-1].sprite;
+            currentPage = Mathf.Clamp(currentPage, 1, e.dialogue.data.Length);
+            speakerName.text = e.dialogue.speaker[e.dialogue.data[currentPage-1].speaker-1].name;
+            textContent.text = e.dialogue.data[currentPage-1].text;
+            characterSprite.sprite = e.dialogue.speaker[e.dialogue.data[currentPage-1].speaker-1].sprite;
         }
     }
 
     void OnTriggerEnter2D(Collider2D col) {
         if(col.gameObject.tag == "DialogueTrigger") {
-            currentDialogueSet = col.GetComponent<DialogueTrigger>().thisData;
-            CallEvent();
+            CallEvent(col.transform.GetComponent<DialogueTrigger>().thisData);
             Destroy(col.gameObject);
         }
     }

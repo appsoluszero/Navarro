@@ -6,6 +6,7 @@ using UnityEngine.UI;
 
 public class PlayerStatus : MonoBehaviour
 {
+    [SerializeField] private GameManager _manager;
     [Header("Player Base Status")]
     public int maxPlayerHealth = 5;
     public float maxStamina = 20;
@@ -15,6 +16,7 @@ public class PlayerStatus : MonoBehaviour
     public State playerState = State.Idle;
     public int currentHealth;
     public float currentStamina;
+    public int bulletCount = 5;
 
     [Header("Status Parameters")]
     public float staminaRegenPerSecond = 2f;
@@ -27,21 +29,30 @@ public class PlayerStatus : MonoBehaviour
         public float staminaUse;
     }
 
+    [SerializeField] private bool debugModeActivated;
+
     [HideInInspector] public bool isStaminaRegenerating, waitingForNextTick;
+    private Animator _playerAnimation;
+    private Controller2D _controller;
 
     void Start()
     {
         currentHealth = maxPlayerHealth;
         currentStamina = maxStamina;
+        _playerAnimation = transform.GetChild(2).GetComponent<Animator>();
+        _controller = GetComponent<Controller2D>();
         GetComponent<PlayerAction>().staminaHandler += DecreaseStamina;
     }
-
     void Update()
     {
-        if (Input.GetKeyDown(KeyCode.Keypad1))
-            DecreaseHealth(1);
-        else if (Input.GetKeyDown(KeyCode.Keypad2))
-            IncreaseHealth(1);
+        if (debugModeActivated)
+        {
+            if (Input.GetKeyDown(KeyCode.Keypad1))
+            {
+                DecreaseHealth(1);
+            }
+        }
+
     }
 
     void FixedUpdate()
@@ -52,16 +63,20 @@ public class PlayerStatus : MonoBehaviour
         }
     }
 
+
     public void DecreaseHealth(int amt)
     {
         if (currentHealth > 0)
         {
             healthDecreaseHandler?.Invoke(this, new StatChangeEventArgs
             {
+
                 healthUse = amt
             });
         }
         currentHealth = Mathf.Clamp(currentHealth - amt, 0, maxPlayerHealth);
+        if (currentHealth == 0)
+            PlayerDieEvent();
     }
 
     void IncreaseHealth(int amt)
@@ -77,15 +92,30 @@ public class PlayerStatus : MonoBehaviour
     }
 
 
-
     void DecreaseStamina(object sender, StatChangeEventArgs e)
     {
+
         isStaminaRegenerating = false;
         staminaDecreaseHandler?.Invoke(this, new StatChangeEventArgs
         {
             staminaUse = e.staminaUse
         });
         currentStamina = Mathf.Clamp(currentStamina - e.staminaUse, 0, maxStamina);
+    }
+
+    public void DecreaseBullet()
+    {
+        bulletCount--;
+    }
+
+    void PlayerDieEvent()
+    {
+        GetComponent<PlayerStatus>().playerState = State.Death;
+        _manager.currentGameState = gameState.Ending;
+        _playerAnimation.Play("Dying");
+        transform.GetChild(3).gameObject.SetActive(true);
+        transform.GetChild(3).localScale = new Vector3(_controller.collision.faceDir, 1f, 1f);
+        transform.GetChild(4).gameObject.SetActive(true);
     }
 }
 
@@ -97,6 +127,9 @@ public enum State
     Floating_Crouch,
     Idle,
     Move,
-    Attack,
-    Rolling
+    Rolling,
+    Death,
+    Hurt,
+    MeleeAttack,
+    RangedAttack
 }

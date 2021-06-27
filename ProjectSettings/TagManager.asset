@@ -6,6 +6,8 @@ TagManager:
   tags:
   - DialogueTrigger
   - Enemy
+  - Level_Concrete
+  - Level_Dirt
   layers:
   - Default
   - TransparentFX
@@ -42,4 +44,7 @@ TagManager:
   m_SortingLayers:
   - name: Default
     uniqueID: 0
+    locked: 0
+  - name: Death_Background
+    uniqueID: 3334731779
     locked: 0
