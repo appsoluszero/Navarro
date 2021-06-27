@@ -49,7 +49,6 @@ public class RangerAI : MonoBehaviour
     public int shootCooldown = 60;
     public int shootCooldownCount = 60;
     public float bulletForce = 10f;
-    List<GameObject> bulletList = new List<GameObject>();
 
     private RaycastHit2D canShoot;
 
@@ -73,39 +72,47 @@ public class RangerAI : MonoBehaviour
         // print("under: " + TargetUnderFeet());
         ShakeOff();
         Countdown();
+        // If floating >> get on the ground
         if (!isGrounded)
         {
             rb.AddForce(Vector2.down * fallingForce);
         }
+        // If player gets too close, go into fleeing mode
         if (TargetInFleeRange() && !isFleeing)
         {
             Flee();
         }
+        // If distance is okay, stop fleeing
         if (TargetDistance() >= shootDistance)
         {
             isFleeing = false;
             fleeDurationCount = fleeDuration;
         }
-        // Detected
-        if (TargetInDistance() && followEnabled && !isAttacking && !isShooting)
+        // Detected player
+        if (TargetInDistance() && followEnabled)
         {
+            // If not attacking
+            if (!isAttacking && !isShooting)
+            {
+                // Can melee (close range)
+                if (TargetInAttackDistance())
+                {
+                    Attack();
+                    Flee();
+
+                }
+                // Can shoot (normal distance)
+                else if (canShoot && shootCooldown == 60)
+                {
+                    Shoot();
+                    shootCooldownCount = 0;
+                }
+            }
+
             // Walk if target out of range for shoot OR need to flee
-            if (!TargetInShootDistance() || isFleeing)
+            if ((!TargetInShootDistance() || isFleeing) && !isAttacking && !isShooting)
             {
                 PathFollow();
-            }
-            // Can melee (close range)
-            else if (TargetInAttackDistance())
-            {
-                Attack();
-                Flee();
-
-            }
-            // Can shoot (normal distance)
-            else if (canShoot && shootCooldown == 60)
-            {
-                Shoot();
-                shootCooldownCount = 0;
             }
         }
     }
@@ -144,15 +151,15 @@ public class RangerAI : MonoBehaviour
             // if target is right
             if (target.position.x > this.transform.position.x)
             {
-                direction = Vector2.left;
+                direction = -transform.right;
             }
             else if (target.position.x < this.transform.position.x)
             {
-                direction = Vector2.right;
+                direction = transform.right;
             }
         }
 
-        Vector2 force = direction * speed * Time.deltaTime;
+        Vector2 force = direction * speed;
 
 
 
@@ -168,7 +175,8 @@ public class RangerAI : MonoBehaviour
         // Movement
         if (!(TargetDistance() >= shootDistance && isFleeing))
         {
-            rb.AddForce(force);
+            //rb.AddForce(force);
+            rb.velocity = force;
         }
 
 
@@ -303,31 +311,17 @@ public class RangerAI : MonoBehaviour
         Vector2 bulletSpawnPosition = this.transform.position;
         bulletSpawnPosition.y += 1;
         GameObject bulletObject = Instantiate(this.transform.GetChild(0).gameObject, bulletSpawnPosition, new Quaternion());
-        bulletList.Add(bulletObject);
 
         Vector2 force = TargetDirection() * bulletForce * Time.deltaTime;
         bulletObject.GetComponent<Rigidbody2D>().AddForce(force, ForceMode2D.Impulse);
-
 
         StartCoroutine(ShootRoutine(bulletObject));
 
     }
 
-    private void BulletCheck()
-    {
-        for (int i = 0; i < bulletList.Count; i++)
-        {
-            if (bulletList[i].GetComponent<Collider2D>().isTrigger == true)
-            {
-                Destroy(bulletList[i]);
-                bulletList.Remove(bulletList[i]);
-                i--;
-            }
-        }
-    }
-
     private void Flee()
     {
+
         isFleeing = true;
         fleeDurationCount = 0;
     }
@@ -377,7 +371,6 @@ public class RangerAI : MonoBehaviour
         }
         isAttacking = false;
     }
-
 
     IEnumerator ShootRoutine(GameObject bulletObject)
     {

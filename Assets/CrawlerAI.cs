@@ -54,10 +54,7 @@ public class CrawlerAI : MonoBehaviour
         // print("top: " + TargetOnTop());
         // print("under: " + TargetUnderFeet());
         ShakeOff();
-        if (!isGrounded)
-        {
-            rb.AddForce(Vector2.down * fallingForce);
-        }
+
         if (TargetInDistance() && followEnabled && !isAttacking)
         {
             PathFollow();
@@ -97,17 +94,9 @@ public class CrawlerAI : MonoBehaviour
         Vector2 direction = ((Vector2)path.vectorPath[currentWaypoint] - rb.position).normalized;
         Vector2 force = direction * speed * Time.deltaTime;
 
-        // Jump
-        if (jumpEnabled && isGrounded)
-        {
-            if (direction.y > jumpNodeHeightRequirement)
-            {
-                rb.AddForce(Vector2.up * speed * jumpModifier, ForceMode2D.Impulse);
-            }
-        }
-
         // Movement
-        rb.AddForce(force);
+        //rb.AddForce(force);
+        rb.velocity = force;
 
         // Next Waypoint
         float distance = Vector2.Distance(rb.position, path.vectorPath[currentWaypoint]);
