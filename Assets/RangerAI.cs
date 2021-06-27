@@ -48,6 +48,8 @@ public class RangerAI : MonoBehaviour
     public bool isShooting = false;
     public int shootCooldown = 60;
     public int shootCooldownCount = 60;
+    public float bulletForce = 10f;
+    List<GameObject> bulletList = new List<GameObject>();
 
     private RaycastHit2D canShoot;
 
@@ -75,10 +77,19 @@ public class RangerAI : MonoBehaviour
         {
             rb.AddForce(Vector2.down * fallingForce);
         }
+        if (TargetInFleeRange() && !isFleeing)
+        {
+            Flee();
+        }
+        if (TargetDistance() >= shootDistance)
+        {
+            isFleeing = false;
+            fleeDurationCount = fleeDuration;
+        }
         // Detected
         if (TargetInDistance() && followEnabled && !isAttacking && !isShooting)
         {
-            // Too far
+            // Walk if target out of range for shoot OR need to flee
             if (!TargetInShootDistance() || isFleeing)
             {
                 PathFollow();
@@ -126,13 +137,24 @@ public class RangerAI : MonoBehaviour
 
         // Direction Calculation
         Vector2 direction = ((Vector2)path.vectorPath[currentWaypoint] - rb.position).normalized;
+
+        // Flee Mechanics
         if (isFleeing)
         {
-            print("fleeing");
-            direction *= -1;
-            print(direction);
+            // if target is right
+            if (target.position.x > this.transform.position.x)
+            {
+                direction = Vector2.left;
+            }
+            else if (target.position.x < this.transform.position.x)
+            {
+                direction = Vector2.right;
+            }
         }
+
         Vector2 force = direction * speed * Time.deltaTime;
+
+
 
         // Jump
         if (jumpEnabled && isGrounded)
@@ -144,7 +166,11 @@ public class RangerAI : MonoBehaviour
         }
 
         // Movement
-        rb.AddForce(force);
+        if (!(TargetDistance() >= shootDistance && isFleeing))
+        {
+            rb.AddForce(force);
+        }
+
 
         // Next Waypoint
         float distance = Vector2.Distance(rb.position, path.vectorPath[currentWaypoint]);
@@ -167,6 +193,10 @@ public class RangerAI : MonoBehaviour
         }
     }
 
+    private float TargetDistance()
+    {
+        return Vector2.Distance(transform.position, target.transform.position);
+    }
     private bool TargetInDistance()
     {
         return Vector2.Distance(transform.position, target.transform.position) < activateDistance;
@@ -185,6 +215,16 @@ public class RangerAI : MonoBehaviour
     private bool TargetInShootDistance()
     {
         return Vector2.Distance(transform.position, target.transform.position) <= shootDistance;
+    }
+
+    private bool TargetInFleeRange()
+    {
+        return Vector2.Distance(transform.position, target.transform.position) <= fleeRange;
+    }
+
+    private Vector2 TargetDirection()
+    {
+        return (((Vector2)target.position - rb.position)).normalized;
     }
 
     private bool TargetOnTop()
@@ -260,8 +300,30 @@ public class RangerAI : MonoBehaviour
         print("Shoot");
         isShooting = true;
         // Shooting stuffs
-        StartCoroutine(ShootRoutine());
+        Vector2 bulletSpawnPosition = this.transform.position;
+        bulletSpawnPosition.y += 1;
+        GameObject bulletObject = Instantiate(this.transform.GetChild(0).gameObject, bulletSpawnPosition, new Quaternion());
+        bulletList.Add(bulletObject);
 
+        Vector2 force = TargetDirection() * bulletForce * Time.deltaTime;
+        bulletObject.GetComponent<Rigidbody2D>().AddForce(force, ForceMode2D.Impulse);
+
+
+        StartCoroutine(ShootRoutine(bulletObject));
+
+    }
+
+    private void BulletCheck()
+    {
+        for (int i = 0; i < bulletList.Count; i++)
+        {
+            if (bulletList[i].GetComponent<Collider2D>().isTrigger == true)
+            {
+                Destroy(bulletList[i]);
+                bulletList.Remove(bulletList[i]);
+                i--;
+            }
+        }
     }
 
     private void Flee()
@@ -317,11 +379,13 @@ public class RangerAI : MonoBehaviour
     }
 
 
-    IEnumerator ShootRoutine()
+    IEnumerator ShootRoutine(GameObject bulletObject)
     {
         yield return new WaitForSeconds(1f);
         // Add somrthing here
         isShooting = false;
+        yield return new WaitForSeconds(5f);
+        Destroy(bulletObject);
     }
 
 }
