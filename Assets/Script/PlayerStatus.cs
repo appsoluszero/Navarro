@@ -92,9 +92,9 @@ public class PlayerStatus : MonoBehaviour
         GetComponent<PlayerStatus>().playerState = State.Death;
         _manager.currentGameState = gameState.Ending;
         _playerAnimation.Play("Dying");
-        transform.GetChild(3).gameObject.SetActive(true);
-        transform.GetChild(3).localScale = new Vector3(_controller.collision.faceDir, 1f, 1f);
         transform.GetChild(4).gameObject.SetActive(true);
+        transform.GetChild(4).localScale = new Vector3(_controller.collision.faceDir, 1f, 1f);
+        transform.GetChild(5).gameObject.SetActive(true);
     }
 }
 
