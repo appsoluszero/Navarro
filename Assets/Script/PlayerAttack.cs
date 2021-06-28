@@ -14,6 +14,7 @@ public class PlayerAttack : MonoBehaviour
     private AttackDetection _rangedDetection;
     private PlayerCameraController _camController;
     private Animator _playerAnimator;
+    private BulletEffect _bulletEffect;
 
     [Header("Sound Effect")]
     [SerializeField] private AudioSource _audio;
@@ -41,6 +42,7 @@ public class PlayerAttack : MonoBehaviour
         _controller = transform.GetComponentInParent<Controller2D>();
         _playerAnimator = GetComponent<Animator>();
         _camController = transform.parent.GetChild(0).GetComponent<PlayerCameraController>();
+        _bulletEffect = GetComponent<BulletEffect>();
 
         //Assigning Event
         _action.meleeAttackEventHandler += MeleeAttacking;
@@ -117,17 +119,19 @@ public class PlayerAttack : MonoBehaviour
         force = e.rangedAttackForce;
         range = e.rangedAttackRange;
         penetrate = e.rangedAttackPenetration;
-        waitingForInput = false;
-        _status.playerState = State.RangedAttack;
-        _status.DecreaseBullet();
-        if(_status.worldState == State.Stand) 
-            _playerAnimator.Play("RangedAttack_Stand");
-        else if(_status.worldState == State.Crouch)
-            _playerAnimator.Play("RangedAttack_Crouch");
-        else if(_status.worldState == State.Floating_Stand) 
-            _playerAnimator.Play("RangedAttack_FloatStand");
-        else 
-            _playerAnimator.Play("RangedAttack_FloatCrouch");
+        if(_status.playerState == State.Idle || _status.playerState == State.Move) {
+            waitingForInput = false;
+            _status.playerState = State.RangedAttack;
+            _status.DecreaseBullet();
+            if(_status.worldState == State.Stand) 
+                _playerAnimator.Play("RangedAttack_Stand");
+            else if(_status.worldState == State.Crouch)
+                _playerAnimator.Play("RangedAttack_Crouch");
+            else if(_status.worldState == State.Floating_Stand) 
+                _playerAnimator.Play("RangedAttack_FloatStand");
+            else 
+                _playerAnimator.Play("RangedAttack_FloatCrouch");
+        }
     }
 
     public void DetectWeaponRange() {
@@ -135,6 +139,7 @@ public class PlayerAttack : MonoBehaviour
         _camController.AttackCameraShake(false);
         //_audio.clip = gunshot_SFX;
         _audio.PlayOneShot(gunshot_SFX, 1f);
+        _bulletEffect.SpawnBulletShell(1);
         if(_status.worldState == State.Floating_Crouch || _status.worldState == State.Floating_Stand)
             _movement.velocity.x = -_controller.collision.faceDir * force;
     }

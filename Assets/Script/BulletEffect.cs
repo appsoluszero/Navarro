@@ -6,31 +6,20 @@ public class BulletEffect : MonoBehaviour
 {
     public ParticleSystem bulletShell;
     public Transform spawnPoint;
-    private Transform spriteTransform;
+    [SerializeField] private bool isDebug;
 
-    // Start is called before the first frame update
-    void Start()
-    {
-        this.spriteTransform = transform.Find("Sprite");
-        if(this.spriteTransform == null) {
-            Debug.LogError("Cannot find child object named `Sprite`");
+    void Update() {
+        if(isDebug) {
+            if(Input.GetMouseButtonDown(0)) {
+                SpawnBulletShell(1);
+            }
         }
     }
-
-    // Update is called once per frame
-    void Update()
-    {
-        // code for testing
-        if (Input.GetMouseButtonDown(0))
-        {
-            SpawnBulletShell(1);
-        }
-    }
-
-    
+ 
     public void SpawnBulletShell(int count = 1) {
+        print("test");
         var lookDir = this.spawnPoint.right;
-        lookDir.x *= this.spriteTransform.localScale.x;
+        lookDir.x *= transform.parent.localScale.x;
         var rotation = Quaternion.FromToRotation(Vector2.right, lookDir);
         var bulletParticle = Instantiate(this.bulletShell, this.spawnPoint.position, rotation);
         bulletParticle.Emit(count);
