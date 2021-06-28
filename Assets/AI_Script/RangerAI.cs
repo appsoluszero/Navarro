@@ -37,7 +37,8 @@ public class RangerAI : MonoBehaviour
 
     [Header("Detect Behavior")]
     public float detectRange = 10f;
-    public LayerMask collisionMask;
+    public LayerMask playerCollisionMask;
+    public LayerMask wallCollisionMask;
 
     [Header("Attack Behavior")]
     public float attackDistance = 1f;
@@ -50,7 +51,9 @@ public class RangerAI : MonoBehaviour
     public int shootCooldownCount = 60;
     public float bulletForce = 10f;
 
-    private RaycastHit2D canShoot;
+    private bool canShoot;
+    private RaycastHit2D hitPlayer;
+    private RaycastHit2D hitWall;
 
     RaycastHit2D isGrounded;
     Seeker seeker;
@@ -67,7 +70,7 @@ public class RangerAI : MonoBehaviour
     private void FixedUpdate()
     {
         bounds = this.GetComponent<BoxCollider2D>().bounds;
-        canShoot = Physics2D.Raycast(this.GetComponent<Transform>().position, (target.GetComponent<Transform>().position - this.GetComponent<Transform>().position).normalized, shootDistance, collisionMask);
+        CheckShoot();
         // print("top: " + TargetOnTop());
         // print("under: " + TargetUnderFeet());
         ShakeOff();
@@ -342,6 +345,38 @@ public class RangerAI : MonoBehaviour
         }
 
     }
+
+    private void CheckShoot()
+    {
+        hitPlayer = Physics2D.Raycast(this.GetComponent<Transform>().position, (target.GetComponent<Transform>().position - this.GetComponent<Transform>().position).normalized, shootDistance, playerCollisionMask);
+        hitWall = Physics2D.Raycast(this.GetComponent<Transform>().position, (target.GetComponent<Transform>().position - this.GetComponent<Transform>().position).normalized, shootDistance, wallCollisionMask);
+
+
+        if (hitPlayer && !hitWall)
+        {
+            canShoot = true;
+        }
+
+        else if (hitPlayer && hitWall)
+        {
+            float distancePlayerHit = ((Vector2)(hitWall.transform.position - this.transform.position)).magnitude;
+            float distanceWallHit = ((Vector2)(hitWall.transform.position - this.transform.position)).magnitude;
+            if (distancePlayerHit > distanceWallHit)
+            {
+                canShoot = false;
+            }
+            else if (distancePlayerHit < distanceWallHit)
+            {
+                canShoot = true;
+            }
+        }
+        else
+        {
+            canShoot = false;
+        }
+    }
+
+
 
     IEnumerator AttackRoutine()
     {
