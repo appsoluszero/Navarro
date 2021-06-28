@@ -11,6 +11,7 @@ public class IntroSequence_Start : MonoBehaviour
     [SerializeField] private PlayableDirector _director;
     [SerializeField] private PlayableAsset lastSequence;
     [SerializeField] private Transform playerTransform;
+    [SerializeField] private AudioSource _audioSource;
 
     public void ActuallyStarting() {
         _manager.currentGameState = gameState.Gameplay;
@@ -20,6 +21,7 @@ public class IntroSequence_Start : MonoBehaviour
         playerTransform.GetChild(0).gameObject.SetActive(true);
         spawnRoom.SetActive(false);
         transform.gameObject.SetActive(false);
+        _audioSource.Play();
     }
 
     public void ChangeToLastSequence() {
