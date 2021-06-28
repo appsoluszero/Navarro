@@ -6,6 +6,8 @@ public class BulletEffect : MonoBehaviour
 {
     public ParticleSystem bulletShell;
     public Transform spawnPoint;
+    public LineRenderer traceLine;
+    public LayerMask traceLayer;
     [SerializeField] private bool isDebug;
     private Controller2D controller2D;
 
@@ -17,10 +19,11 @@ public class BulletEffect : MonoBehaviour
         if(isDebug) {
             if(Input.GetMouseButtonDown(0)) {
                 SpawnBulletShell(1);
+                SpawnBulletTrace(transform.position, transform.position + new Vector3(1, 1, 0));
             }
         }
     }
- 
+    
     public void SpawnBulletShell(int count = 1) {
         print("test");
         var dir = this.controller2D.collision.faceDir;
@@ -35,5 +38,11 @@ public class BulletEffect : MonoBehaviour
 
         var bulletParticle = Instantiate(this.bulletShell, pos, rotation);
         bulletParticle.Emit(count);
+    }
+
+    public void SpawnBulletTrace(Vector2 start, Vector2 stop) {
+        var line = Instantiate(this.traceLine);
+        line.SetPosition(0, start);
+        line.SetPosition(1, stop);
     }
 }
