@@ -13,6 +13,7 @@ public class PlayerAttack : MonoBehaviour
     private Controller2D _controller;
     private AttackDetection _rangedDetection;
     private PlayerCameraController _camController;
+    private StatusHandler _statusUI;
     private Animator _playerAnimator;
     private BulletEffect _bulletEffect;
 
@@ -43,6 +44,7 @@ public class PlayerAttack : MonoBehaviour
         _playerAnimator = GetComponent<Animator>();
         _camController = transform.parent.GetChild(0).GetComponent<PlayerCameraController>();
         _bulletEffect = GetComponent<BulletEffect>();
+        _statusUI = transform.parent.GetComponent<StatusHandler>();
 
         //Assigning Event
         _action.meleeAttackEventHandler += MeleeAttacking;
@@ -140,6 +142,7 @@ public class PlayerAttack : MonoBehaviour
         //_audio.clip = gunshot_SFX;
         _audio.PlayOneShot(gunshot_SFX, 1f);
         _bulletEffect.SpawnBulletShell(1);
+        _statusUI.UpdateBullet();
         if(_status.worldState == State.Floating_Crouch || _status.worldState == State.Floating_Stand)
             _movement.velocity.x = -_controller.collision.faceDir * force;
     }
