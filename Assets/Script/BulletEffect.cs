@@ -7,8 +7,13 @@ public class BulletEffect : MonoBehaviour
     public ParticleSystem bulletShell;
     public Transform spawnPoint;
     [SerializeField] private bool isDebug;
+    private Controller2D controller2D;
 
-    void Update() {
+    private void Start() {
+        this.controller2D = transform.parent.GetComponent<Controller2D>();
+    }
+
+    void FixedUpdate() {
         if(isDebug) {
             if(Input.GetMouseButtonDown(0)) {
                 SpawnBulletShell(1);
@@ -18,10 +23,17 @@ public class BulletEffect : MonoBehaviour
  
     public void SpawnBulletShell(int count = 1) {
         print("test");
+        var dir = this.controller2D.collision.faceDir;
+
         var lookDir = this.spawnPoint.right;
-        lookDir.x *= transform.parent.localScale.x;
+        lookDir.x *= dir;
         var rotation = Quaternion.FromToRotation(Vector2.right, lookDir);
-        var bulletParticle = Instantiate(this.bulletShell, this.spawnPoint.position, rotation);
+        var pos = this.spawnPoint.position;
+        if(dir > 0) {
+             pos.x = 2 * transform.parent.position.x - pos.x;
+        }
+
+        var bulletParticle = Instantiate(this.bulletShell, pos, rotation);
         bulletParticle.Emit(count);
     }
 }
