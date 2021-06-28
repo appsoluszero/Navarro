@@ -18,8 +18,8 @@ public class RunnerAI : MonoBehaviour
     public float jumpCheckOffset = 0.1f;
     public float fallingForce = 10f;
     public float shakeForce = 2f;
-
     public Bounds bounds;
+    public LayerMask groundCheck;
 
     [Header("Custom Behavior")]
 
@@ -90,9 +90,15 @@ public class RunnerAI : MonoBehaviour
         }
 
         // See if colliding with anything
-        Vector3 startOffset = transform.position - new Vector3(0f, GetComponent<Collider2D>().bounds.extents.y + jumpCheckOffset);
-        isGrounded = Physics2D.Raycast(startOffset, -Vector3.up, 0.1f);
+        Vector3 startOffset = transform.position;
+        //Debug.DrawRay(startOffset, -Vector3.up);
+        RaycastHit2D boxCast = Physics2D.BoxCast(this.GetComponent<Collider2D>().bounds.center, this.GetComponent<Collider2D>().bounds.size, 0f, Vector2.down, 1f, groundCheck);
 
+        isGrounded = Physics2D.Raycast(transform.position, -Vector3.up, GetComponent<Collider2D>().bounds.extents.y + 0.1f, groundCheck);
+        isGrounded = boxCast;
+
+        //Debug.DrawRay(transform.position, -Vector3.up * (GetComponent<Collider2D>().bounds.extents.y + 0.1f));
+        //Debug.DrawRay(transform.position, -Vector3.up * (GetComponent<Collider2D>().bounds.extents.y + 0.1f));
         // Direction Calculation
         Vector2 direction = ((Vector2)path.vectorPath[currentWaypoint] - rb.position).normalized;
         Vector2 force = direction * speed * Time.deltaTime;
