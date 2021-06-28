@@ -7,7 +7,6 @@ public class BulletEffect : MonoBehaviour
     public ParticleSystem bulletShell;
     public Transform spawnPoint;
     public LineRenderer traceLine;
-    public LayerMask traceLayer;
     [SerializeField] private bool isDebug;
     private Controller2D controller2D;
 
