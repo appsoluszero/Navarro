@@ -9,6 +9,11 @@ public class CrawlerAI : MonoBehaviour
     public Transform target;
     public float activateDistance = 50f;
     public float pathUpdateSeconds = 0.5f;
+    private Path path;
+    private int currentWaypoint = 0;
+    RaycastHit2D isGrounded;
+    Seeker seeker;
+    Rigidbody2D rb;
 
     [Header("Physics")]
     public float speed = 700f;
@@ -33,17 +38,20 @@ public class CrawlerAI : MonoBehaviour
     public bool isAttacking = false;
     public float xBoundMultiplier = 1.3f;
 
-    private Path path;
-    private int currentWaypoint = 0;
+    [Header("Rotation")]
+    public float angleOffset = 30f;
+    public float goalAngle;
+    public float currentAngle;
+    public float angleTurnPerFrame = 1;
 
-    RaycastHit2D isGrounded;
-    Seeker seeker;
-    Rigidbody2D rb;
+
 
     public void Start()
     {
         seeker = GetComponent<Seeker>();
         rb = GetComponent<Rigidbody2D>();
+
+        currentAngle = this.transform.rotation.z;
 
         InvokeRepeating("UpdatePath", 0f, pathUpdateSeconds);
     }
@@ -51,6 +59,7 @@ public class CrawlerAI : MonoBehaviour
     private void FixedUpdate()
     {
         bounds = this.GetComponent<BoxCollider2D>().bounds;
+
         // print("top: " + TargetOnTop());
         // print("under: " + TargetUnderFeet());
         ShakeOff();
@@ -58,6 +67,7 @@ public class CrawlerAI : MonoBehaviour
         if (TargetInDistance() && followEnabled && !isAttacking)
         {
             PathFollow();
+            RotateToMovingDirection();
             if (TargetInAttackDistance())
             {
                 Attack();
@@ -96,6 +106,13 @@ public class CrawlerAI : MonoBehaviour
 
         // Movement
         //rb.AddForce(force);
+
+        if (isAttacking)
+        {
+            force = new Vector2(0, 0);
+        }
+
+
         rb.velocity = force;
 
         // Next Waypoint
@@ -215,5 +232,26 @@ public class CrawlerAI : MonoBehaviour
             print("Runner missed");
         }
         isAttacking = false;
+    }
+
+    private void RotateToMovingDirection()
+    {
+        Vector2 direction = rb.velocity.normalized;
+
+        goalAngle = Vector2.Angle(Vector2.right.normalized, direction);
+        goalAngle += angleOffset;
+
+        if (goalAngle > currentAngle && goalAngle - currentAngle >= angleTurnPerFrame)
+        {
+            currentAngle += angleTurnPerFrame;
+        }
+        else if (goalAngle < currentAngle && currentAngle - goalAngle >= angleTurnPerFrame)
+        {
+            currentAngle -= angleTurnPerFrame;
+        }
+
+        this.transform.rotation = Quaternion.Euler(0, 0, currentAngle);
+
+
     }
 }
