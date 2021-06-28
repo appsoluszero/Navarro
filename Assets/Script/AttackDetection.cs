@@ -11,10 +11,12 @@ public class AttackDetection : MonoBehaviour
 
     private Controller2D _controller;
     private PlayerCameraController _camController;
+    private BulletEffect _bulletEffect;
 
     void Start() {
         _controller = transform.parent.GetComponentInParent<Controller2D>();
         _camController = transform.parent.parent.GetComponentInChildren<PlayerCameraController>();
+        _bulletEffect = transform.parent.GetComponent<BulletEffect>();
     }
     
     //Melee detection
@@ -27,7 +29,7 @@ public class AttackDetection : MonoBehaviour
     }
 
     //Ranged detection
-    public void HitscanCheck(float range, int penetrate) {
+    public float HitscanCheck(float range, int penetrate) {
         float actualRange;
         //check for max distance
         RaycastHit2D hit = Physics2D.Raycast(transform.position, Vector3.right * _controller.collision.faceDir, range, collisionMask);
@@ -36,6 +38,7 @@ public class AttackDetection : MonoBehaviour
         else
             actualRange = range;
         Debug.DrawRay(transform.position, Vector3.right * _controller.collision.faceDir * actualRange, Color.green, 20f);
+        _bulletEffect.SpawnBulletTrace(transform.position, transform.position + Vector3.right * _controller.collision.faceDir * actualRange);
         //list of enemy in hitting range
         RaycastHit2D[] enemyHit = Physics2D.RaycastAll(transform.position, Vector3.right * _controller.collision.faceDir, actualRange, enemyLayerMask);
         if(enemyHit.Length > penetrate)
@@ -46,5 +49,6 @@ public class AttackDetection : MonoBehaviour
             Vector2 dir = new Vector2(e.transform.position.x - playerTransform.position.x, 0f).normalized;
             rb_this.AddForce(Vector2.right * dir * 2.25f, ForceMode2D.Impulse);
         }
+        return actualRange;
     }
 }
