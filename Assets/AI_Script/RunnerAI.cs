@@ -24,19 +24,18 @@ public class RunnerAI : MonoBehaviour
     [Header("Custom Behavior")]
 
     public float attackDistance = 1f;
-
     public float attackRange = 1f;
     public bool followEnabled = true;
     public bool jumpEnabled = true;
     public bool directionLookEnabled = true;
-
     public bool isAttacking = false;
     public float xBoundMultiplier = 1.3f;
+    public RaycastHit2D isGrounded;
 
     private Path path;
     private int currentWaypoint = 0;
 
-    RaycastHit2D isGrounded;
+
     Seeker seeker;
     Rigidbody2D rb;
 
@@ -56,6 +55,7 @@ public class RunnerAI : MonoBehaviour
         ShakeOff();
         if (!isGrounded)
         {
+            print("Not grounded");
             rb.AddForce(Vector2.down * fallingForce);
         }
         if (TargetInDistance() && followEnabled && !isAttacking)
@@ -91,7 +91,7 @@ public class RunnerAI : MonoBehaviour
 
         // See if colliding with anything
         Vector3 startOffset = transform.position - new Vector3(0f, GetComponent<Collider2D>().bounds.extents.y + jumpCheckOffset);
-        isGrounded = Physics2D.Raycast(startOffset, -Vector3.up, 0.05f);
+        isGrounded = Physics2D.Raycast(startOffset, -Vector3.up, 0.1f);
 
         // Direction Calculation
         Vector2 direction = ((Vector2)path.vectorPath[currentWaypoint] - rb.position).normalized;
@@ -103,6 +103,7 @@ public class RunnerAI : MonoBehaviour
             if (direction.y > jumpNodeHeightRequirement)
             {
                 rb.AddForce(Vector2.up * speed * jumpModifier, ForceMode2D.Impulse);
+                print("jump");
             }
         }
 
