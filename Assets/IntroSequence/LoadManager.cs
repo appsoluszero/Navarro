@@ -8,7 +8,6 @@ public class LoadManager : MonoBehaviour
 {
     public PlayableAsset duringLoadAsset;
     public PlayableDirector loadSequenceController;
-    private bool hasStartLoading;
     private AsyncOperation loadOperation;
     public void StartLoadingScene() {
         loadSequenceController.Play();
@@ -18,7 +17,6 @@ public class LoadManager : MonoBehaviour
         loadSequenceController.playableAsset = duringLoadAsset;
         loadSequenceController.extrapolationMode = DirectorWrapMode.Loop;
         loadSequenceController.Play();
-        hasStartLoading = true;
         StartCoroutine(loadSceneCoroutine());
     }
 
