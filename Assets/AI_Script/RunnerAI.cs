@@ -31,6 +31,9 @@ public class RunnerAI : MonoBehaviour
     public bool isAttacking = false;
     public float xBoundMultiplier = 1.3f;
     public RaycastHit2D isGrounded;
+    public RaycastHit2D rightGroundCheck;
+    public RaycastHit2D leftGroundCheck;
+
     [Header("Animation")]
     private Animator _animator;
     [Header("Audio")]
@@ -56,6 +59,7 @@ public class RunnerAI : MonoBehaviour
 
     private void FixedUpdate()
     {
+        //print(isAttacking);
         bounds = this.GetComponent<BoxCollider2D>().bounds;
         // print("top: " + TargetOnTop());
         // print("under: " + TargetUnderFeet());
@@ -71,6 +75,10 @@ public class RunnerAI : MonoBehaviour
             {
                 Attack();
             }
+        }
+        else if (!isAttacking)
+        {
+            _animator.Play("Runner_Idle");
         }
     }
 
@@ -106,7 +114,9 @@ public class RunnerAI : MonoBehaviour
         //Debug.DrawRay(transform.position, -Vector3.up * (GetComponent<Collider2D>().bounds.extents.y + 0.1f));
         //Debug.DrawRay(transform.position, -Vector3.up * (GetComponent<Collider2D>().bounds.extents.y + 0.1f));
         // Direction Calculation
+
         Vector2 direction = ((Vector2)path.vectorPath[currentWaypoint] - rb.position).normalized;
+        //Vector2 direction = GetDirection();
         Vector2 force = direction * speed * Time.deltaTime;
 
         // Jump
@@ -140,6 +150,51 @@ public class RunnerAI : MonoBehaviour
             {
                 transform.localScale = new Vector3(Mathf.Abs(transform.localScale.x), transform.localScale.y, transform.localScale.z);
             }
+        }
+    }
+    public Vector2 Rotate(Vector2 v, float degrees)
+    {
+        float sin = Mathf.Sin(degrees * Mathf.Deg2Rad);
+        float cos = Mathf.Cos(degrees * Mathf.Deg2Rad);
+
+        float tx = v.x;
+        float ty = v.y;
+        v.x = (cos * tx) - (sin * ty);
+        v.y = (sin * tx) + (cos * ty);
+        return v;
+    }
+
+    private Vector2 GetDirection()
+    {
+        isGrounded = Physics2D.Raycast(transform.position, -Vector3.up, GetComponent<Collider2D>().bounds.extents.y + 0.1f, groundCheck);
+
+        Vector2 rightPosition = new Vector2(transform.position.x + GetComponent<Collider2D>().bounds.extents.x, transform.position.y);
+        Vector2 leftPosition = new Vector2(transform.position.x - GetComponent<Collider2D>().bounds.extents.x, transform.position.y);
+
+        rightGroundCheck = Physics2D.Raycast(rightPosition, -Vector3.up, GetComponent<Collider2D>().bounds.extents.y + 0.1f, groundCheck);
+        leftGroundCheck = Physics2D.Raycast(leftPosition, -Vector3.up, GetComponent<Collider2D>().bounds.extents.y + 0.1f, groundCheck);
+
+        Vector2 rightNormal = rightGroundCheck.normal;
+        Vector2 leftNormal = leftGroundCheck.normal;
+
+        Vector2 rightDirection = Rotate(rightNormal, 90);
+        Vector2 leftDirection = Rotate(rightNormal, -90);
+        Vector2 defaultDirection = ((Vector2)path.vectorPath[currentWaypoint] - rb.position).normalized;
+
+        Debug.DrawRay(transform.position, rightDirection);
+        Debug.DrawRay(transform.position, leftDirection);
+
+        if (defaultDirection.x - target.position.x > 0 && rightGroundCheck)
+        {
+            return rightDirection;
+        }
+        else if (target.position.x - defaultDirection.x > 0 && leftGroundCheck)
+        {
+            return leftDirection;
+        }
+        else
+        {
+            return defaultDirection;
         }
     }
 
@@ -241,5 +296,7 @@ public class RunnerAI : MonoBehaviour
     public void ResetAttackState()
     {
         isAttacking = false;
+        _animator.Play("Runner_Idle");
     }
+
 }
