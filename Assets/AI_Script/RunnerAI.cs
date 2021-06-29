@@ -163,8 +163,8 @@ public class RunnerAI : MonoBehaviour
         // If player position is in Runner's x-axis collider
         if (target.position.x <= bounds.center.x + bounds.extents.x * xBoundMultiplier && target.position.x >= bounds.center.x - bounds.extents.x * xBoundMultiplier)
         {
-            // If player is above Runner
-            if (target.position.y >= bounds.center.y + bounds.extents.y)
+            // If player is above Runner AND not too far
+            if (target.position.y >= bounds.center.y + bounds.extents.y && target.position.y <= bounds.center.y + 2 * bounds.extents.y)
             {
                 return true;
             }
@@ -177,8 +177,8 @@ public class RunnerAI : MonoBehaviour
         // If player position is in Runner's x-axis collider
         if (target.position.x <= bounds.center.x + bounds.extents.x * xBoundMultiplier && target.position.x >= bounds.center.x - bounds.extents.x * xBoundMultiplier)
         {
-            // If player is under Runner
-            if (target.position.y <= bounds.center.y - bounds.extents.y)
+            // If player is under Runner AND not too far
+            if (target.position.y <= bounds.center.y - bounds.extents.y && target.position.y >= bounds.center.y - 2 * bounds.extents.y)
             {
                 return true;
             }
@@ -224,7 +224,8 @@ public class RunnerAI : MonoBehaviour
         _animator.Play("Runner_Attack");
     }
 
-    public void CheckHitPlayer() {
+    public void CheckHitPlayer()
+    {
         _audio.PlayOneShot(RunnerAttackSound);
         if (TargetInAttackRange())
         {
@@ -237,7 +238,8 @@ public class RunnerAI : MonoBehaviour
         }
     }
 
-    public void ResetAttackState() {
+    public void ResetAttackState()
+    {
         isAttacking = false;
     }
 }
