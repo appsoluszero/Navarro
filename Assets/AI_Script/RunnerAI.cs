@@ -33,6 +33,9 @@ public class RunnerAI : MonoBehaviour
     public RaycastHit2D isGrounded;
     [Header("Animation")]
     private Animator _animator;
+    [Header("Audio")]
+    private AudioSource _audio;
+    public AudioClip RunnerAttackSound;
 
     private Path path;
     private int currentWaypoint = 0;
@@ -46,6 +49,7 @@ public class RunnerAI : MonoBehaviour
         seeker = GetComponent<Seeker>();
         rb = GetComponent<Rigidbody2D>();
         _animator = GetComponent<Animator>();
+        _audio = GetComponent<AudioSource>();
 
         InvokeRepeating("UpdatePath", 0f, pathUpdateSeconds);
     }
@@ -221,6 +225,7 @@ public class RunnerAI : MonoBehaviour
     }
 
     public void CheckHitPlayer() {
+        _audio.PlayOneShot(RunnerAttackSound);
         if (TargetInAttackRange())
         {
             target.GetComponent<PlayerStatus>().DecreaseHealth(1);
