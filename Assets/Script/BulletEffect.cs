@@ -6,7 +6,7 @@ public class BulletEffect : MonoBehaviour
 {
     public ParticleSystem bulletShell;
     public Transform spawnPoint;
-    public LineRenderer traceLine;
+    public BulletTrace traceLine;
     [SerializeField] private bool isDebug;
     private Controller2D controller2D;
 
@@ -41,7 +41,7 @@ public class BulletEffect : MonoBehaviour
 
     public void SpawnBulletTrace(Vector2 start, Vector2 stop) {
         var line = Instantiate(this.traceLine);
-        line.SetPosition(0, start);
-        line.SetPosition(1, stop);
+        line.startPos = start;
+        line.stopPos = stop;
     }
 }
