@@ -42,8 +42,7 @@ public class BulletShellCollsion : MonoBehaviour
                 }
                 var audio = Instantiate(this.audioSource, collsion.intersection, Quaternion.identity);
                 audio.volume = volume;
-                Debug.Log(volume);
-                Destroy(audio, audio.clip.length);
+                Destroy(audio.gameObject, audio.clip.length + 1);
             }
         }
     }
