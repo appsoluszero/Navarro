@@ -39,6 +39,7 @@ public class RunnerAI : MonoBehaviour
     [Header("Audio")]
     private AudioSource _audio;
     public AudioClip RunnerAttackSound;
+    bool isFollowPath = false;
 
     private Path path;
     private int currentWaypoint = 0;
@@ -57,8 +58,8 @@ public class RunnerAI : MonoBehaviour
         InvokeRepeating("UpdatePath", 0f, pathUpdateSeconds);
     }
 
-    private void FixedUpdate()
-    {
+    private void Update() {
+        isFollowPath = false;
         //print(isAttacking);
         bounds = this.GetComponent<BoxCollider2D>().bounds;
         // print("top: " + TargetOnTop());
@@ -70,7 +71,7 @@ public class RunnerAI : MonoBehaviour
         }
         if (TargetInDistance() && followEnabled && !isAttacking)
         {
-            PathFollow();
+            isFollowPath = true;
             if (TargetInAttackDistance())
             {
                 Attack();
@@ -80,6 +81,12 @@ public class RunnerAI : MonoBehaviour
         {
             _animator.Play("Runner_Idle");
         }
+    }
+
+    private void FixedUpdate()
+    {
+        if(isFollowPath)
+            PathFollow();
     }
 
     private void UpdatePath()
@@ -117,7 +124,7 @@ public class RunnerAI : MonoBehaviour
 
         Vector2 direction = ((Vector2)path.vectorPath[currentWaypoint] - rb.position).normalized;
         //Vector2 direction = GetDirection();
-        Vector2 force = direction * speed * Time.deltaTime;
+        Vector2 force = direction * speed * Time.fixedDeltaTime;
 
         // Jump
         if (jumpEnabled && isGrounded)
@@ -130,7 +137,8 @@ public class RunnerAI : MonoBehaviour
         }
 
         // Movement
-        rb.AddForce(force);
+        rb.velocity = force;
+        //rb.AddForce(force);
 
         // Next Waypoint
         float distance = Vector2.Distance(rb.position, path.vectorPath[currentWaypoint]);
@@ -295,6 +303,11 @@ public class RunnerAI : MonoBehaviour
 
     public void ResetAttackState()
     {
+        StartCoroutine(delayAttackCheck());
+    }
+
+    IEnumerator delayAttackCheck() {
+        yield return new WaitForSeconds(1);
         isAttacking = false;
         _animator.Play("Runner_Idle");
     }

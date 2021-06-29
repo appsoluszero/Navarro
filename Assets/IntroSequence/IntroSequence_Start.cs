@@ -15,7 +15,6 @@ public class IntroSequence_Start : MonoBehaviour
 
     public void ActuallyStarting() {
         _manager.currentGameState = gameState.Gameplay;
-        _director.playableAsset = null;
         gameplayUI.Play("GameplayUI_FadeIn");
         playerTransform.position = transform.GetChild(3).position;
         playerTransform.GetChild(0).gameObject.SetActive(true);

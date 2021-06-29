@@ -5,6 +5,8 @@ using TMPro;
 
 public class IntroText_Sequence : MonoBehaviour
 {
+    private static char[] alphabet = {'A','B','C','D','E','F','G','H','I','J','K','L','M','N','O','P','Q','R','S','T','U','V','W','X','Y','Z'};
+    private static char[] num = {'1','2','3','4','5','6','7','8','9','0'};
     [SerializeField] private string[] textEachLine;
     private float[] lengthEachLine;
     private int[] currentLine;
@@ -33,7 +35,9 @@ public class IntroText_Sequence : MonoBehaviour
     }
 
     void CodeGenerator() {
-        
+        string code_alphabet = "" + alphabet[Random.Range(1, 28)-1] + alphabet[Random.Range(1, 28)-1];
+        string code_num = "" + num[Random.Range(1, 11)-1] + num[Random.Range(1, 11)-1] + num[Random.Range(1, 11)-1];
+        textEachLine[3] = "Subject: " + code_alphabet + "-" + code_num + " \"Lunette\"";
     }
 
     IEnumerator TextCoroutine() {
