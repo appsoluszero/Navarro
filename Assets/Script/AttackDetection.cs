@@ -11,17 +11,20 @@ public class AttackDetection : MonoBehaviour
 
     private Controller2D _controller;
     private PlayerCameraController _camController;
+    private PlayerAttack _attack;
     private BulletEffect _bulletEffect;
 
     void Start() {
         _controller = transform.parent.GetComponentInParent<Controller2D>();
         _camController = transform.parent.parent.GetComponentInChildren<PlayerCameraController>();
         _bulletEffect = transform.parent.GetComponent<BulletEffect>();
+        _attack = transform.parent.GetComponent<PlayerAttack>();
     }
     
     //Melee detection
     void OnTriggerEnter2D(Collider2D col) {
         if(col.gameObject.tag == "Enemy" && ((enemyLayerMask & 1 << col.gameObject.layer) != 0)) {
+            _attack.isHitThisAttack = true;
             Vector2 dir = new Vector2(col.transform.position.x - playerTransform.position.x, 0f).normalized;
             col.transform.GetComponent<Rigidbody2D>().AddForce(Vector2.right * dir * 1.25f, ForceMode2D.Impulse);
             _camController.AttackCameraShake(true);

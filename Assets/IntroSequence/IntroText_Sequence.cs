@@ -11,6 +11,7 @@ public class IntroText_Sequence : MonoBehaviour
     [SerializeField] private float timeEachLetter;
 
     void Start() {
+        CodeGenerator();
         FindLength();
     }
 
@@ -29,6 +30,10 @@ public class IntroText_Sequence : MonoBehaviour
             lengthEachLine[i] = textEachLine[i].Length;
             currentLine[i] = 0;
         }
+    }
+
+    void CodeGenerator() {
+        
     }
 
     IEnumerator TextCoroutine() {

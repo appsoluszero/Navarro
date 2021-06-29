@@ -24,7 +24,6 @@ public class BulletEffect : MonoBehaviour
     }
     
     public void SpawnBulletShell(int count = 1) {
-        print("test");
         var dir = this.controller2D.collision.faceDir;
 
         var lookDir = this.spawnPoint.right;

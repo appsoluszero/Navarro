@@ -20,6 +20,8 @@ public class PlayerAttack : MonoBehaviour
     [Header("Sound Effect")]
     [SerializeField] private AudioSource _audio;
     [SerializeField] private AudioClip gunshot_SFX;
+    [SerializeField] private AudioClip melee_miss_SFX;
+    [SerializeField] private AudioClip melee_hit_SFX;
 
     [Header("Attack Parameters")]
     [SerializeField] private float delayBetweenAttack;
@@ -29,6 +31,7 @@ public class PlayerAttack : MonoBehaviour
     [HideInInspector] public bool goingNextPhase = false;
     bool isRunning = false;
     [SerializeField] int attackPhase = 1;
+    public bool isHitThisAttack = false;
 
     float range, force;
     int penetrate;
@@ -114,6 +117,14 @@ public class PlayerAttack : MonoBehaviour
         else
             StartResetCoroutine();
     }
+
+    public void playMeleeSound() {
+        if(!isHitThisAttack)
+            _audio.PlayOneShot(melee_miss_SFX);
+        else
+            _audio.PlayOneShot(melee_hit_SFX);
+    }
+
     #endregion
 
     #region Ranged
@@ -139,7 +150,6 @@ public class PlayerAttack : MonoBehaviour
     public void DetectWeaponRange() {
         _rangedDetection.HitscanCheck(range, penetrate);
         _camController.AttackCameraShake(false);
-        //_audio.clip = gunshot_SFX;
         _audio.PlayOneShot(gunshot_SFX, 1f);
         _bulletEffect.SpawnBulletShell(1);
         _statusUI.UpdateBullet();
