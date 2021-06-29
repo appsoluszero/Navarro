@@ -35,7 +35,7 @@ public class BulletShellCollsion : MonoBehaviour
                 var t = (velocity-this.minAudiableVelocity)/(this.maxDistinguishableVelocity-this.minAudiableVelocity);
                 float volume;
                 if(t > 1) {
-                    volume = 1f;
+                    volume = this.velocityToSoundCurve.Evaluate(1);
                 }
                 else {
                     volume = this.velocityToSoundCurve.Evaluate(t);
