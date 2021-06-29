@@ -31,6 +31,8 @@ public class RunnerAI : MonoBehaviour
     public bool isAttacking = false;
     public float xBoundMultiplier = 1.3f;
     public RaycastHit2D isGrounded;
+    [Header("Animation")]
+    private Animator _animator;
 
     private Path path;
     private int currentWaypoint = 0;
@@ -43,6 +45,7 @@ public class RunnerAI : MonoBehaviour
     {
         seeker = GetComponent<Seeker>();
         rb = GetComponent<Rigidbody2D>();
+        _animator = GetComponent<Animator>();
 
         InvokeRepeating("UpdatePath", 0f, pathUpdateSeconds);
     }
@@ -55,7 +58,6 @@ public class RunnerAI : MonoBehaviour
         ShakeOff();
         if (!isGrounded)
         {
-            print("Not grounded");
             rb.AddForce(Vector2.down * fallingForce);
         }
         if (TargetInDistance() && followEnabled && !isAttacking)
@@ -215,14 +217,10 @@ public class RunnerAI : MonoBehaviour
     {
         print("Beginning to attack");
         isAttacking = true;
-        // Attack stuffs
-        StartCoroutine(AttackRoutine());
-
+        _animator.Play("Runner_Attack");
     }
 
-    IEnumerator AttackRoutine()
-    {
-        yield return new WaitForSeconds(1f);
+    public void CheckHitPlayer() {
         if (TargetInAttackRange())
         {
             target.GetComponent<PlayerStatus>().DecreaseHealth(1);
@@ -232,6 +230,9 @@ public class RunnerAI : MonoBehaviour
         {
             print("Runner missed");
         }
+    }
+
+    public void ResetAttackState() {
         isAttacking = false;
     }
 }
