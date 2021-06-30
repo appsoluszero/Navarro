@@ -8,7 +8,7 @@ public class EnemyDamageDetection : MonoBehaviour
     [SerializeField] private AudioClip deathSound;
 
     public void receiveDamage(float damage, PlayerStatus stat, PlayerAttack atk) {
-        GetComponent<RunnerAI>().TakeDamage();
+        GetComponent<ArtificialIntelligence>().TakeDamage();
         enemyHealth = Mathf.Clamp(enemyHealth - damage, 0f, 100f);
         if(enemyHealth == 0) {
             int chance_bullet = Random.Range(0, 101);

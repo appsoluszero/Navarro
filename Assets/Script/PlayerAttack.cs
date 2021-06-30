@@ -123,9 +123,9 @@ public class PlayerAttack : MonoBehaviour
 
     public void playMeleeSound() {
         if(!isHitThisAttack)
-            _audio.PlayOneShot(melee_miss_SFX);
+            _audio.PlayOneShot(melee_miss_SFX, 1f);
         else
-            _audio.PlayOneShot(melee_hit_SFX);
+            _audio.PlayOneShot(melee_hit_SFX, 1f);
     }
 
     #endregion

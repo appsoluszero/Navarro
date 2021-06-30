@@ -3,7 +3,7 @@ using System.Collections.Generic;
 using UnityEngine;
 using Pathfinding;
 
-public class CrawlerAI : MonoBehaviour
+public class CrawlerAI : MonoBehaviour, ArtificialIntelligence
 {
     [Header("Pathfinding")]
     public Transform target;
@@ -36,7 +36,13 @@ public class CrawlerAI : MonoBehaviour
     public bool directionLookEnabled = true;
 
     public bool isAttacking = false;
+    public bool isHurting = false;
     public float xBoundMultiplier = 1.3f;
+    [Header("Animation")]
+    private Animator _animator;
+    [Header("Audio")]
+    private AudioSource _audio;
+    public AudioClip CrawlerAttackSound;
 
     [Header("Rotation")]
     public float angleOffset = 30f;
@@ -217,6 +223,12 @@ public class CrawlerAI : MonoBehaviour
         // Attack stuffs
         StartCoroutine(AttackRoutine());
 
+    }
+
+    public void TakeDamage() {
+        isAttacking = false;
+        isHurting = true;
+        //_animator.Play("Runner_Hurt");
     }
 
     IEnumerator AttackRoutine()

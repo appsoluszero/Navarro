@@ -3,7 +3,7 @@ using System.Collections.Generic;
 using UnityEngine;
 using Pathfinding;
 
-public class RunnerAI : MonoBehaviour
+public class RunnerAI : MonoBehaviour, ArtificialIntelligence
 {
     [Header("Pathfinding")]
     public Transform target;

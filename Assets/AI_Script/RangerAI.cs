@@ -3,7 +3,7 @@ using System.Collections.Generic;
 using UnityEngine;
 using Pathfinding;
 
-public class RangerAI : MonoBehaviour
+public class RangerAI : MonoBehaviour, ArtificialIntelligence
 {
     [Header("Pathfinding")]
     public Transform target;
@@ -47,9 +47,15 @@ public class RangerAI : MonoBehaviour
     public float shootRange = 12f;
     public bool isAttacking = false;
     public bool isShooting = false;
+    public bool isHurting = false;
     public int shootCooldown = 60;
     public int shootCooldownCount = 60;
     public float bulletForce = 10f;
+    [Header("Animation")]
+    private Animator _animator;
+    [Header("Audio")]
+    private AudioSource _audio;
+    public AudioClip RangerAttackSound;
 
     private bool canShoot;
     private RaycastHit2D hitPlayer;
@@ -304,6 +310,12 @@ public class RangerAI : MonoBehaviour
         // Attack stuffs
         StartCoroutine(AttackRoutine());
 
+    }
+
+    public void TakeDamage() {
+        isAttacking = false;
+        isHurting = true;
+        //_animator.Play("Runner_Hurt");
     }
 
     private void Shoot()

@@ -15,6 +15,9 @@ public class MovementAnimationController : MonoBehaviour
     
     [Header("Floating Error Compensation")]
     [SerializeField] private int targetCheckFrame = 5;
+    [Header("Hurt Sound Effect")]
+    [SerializeField] private AudioSource _audio;
+    [SerializeField] private AudioClip hurt_sfx;
     private SpriteRenderer _spriteRenderer;
     private bool startFloating;
     void Start()
@@ -96,6 +99,7 @@ public class MovementAnimationController : MonoBehaviour
         _attack.isHurt = true;
         _playerAnimation.Play("Hurt_Stand");
         _status.playerState = State.Hurt;
+        _audio.PlayOneShot(hurt_sfx, 0.3f);
         StopCoroutine(floatingFrameCount());
     }
 
