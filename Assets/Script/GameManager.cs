@@ -6,10 +6,14 @@ public class GameManager : MonoBehaviour
     //Reference
     [SerializeField] private DialogueHandler _dialogue;
     [SerializeField] private int targetFrameRate = 60;
+    [SerializeField] private bool isDebugMode = false;
     public gameState currentGameState;
     void Start()
     {
-        currentGameState = gameState.Gameplay;
+        if(!isDebugMode)
+            currentGameState = gameState.Intro;
+        else 
+            currentGameState = gameState.Gameplay;
         Application.targetFrameRate = targetFrameRate;
 
         _dialogue.dialogueInteractEvent += ChangeStateToDialogue;
@@ -28,5 +32,7 @@ public class GameManager : MonoBehaviour
 public enum gameState {
     Menu,
     Gameplay,
-    Dialogue
+    Dialogue,
+    Ending,
+    Intro
 }

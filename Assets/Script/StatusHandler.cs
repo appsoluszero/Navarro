@@ -2,6 +2,7 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.UI;
+using TMPro;
 
 public class StatusHandler : MonoBehaviour
 {
@@ -13,6 +14,8 @@ public class StatusHandler : MonoBehaviour
     [Header("User Interface/Stamina")]
     [SerializeField] private RectTransform stamina_Foreground;
     [SerializeField] private RectTransform stamina_Background;
+    [Header("User Interface/Bullet Count")]
+    [SerializeField] private TextMeshProUGUI bullet_Text;
     [Header("Animation Parameter")]
     [SerializeField] private float timeToChange = 0.3f;
     [SerializeField] private AnimationCurve curve;
@@ -96,6 +99,10 @@ public class StatusHandler : MonoBehaviour
             health_Background.GetChild(health_Background.childCount - 1).GetComponent<RectTransform>().localPosition = obj_bg.transform.GetComponent<RectTransform>().localPosition + new Vector3(0, (obj_bg.GetComponent<RectTransform>().sizeDelta.x / 2f) + (health_Background.GetChild(health_Background.childCount - 1).GetComponent<RectTransform>().sizeDelta.x / 2f), 0);
             health_Foreground.GetChild(health_Foreground.childCount - 1).GetComponent<RectTransform>().localPosition = obj.transform.GetComponent<RectTransform>().localPosition + new Vector3(0, (obj_bg.GetComponent<RectTransform>().sizeDelta.x / 2f) + (health_Foreground.GetChild(health_Foreground.childCount - 1).GetComponent<RectTransform>().sizeDelta.x / 2f), 0);
         }
+    }
+
+    public void UpdateBullet() {
+        bullet_Text.text = _status.bulletCount.ToString();
     }
 
     IEnumerator startHealthChange(int type) {

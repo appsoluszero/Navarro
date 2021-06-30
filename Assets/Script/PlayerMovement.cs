@@ -21,7 +21,7 @@ public class PlayerMovement : MonoBehaviour
     float gravityScale;
     [HideInInspector] public float jumpVelocity;
 
-    [HideInInspector] public Vector3 velocity;
+    public Vector3 velocity;
     Vector3 prevVelocity;
     
     float velocityXSmoothing;
@@ -65,13 +65,16 @@ public class PlayerMovement : MonoBehaviour
     void FixedUpdate() {
         prevVelocity = velocity;
         
-        if(_status.playerState != State.Rolling && _status.playerState != State.Attack) {
+        if(_status.playerState != State.Rolling && _status.playerState != State.MeleeAttack && _status.playerState != State.RangedAttack && _status.playerState != State.Death && _status.playerState != State.Hurt) {
             _status.playerState = State.Idle;
             velocity.x = Mathf.SmoothDamp(velocity.x, targetVelocityX, ref velocityXSmoothing, (_controller.collision.below) ? accelTimeGrounded : accelTimeAirborne);
         }
 
-        if((_status.playerState == State.Attack && _controller.collision.below) || _manager.currentGameState != gameState.Gameplay)
+        if((_status.playerState == State.RangedAttack && _controller.collision.below) || _manager.currentGameState != gameState.Gameplay || _status.playerState == State.Death || _status.playerState == State.Hurt) 
             velocity.x = 0;
+
+        if((_status.playerState == State.MeleeAttack && _controller.collision.below))
+            velocity.x = Mathf.SmoothDamp(velocity.x, 0, ref velocityXSmoothing, 0.08f);
             
         velocity.y += gravityScale * Time.fixedDeltaTime;
         Vector3 deltaPosition = (prevVelocity + velocity) * 0.5f * Time.fixedDeltaTime;
@@ -79,14 +82,14 @@ public class PlayerMovement : MonoBehaviour
         _controller.Move(deltaPosition);
 
         if(_controller.collision.above || _controller.collision.below) {
-            if(_controller.collision.ascendingSlope && _controller.collision.above)
+            if(_controller.collision.ascendingSlope && _controller.collision.above) {
                 velocity.x = 0;
-            velocity.y = 0f;    
+            }
+            velocity.y = 0;    
         }
 
-        if(_controller.collision.left || _controller.collision.right) {
+        if(_controller.collision.left || _controller.collision.right)
             velocity.x = 0;
-        }
 
         if(Mathf.Abs(velocity.x) >= 1E-2 && _status.playerState == State.Idle) 
             _status.playerState = State.Move;

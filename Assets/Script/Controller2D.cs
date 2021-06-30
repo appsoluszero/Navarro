@@ -5,7 +5,7 @@ using UnityEngine;
 public class Controller2D : RaycastController
 {
     [Header("Layer Mask")]
-    [SerializeField] public LayerMask collisionMask;
+    [SerializeField] public LayerMask levelAndPlatformMask;
     [SerializeField] public LayerMask platformMask;
     [SerializeField] public LayerMask levelMask;
     [SerializeField] public LayerMask levelAndCharacterMask;
@@ -20,6 +20,7 @@ public class Controller2D : RaycastController
     public override void Start() {
         base.Start();
         collision.faceDir = 1;
+        collision.verticalDir = -1;
     }
  
     public void Move(Vector3 velocity) {
@@ -31,14 +32,16 @@ public class Controller2D : RaycastController
         if(velocity.y < 0) 
             DescendSlope(ref velocity);
 
-        if(velocity.x != 0) 
+        if(Mathf.Abs(velocity.x) > 1E-2) 
             collision.faceDir = (int)Mathf.Sign(velocity.x);
 
         HorizontalCollision(ref velocity);
-
-        if(velocity.y != 0)
+        
+        if(!Mathf.Approximately(velocity.y, 0f)) {
+            collision.verticalDir = (int)Mathf.Sign(velocity.y);
             VerticalCollision(ref velocity);
-
+        }
+        
         transform.Translate(velocity);
     }
 
@@ -53,6 +56,7 @@ public class Controller2D : RaycastController
             Vector2 rayOrigin = (directionX == -1) ? raycastOriginPos.bottomLeft : raycastOriginPos.bottomRight;
             rayOrigin += Vector2.up * (horizontalRaySpacing * i);
             RaycastHit2D hit;
+            hit = Physics2D.Raycast(rayOrigin, Vector2.right * directionX, rayLength, levelMask);
             if(GetComponent<PlayerStatus>().playerState == State.Rolling)
                 hit = Physics2D.Raycast(rayOrigin, Vector2.right * directionX, rayLength, levelMask);
             else
@@ -103,6 +107,7 @@ public class Controller2D : RaycastController
         float rayLength = Mathf.Abs(velocity.y) + skinWidth;
 
         for(int i = 0 ; i < verticalRayCount ; ++i) {
+            Vector2 rayOriginPlatform = (directionX == -1) ? raycastOriginPos.bottomRight : raycastOriginPos.bottomLeft;
             Vector2 rayOrigin = (directionY == -1) ? ((directionX == -1) ? raycastOriginPos.bottomRight : raycastOriginPos.bottomLeft) : ((directionX == -1) ? raycastOriginPos.topRight : raycastOriginPos.topLeft);
             if(directionX == 1)
                 rayOrigin += Vector2.right * (verticalRaySpacing * i + velocity.x);
@@ -113,7 +118,7 @@ public class Controller2D : RaycastController
                 hit = Physics2D.Raycast(rayOrigin, Vector2.up * directionY, rayLength, levelMask);
             else
                 hit = Physics2D.Raycast(rayOrigin, Vector2.up * directionY, rayLength, levelAndCharacterMask);
-            hitPlatform = Physics2D.Raycast(rayOrigin, Vector2.up * directionY, rayLength, platformMask);
+            hitPlatform = Physics2D.Raycast(rayOriginPlatform, Vector2.up * -1, rayLength, platformMask);
 
             Debug.DrawRay(rayOrigin, Vector2.up * directionY, Color.red);
 
@@ -162,7 +167,7 @@ public class Controller2D : RaycastController
         if(collision.ascendingSlope) {
             rayLength = Mathf.Abs(velocity.x) + skinWidth;
             Vector2 rayOrigin = ((directionX == -1) ? raycastOriginPos.bottomLeft : raycastOriginPos.bottomRight) + Vector2.up * velocity.y;
-            RaycastHit2D hit = Physics2D.Raycast(rayOrigin, Vector2.right * directionX, rayLength, collisionMask);
+            RaycastHit2D hit = Physics2D.Raycast(rayOrigin, Vector2.right * directionX, rayLength, levelAndPlatformMask);
 
             if(hit) {
                 float slopeAngle = Vector2.Angle(hit.normal, Vector2.up);
@@ -203,7 +208,7 @@ public class Controller2D : RaycastController
         if(!collision.slidingDownMaxSlope) {
             float directionX = collision.faceDir;
             Vector2 rayOrigin = (directionX == -1) ? raycastOriginPos.bottomRight : raycastOriginPos.bottomLeft;
-            RaycastHit2D hit = Physics2D.Raycast(rayOrigin, -Vector2.up, Mathf.Infinity, collisionMask);
+            RaycastHit2D hit = Physics2D.Raycast(rayOrigin, -Vector2.up, Mathf.Infinity, levelAndPlatformMask);
 
             if(hit) {
                 float slopeAngle = Vector2.Angle(hit.normal, Vector2.up);
@@ -251,6 +256,7 @@ public class Controller2D : RaycastController
 
         public Vector3 prevVelocity;
         public int faceDir;
+        public int verticalDir;
 
         public void reset() {
             above = below = false;
