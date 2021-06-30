@@ -61,6 +61,7 @@ public class DamageEffect : MonoBehaviour
             transform
         );
         blood_instance.transform.localPosition = damageEffectData.relativePosition;
+        blood_instance.transform.SetParent(null);
         return blood_instance;
         // blood_instance.transform.localPosition = new Vector3(-0.2f, 0.64f, 0.0f);
     }
