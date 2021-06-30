@@ -82,6 +82,12 @@ public class DamageEffect : MonoBehaviour
         }
     }
 
+    public void DoBloodExplosion(Bounds area) {
+        var min = area.min;
+        var size = area.size;
+        DoBloodExplosion(new Rect(min.x, min.y, size.x, size.y));
+    }
+
     IEnumerator FlashRoutine()
     {
         float resoultion = 1.0f / (float)(this.damageEffectData.frameCount);

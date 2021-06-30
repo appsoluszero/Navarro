@@ -20,6 +20,10 @@ public class EnemyDamageDetection : MonoBehaviour
                 stat.IncreaseHealth(1);
             }
             PlayerPrefs.SetInt("KillCount", PlayerPrefs.GetInt("KillCount")+1);
+
+            var bound = transform.Find("Sprite").GetComponent<SpriteRenderer>().bounds;
+            GetComponent<DamageEffect>().DoBloodExplosion(bound);
+            
             Destroy(this.gameObject);
         }
     }
