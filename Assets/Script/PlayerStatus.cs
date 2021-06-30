@@ -125,6 +125,7 @@ public class PlayerStatus : MonoBehaviour
     {
         GetComponent<PlayerStatus>().playerState = State.Death;
         GetComponent<AudioSource>().PlayOneShot(deathSound, deathSoundVolume);
+        _manager.GetComponent<AudioSource>().Stop();
         _manager.currentGameState = gameState.Ending;
         _playerAnimation.Play("Dying");
         stamina_normal.SetActive(false);

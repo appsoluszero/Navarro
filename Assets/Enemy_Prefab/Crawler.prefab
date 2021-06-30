@@ -75,7 +75,7 @@ MonoBehaviour:
   target: {fileID: 0}
   activateDistance: 50
   pathUpdateSeconds: 0.5
-  speed: 450
+  speed: 250
   nextWaypointDistance: 3
   jumpNodeHeightRequirement: 0.8
   jumpModifier: 0.01
@@ -253,7 +253,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 75842182fbf1f5f4a8bf7abd4e109abb, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  enemyHealth: 100
+  enemyHealth: 80
   deathSound: {fileID: 8300000, guid: e95132f33ce802a4db00a170c6675e67, type: 3}
 --- !u!114 &1649278309784745252
 MonoBehaviour:
