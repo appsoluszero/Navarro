@@ -58,7 +58,8 @@ public class RunnerAI : MonoBehaviour
         InvokeRepeating("UpdatePath", 0f, pathUpdateSeconds);
     }
 
-    private void Update() {
+    private void Update()
+    {
         isFollowPath = false;
         //print(isAttacking);
         bounds = this.GetComponent<BoxCollider2D>().bounds;
@@ -85,7 +86,7 @@ public class RunnerAI : MonoBehaviour
 
     private void FixedUpdate()
     {
-        if(isFollowPath)
+        if (isFollowPath)
             PathFollow();
     }
 
@@ -113,7 +114,7 @@ public class RunnerAI : MonoBehaviour
         // See if colliding with anything
         Vector3 startOffset = transform.position;
         //Debug.DrawRay(startOffset, -Vector3.up);
-        RaycastHit2D boxCast = Physics2D.BoxCast(this.GetComponent<Collider2D>().bounds.center, this.GetComponent<Collider2D>().bounds.size, 0f, Vector2.down, 1f, groundCheck);
+        RaycastHit2D boxCast = Physics2D.BoxCast(this.GetComponent<Collider2D>().bounds.center, this.GetComponent<Collider2D>().bounds.size, 0f, Vector2.down, 0.1f, groundCheck);
 
         isGrounded = Physics2D.Raycast(transform.position, -Vector3.up, GetComponent<Collider2D>().bounds.extents.y + 0.1f, groundCheck);
         isGrounded = boxCast;
@@ -123,22 +124,25 @@ public class RunnerAI : MonoBehaviour
         // Direction Calculation
 
         Vector2 direction = ((Vector2)path.vectorPath[currentWaypoint] - rb.position).normalized;
+        Vector2 forceDirection = FourDirectionConvert(direction);
+        //forceDirection = EdgeHandler(forceDirection);
+        Debug.DrawRay(transform.position, forceDirection * 2, Color.red);
+        Debug.DrawRay(transform.position, direction * 2, Color.blue);
         //Vector2 direction = GetDirection();
-        Vector2 force = direction * speed * Time.fixedDeltaTime;
+        Vector2 force = forceDirection * speed * Time.fixedDeltaTime;
 
         // Jump
         if (jumpEnabled && isGrounded)
         {
             if (direction.y > jumpNodeHeightRequirement)
             {
-                rb.AddForce(Vector2.up * speed * jumpModifier, ForceMode2D.Impulse);
-                print("jump");
+                Jump();
             }
         }
 
         // Movement
-        rb.velocity = force;
-        //rb.AddForce(force);
+        //rb.velocity = force;
+        rb.AddForce(force);
 
         // Next Waypoint
         float distance = Vector2.Distance(rb.position, path.vectorPath[currentWaypoint]);
@@ -206,6 +210,18 @@ public class RunnerAI : MonoBehaviour
         }
     }
 
+    private Vector2 FourDirectionConvert(Vector2 direction)
+    {
+        float size = direction.magnitude;
+
+        if (direction.y != 0 && direction.x != 0)
+        {
+            return new Vector2(direction.x, 0);
+        }
+        return direction;
+
+    }
+
     private bool TargetInDistance()
     {
         return Vector2.Distance(transform.position, target.transform.position) < activateDistance;
@@ -271,6 +287,34 @@ public class RunnerAI : MonoBehaviour
         }
     }
 
+    private void Jump()
+    {
+        rb.AddForce(Vector2.up * speed * jumpModifier, ForceMode2D.Impulse);
+        print("jump");
+    }
+
+    private Vector2 EdgeHandler(Vector2 movingDirection)
+    {
+        Vector2 rightPosition = new Vector2(transform.position.x + GetComponent<Collider2D>().bounds.extents.x, transform.position.y);
+        Vector2 leftPosition = new Vector2(transform.position.x - GetComponent<Collider2D>().bounds.extents.x, transform.position.y);
+
+        rightGroundCheck = Physics2D.Raycast(rightPosition, -Vector3.up, GetComponent<Collider2D>().bounds.extents.y + 0.1f, groundCheck);
+        leftGroundCheck = Physics2D.Raycast(leftPosition, -Vector3.up, GetComponent<Collider2D>().bounds.extents.y + 0.1f, groundCheck);
+
+        if (movingDirection.x == 0 && movingDirection.y != 0)
+        {
+            if (rightGroundCheck && !leftGroundCheck)
+            {
+                return new Vector2(-movingDirection.magnitude, 0);
+            }
+            else if (!rightGroundCheck && leftGroundCheck)
+            {
+                return new Vector2(movingDirection.magnitude, 0);
+            }
+        }
+        return movingDirection;
+    }
+
     private void OnPathComplete(Path p)
     {
         if (!p.error)
@@ -306,7 +350,8 @@ public class RunnerAI : MonoBehaviour
         StartCoroutine(delayAttackCheck());
     }
 
-    IEnumerator delayAttackCheck() {
+    IEnumerator delayAttackCheck()
+    {
         yield return new WaitForSeconds(1);
         isAttacking = false;
         _animator.Play("Runner_Idle");
