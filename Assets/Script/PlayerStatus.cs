@@ -79,7 +79,7 @@ public class PlayerStatus : MonoBehaviour
             PlayerDieEvent();
     }
 
-    void IncreaseHealth(int amt)
+    public void IncreaseHealth(int amt)
     {
         if (currentHealth < maxPlayerHealth)
         {

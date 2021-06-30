@@ -108,10 +108,10 @@ public class PlayerAction : MonoBehaviour
                         }   
                         else if(Input.GetKeyDown(InputManager.actionsMap["jumpingUp"])) 
                             jumpEventHandler?.Invoke(this, EventArgs.Empty);
-                        else if(Input.GetKeyDown(InputManager.actionsMap["crouchDown"]))
+                        /*else if(Input.GetKeyDown(InputManager.actionsMap["crouchDown"]))
                             crouchEventHandler?.Invoke(this, new ActionEventArgs {
                                 crouchSpdMul = crouchSpeedMultiplier
-                            });
+                            });*/
                     }
                     if(_status.playerState != State.MeleeAttack && _status.playerState != State.RangedAttack) {
                         if(Input.GetKey(InputManager.actionsMap["dropDown"])) {
