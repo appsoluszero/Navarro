@@ -60699,6 +60699,7 @@ MonoBehaviour:
   currentStamina: 0
   bulletCount: 8
   staminaRegenPerSecond: 10
+  deathSound: {fileID: 8300000, guid: 3487fb71aaa0dbf4796de80fc95cef49, type: 3}
   stamina_normal: {fileID: 1483546126}
   stamina_glitched: {fileID: 887538218}
   bulletCount_text: {fileID: 1807156063}
