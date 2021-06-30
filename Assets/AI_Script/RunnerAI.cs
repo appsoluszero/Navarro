@@ -344,6 +344,7 @@ public class RunnerAI : MonoBehaviour, ArtificialIntelligence
         if (TargetInAttackRange() && target.GetComponent<PlayerStatus>().playerState != State.Rolling && target.GetComponent<PlayerStatus>().playerState != State.Hurt && target.GetComponent<PlayerStatus>().playerState != State.Death)
         {
             target.GetComponent<PlayerStatus>().DecreaseHealth(1);
+            target.GetComponent<DamageEffect>().DoEffect(transform.position);
             print("Health after attacked: " + target.GetComponent<PlayerStatus>().currentHealth);
         }
         else
