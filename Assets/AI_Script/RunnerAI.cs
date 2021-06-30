@@ -341,7 +341,7 @@ public class RunnerAI : MonoBehaviour
     public void CheckHitPlayer()
     {
         _audio.PlayOneShot(RunnerAttackSound);
-        if (TargetInAttackRange())
+        if (TargetInAttackRange() && target.GetComponent<PlayerStatus>().playerState != State.Rolling && target.GetComponent<PlayerStatus>().playerState != State.Hurt && target.GetComponent<PlayerStatus>().playerState != State.Death)
         {
             target.GetComponent<PlayerStatus>().DecreaseHealth(1);
             print("Health after attacked: " + target.GetComponent<PlayerStatus>().currentHealth);

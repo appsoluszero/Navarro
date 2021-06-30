@@ -4,6 +4,7 @@ using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.UI;
 using UnityEngine.SceneManagement;
+using TMPro;
 
 public class PlayerStatus : MonoBehaviour
 {
@@ -21,6 +22,13 @@ public class PlayerStatus : MonoBehaviour
 
     [Header("Status Parameters")]
     public float staminaRegenPerSecond = 2f;
+    [Header("Dying Sequence/Reference")]
+    public GameObject stamina_normal;
+    public GameObject stamina_glitched;
+    public TextMeshProUGUI bulletCount_text;
+    public GameObject deathText;
+    public GameObject health_foreground, health_background, health_broken;
+
     public event EventHandler<StatChangeEventArgs> staminaDecreaseHandler;
     public event EventHandler<StatChangeEventArgs> healthDecreaseHandler;
     public event EventHandler<StatChangeEventArgs> healthIncreaseHandler;
@@ -94,7 +102,6 @@ public class PlayerStatus : MonoBehaviour
 
     void DecreaseStamina(object sender, StatChangeEventArgs e)
     {
-
         isStaminaRegenerating = false;
         staminaDecreaseHandler?.Invoke(this, new StatChangeEventArgs
         {
@@ -117,6 +124,13 @@ public class PlayerStatus : MonoBehaviour
         GetComponent<PlayerStatus>().playerState = State.Death;
         _manager.currentGameState = gameState.Ending;
         _playerAnimation.Play("Dying");
+        stamina_normal.SetActive(false);
+        stamina_glitched.SetActive(true);
+        bulletCount_text.text = "9999999999999999999999999";
+        deathText.SetActive(true);
+        health_background.SetActive(false);
+        health_foreground.SetActive(false);
+        health_broken.SetActive(true);
         transform.GetChild(3).gameObject.SetActive(true);
         transform.GetChild(3).localScale = new Vector3(_controller.collision.faceDir, 1f, 1f);
         transform.GetChild(4).gameObject.SetActive(true);
