@@ -5,6 +5,7 @@ using UnityEngine;
 public class EnemyDamageDetection : MonoBehaviour
 {
     [SerializeField] private float enemyHealth = 100f;
+    [SerializeField] private AudioClip deathSound;
 
     public void receiveDamage(float damage, PlayerStatus stat, PlayerAttack atk) {
         GetComponent<RunnerAI>().TakeDamage();
@@ -23,6 +24,7 @@ public class EnemyDamageDetection : MonoBehaviour
 
             var bound = transform.Find("Sprite").GetComponent<SpriteRenderer>().bounds;
             GetComponent<DamageEffect>().DoBloodExplosion(bound);
+            AudioSource.PlayClipAtPoint(this.deathSound, transform.position);
             
             Destroy(this.gameObject);
         }

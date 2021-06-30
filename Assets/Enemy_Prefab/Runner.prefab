@@ -292,6 +292,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   enemyHealth: 100
+  deathSound: {fileID: 8300000, guid: e95132f33ce802a4db00a170c6675e67, type: 3}
 --- !u!1 &7778289332068414509
 GameObject:
   m_ObjectHideFlags: 0
