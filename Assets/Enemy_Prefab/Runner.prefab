@@ -115,7 +115,7 @@ MonoBehaviour:
     serializedVersion: 2
     m_Bits: 384
   attackDistance: 2
-  attackRange: 2
+  attackRange: 3
   followEnabled: 1
   jumpEnabled: 1
   directionLookEnabled: 1

@@ -65,7 +65,7 @@ public class CrawlerAI : MonoBehaviour, ArtificialIntelligence
 
     private void FixedUpdate()
     {
-        bounds = this.GetComponent<BoxCollider2D>().bounds;
+        bounds = this.GetComponent<CircleCollider2D>().bounds;
 
         // print("top: " + TargetOnTop());
         // print("under: " + TargetUnderFeet());

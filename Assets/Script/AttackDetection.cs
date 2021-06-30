@@ -31,7 +31,7 @@ public class AttackDetection : MonoBehaviour
             col.transform.GetComponent<DamageEffect>().DoEffect(transform.parent.parent.position);
             col.transform.GetComponent<EnemyDamageDetection>().receiveDamage(_attack.meleeDmg, _status, _attack);
             Vector2 dir = new Vector2(col.transform.position.x - playerTransform.position.x, 0f).normalized;
-            col.transform.GetComponent<Rigidbody2D>().AddForce(Vector2.right * dir * 1.25f, ForceMode2D.Impulse);
+            col.transform.GetComponent<Rigidbody2D>().AddForce(Vector2.right * dir * 2.5f, ForceMode2D.Impulse);
             _camController.AttackCameraShake(true);
         }
     }
@@ -56,7 +56,7 @@ public class AttackDetection : MonoBehaviour
             e.transform.GetComponent<DamageEffect>().DoEffect(e.transform.position + Vector3.forward);
             e.transform.GetComponent<EnemyDamageDetection>().receiveDamage(_attack.rangedDmg, _status, null);
             Vector2 dir = new Vector2(e.transform.position.x - playerTransform.position.x, 0f).normalized;
-            rb_this.AddForce(Vector2.right * dir * 2.25f, ForceMode2D.Impulse);
+            rb_this.AddForce(Vector2.right * dir * 3.5f, ForceMode2D.Impulse);
         }
         return actualRange;
     }

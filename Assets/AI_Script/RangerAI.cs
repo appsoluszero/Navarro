@@ -78,7 +78,7 @@ public class RangerAI : MonoBehaviour, ArtificialIntelligence
 
     private void FixedUpdate()
     {
-        bounds = this.GetComponent<BoxCollider2D>().bounds;
+        bounds = this.GetComponent<Collider2D>().bounds;
         CheckShoot();
         // print("top: " + TargetOnTop());
         // print("under: " + TargetUnderFeet());
