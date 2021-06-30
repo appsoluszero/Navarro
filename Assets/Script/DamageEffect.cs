@@ -49,7 +49,7 @@ public class DamageEffect : MonoBehaviour
         this.flashHandle = StartCoroutine(FlashRoutine());
     }
 
-    public void DoBlood(Vector3 attackerPosition)
+    public ParticleSystem DoBlood(Vector3 attackerPosition)
     {
         var relativePosition = transform.position - attackerPosition;
 
@@ -61,8 +61,25 @@ public class DamageEffect : MonoBehaviour
             transform
         );
         blood_instance.transform.localPosition = damageEffectData.relativePosition;
-        
+        return blood_instance;
         // blood_instance.transform.localPosition = new Vector3(-0.2f, 0.64f, 0.0f);
+    }
+
+    public void DoBloodExplosion(Rect area) {
+        var blood_count = this.damageEffectData.bloodDensity * area.width * area.height;
+        for (int i = 0; i < blood_count; i++)
+        {
+            // rejection sampling with maxmimum rejection count of 10
+            for(int b=0; b<10 ; b++) {
+                var x = UnityEngine.Random.Range(area.xMin, area.xMax);   
+                var y = UnityEngine.Random.Range(area.yMin, area.yMax);
+                var point = new Vector2(x, y);
+                if(!Physics2D.OverlapPoint(point, this.damageEffectData.bloodSpawnMask)) {
+                    Instantiate(this.damageEffectData.bloodBombParticle, point, Quaternion.identity);
+                    break;
+                }
+            }
+        }
     }
 
     IEnumerator FlashRoutine()

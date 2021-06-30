@@ -13,4 +13,9 @@ public class DamageEffectData : ScriptableObject {
     [Header("Blood")]
     public ParticleSystem blood_particle;
     public Vector3 relativePosition;
+    [Header("BloodBomb")]
+    public ParticleSystem bloodBombParticle;
+    public float bloodDensity;
+    [Tooltip("LayerMask in which blood will not spawn")]
+    public LayerMask bloodSpawnMask;
 }
