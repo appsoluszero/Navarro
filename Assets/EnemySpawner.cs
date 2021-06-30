@@ -33,6 +33,6 @@ public class EnemySpawner : MonoBehaviour
 
     public void SpawnStuff() {
         GameObject p = Instantiate(enemyType[Random.Range(0, enemyType.Length)], spawnPoint[Random.Range(0, spawnPoint.Length)], new Quaternion());
-        p.GetComponent<RunnerAI>().target = playerRef;
+        p.GetComponent<ArtificialIntelligence>().SetTarget(playerRef);
     }
 }
