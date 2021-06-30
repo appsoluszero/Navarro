@@ -70,6 +70,9 @@ public class RangerAI : MonoBehaviour, ArtificialIntelligence
         seeker = GetComponent<Seeker>();
         rb = GetComponent<Rigidbody2D>();
 
+        _animator = GetComponent<Animator>();
+        _audio = GetComponent<AudioSource>();
+
         InvokeRepeating("UpdatePath", 0f, pathUpdateSeconds);
     }
 
@@ -312,7 +315,8 @@ public class RangerAI : MonoBehaviour, ArtificialIntelligence
 
     }
 
-    public void TakeDamage() {
+    public void TakeDamage()
+    {
         isAttacking = false;
         isHurting = true;
         //_animator.Play("Runner_Hurt");

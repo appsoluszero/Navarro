@@ -1,0 +1,372 @@
+fileFormatVersion: 2
+guid: a7a3c2a12adad3d4b9848fae81dd1429
+TextureImporter:
+  internalIDToNameTable:
+  - first:
+      213: 8048668061461203166
+    second: Ranger_Idle_0
+  - first:
+      213: 5239356233248346211
+    second: Ranger_Idle_1
+  - first:
+      213: 4921113402237285444
+    second: Ranger_Idle_2
+  - first:
+      213: 3195705228328336375
+    second: Ranger_Idle_3
+  - first:
+      213: -2770242059257064645
+    second: Ranger_Idle_4
+  - first:
+      213: 5264393812773158499
+    second: Ranger_Idle_5
+  - first:
+      213: 9169975975566402292
+    second: Ranger_Idle_6
+  - first:
+      213: 5490545226703722265
+    second: Ranger_Idle_7
+  - first:
+      213: -1256766985542525869
+    second: Ranger_Idle_8
+  - first:
+      213: -6541639296113822349
+    second: Ranger_Idle_9
+  - first:
+      213: -4907157940244031183
+    second: Ranger_Idle_10
+  externalObjects: {}
+  serializedVersion: 11
+  mipmaps:
+    mipMapMode: 0
+    enableMipMap: 0
+    sRGBTexture: 1
+    linearTexture: 0
+    fadeOut: 0
+    borderMipMap: 0
+    mipMapsPreserveCoverage: 0
+    alphaTestReferenceValue: 0.5
+    mipMapFadeDistanceStart: 1
+    mipMapFadeDistanceEnd: 3
+  bumpmap:
+    convertToNormalMap: 0
+    externalNormalMap: 0
+    heightScale: 0.25
+    normalMapFilter: 0
+  isReadable: 0
+  streamingMipmaps: 0
+  streamingMipmapsPriority: 0
+  vTOnly: 0
+  grayScaleToAlpha: 0
+  generateCubemap: 6
+  cubemapConvolution: 0
+  seamlessCubemap: 0
+  textureFormat: 1
+  maxTextureSize: 2048
+  textureSettings:
+    serializedVersion: 2
+    filterMode: 0
+    aniso: 1
+    mipBias: 0
+    wrapU: 1
+    wrapV: 1
+    wrapW: 1
+  nPOTScale: 0
+  lightmap: 0
+  compressionQuality: 50
+  spriteMode: 2
+  spriteExtrude: 1
+  spriteMeshType: 1
+  alignment: 0
+  spritePivot: {x: 0.5, y: 0.5}
+  spritePixelsToUnits: 20
+  spriteBorder: {x: 0, y: 0, z: 0, w: 0}
+  spriteGenerateFallbackPhysicsShape: 1
+  alphaUsage: 1
+  alphaIsTransparency: 1
+  spriteTessellationDetail: -1
+  textureType: 8
+  textureShape: 1
+  singleChannelComponent: 0
+  flipbookRows: 1
+  flipbookColumns: 1
+  maxTextureSizeSet: 0
+  compressionQualitySet: 0
+  textureFormatSet: 0
+  ignorePngGamma: 0
+  applyGammaDecoding: 0
+  platformSettings:
+  - serializedVersion: 3
+    buildTarget: DefaultTexturePlatform
+    maxTextureSize: 2048
+    resizeAlgorithm: 0
+    textureFormat: -1
+    textureCompression: 0
+    compressionQuality: 50
+    crunchedCompression: 0
+    allowsAlphaSplitting: 0
+    overridden: 0
+    androidETC2FallbackOverride: 0
+    forceMaximumCompressionQuality_BC6H_BC7: 0
+  - serializedVersion: 3
+    buildTarget: Standalone
+    maxTextureSize: 2048
+    resizeAlgorithm: 0
+    textureFormat: -1
+    textureCompression: 0
+    compressionQuality: 50
+    crunchedCompression: 0
+    allowsAlphaSplitting: 0
+    overridden: 0
+    androidETC2FallbackOverride: 0
+    forceMaximumCompressionQuality_BC6H_BC7: 0
+  spriteSheet:
+    serializedVersion: 2
+    sprites:
+    - serializedVersion: 2
+      name: Ranger_Idle_0
+      rect:
+        serializedVersion: 2
+        x: 3
+        y: 15
+        width: 34
+        height: 28
+      alignment: 9
+      pivot: {x: 0.26762262, y: 0.67047924}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: ed84d6e45fc92bf60800000000000000
+      internalID: 8048668061461203166
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: Ranger_Idle_1
+      rect:
+        serializedVersion: 2
+        x: 43
+        y: 15
+        width: 34
+        height: 43
+      alignment: 9
+      pivot: {x: 0.2869872, y: 0.36602274}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: 3601f7e1cbee5b840800000000000000
+      internalID: 5239356233248346211
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: Ranger_Idle_2
+      rect:
+        serializedVersion: 2
+        x: 83
+        y: 15
+        width: 34
+        height: 31
+      alignment: 9
+      pivot: {x: 0.26762232, y: 0.51061934}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: 44474cfe09e4b4440800000000000000
+      internalID: 4921113402237285444
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: Ranger_Idle_3
+      rect:
+        serializedVersion: 2
+        x: 123
+        y: 15
+        width: 34
+        height: 27
+      alignment: 9
+      pivot: {x: 0.28214577, y: 0.6646007}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: 7fb7e5d39fc695c20800000000000000
+      internalID: 3195705228328336375
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: Ranger_Idle_4
+      rect:
+        serializedVersion: 2
+        x: 163
+        y: 12
+        width: 34
+        height: 31
+      alignment: 9
+      pivot: {x: 0.2773047, y: 0.7176975}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: b33d224468f1e89d0800000000000000
+      internalID: -2770242059257064645
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: Ranger_Idle_5
+      rect:
+        serializedVersion: 2
+        x: 203
+        y: 15
+        width: 34
+        height: 28
+      alignment: 9
+      pivot: {x: 0.2773047, y: 0.69399357}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: 36ebb10e742ee0940800000000000000
+      internalID: 5264393812773158499
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: Ranger_Idle_6
+      rect:
+        serializedVersion: 2
+        x: 243
+        y: 16
+        width: 34
+        height: 42
+      alignment: 9
+      pivot: {x: 0.2773047, y: 0.3824281}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: 4f2608ea09c424f70800000000000000
+      internalID: 9169975975566402292
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: Ranger_Idle_7
+      rect:
+        serializedVersion: 2
+        x: 283
+        y: 16
+        width: 34
+        height: 30
+      alignment: 9
+      pivot: {x: 0.27730426, y: 0.5274334}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: 91754e42bc5523c40800000000000000
+      internalID: 5490545226703722265
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: Ranger_Idle_8
+      rect:
+        serializedVersion: 2
+        x: 323
+        y: 15
+        width: 33
+        height: 25
+      alignment: 9
+      pivot: {x: 0.2705559, y: 0.63826454}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: 35c9c45d5111f8ee0800000000000000
+      internalID: -1256766985542525869
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: Ranger_Idle_9
+      rect:
+        serializedVersion: 2
+        x: 362
+        y: 12
+        width: 35
+        height: 28
+      alignment: 9
+      pivot: {x: 0.26015276, y: 0.67635775}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: 375366228bd6735a0800000000000000
+      internalID: -6541639296113822349
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: Ranger_Idle_10
+      rect:
+        serializedVersion: 2
+        x: 402
+        y: 12
+        width: 35
+        height: 28
+      alignment: 9
+      pivot: {x: 0.2648551, y: 0.65284336}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: 13954034ad546ebb0800000000000000
+      internalID: -4907157940244031183
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    outline: []
+    physicsShape: []
+    bones: []
+    spriteID: 5e97eb03825dee720800000000000000
+    internalID: 0
+    vertices: []
+    indices: 
+    edges: []
+    weights: []
+    secondaryTextures: []
+  spritePackingTag: 
+  pSDRemoveMatte: 0
+  pSDShowRemoveMatteOption: 0
+  userData: 
+  assetBundleName: 
+  assetBundleVariant: 

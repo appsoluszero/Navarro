@@ -59,6 +59,9 @@ public class CrawlerAI : MonoBehaviour, ArtificialIntelligence
 
         currentAngle = this.transform.rotation.z;
 
+        _animator = GetComponent<Animator>();
+        _audio = GetComponent<AudioSource>();
+
         InvokeRepeating("UpdatePath", 0f, pathUpdateSeconds);
     }
 
@@ -225,7 +228,8 @@ public class CrawlerAI : MonoBehaviour, ArtificialIntelligence
 
     }
 
-    public void TakeDamage() {
+    public void TakeDamage()
+    {
         isAttacking = false;
         isHurting = true;
         //_animator.Play("Runner_Hurt");
