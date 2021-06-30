@@ -12,6 +12,7 @@ public class IntroSequence_Start : MonoBehaviour
     [SerializeField] private PlayableAsset lastSequence;
     [SerializeField] private Transform playerTransform;
     [SerializeField] private AudioSource _audioSource;
+    [SerializeField] private GameObject spawner;
 
     public void ActuallyStarting() {
         _manager.currentGameState = gameState.Gameplay;
@@ -20,6 +21,8 @@ public class IntroSequence_Start : MonoBehaviour
         playerTransform.GetChild(0).gameObject.SetActive(true);
         spawnRoom.SetActive(false);
         transform.gameObject.SetActive(false);
+        spawner.SetActive(true);
+        spawner.GetComponent<EnemySpawner>().SpawnStuff();
         _audioSource.Play();
     }
 

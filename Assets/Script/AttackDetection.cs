@@ -40,21 +40,21 @@ public class AttackDetection : MonoBehaviour
     public float HitscanCheck(float range, int penetrate) {
         float actualRange;
         //check for max distance
-        RaycastHit2D hit = Physics2D.Raycast(transform.position, Vector3.right * _controller.collision.faceDir, range, collisionMask);
+        RaycastHit2D hit = Physics2D.Raycast(transform.parent.parent.position, Vector3.right * _controller.collision.faceDir, range, collisionMask);
         if(hit) 
             actualRange = hit.distance;
         else
             actualRange = range;
-        Debug.DrawRay(transform.position, Vector3.right * _controller.collision.faceDir * actualRange, Color.green, 20f);
+        Debug.DrawRay(transform.parent.parent.position, Vector3.right * _controller.collision.faceDir * actualRange, Color.green, 20f);
         _bulletEffect.SpawnBulletTrace(tracerSpawnPoint.position, tracerSpawnPoint.position + Vector3.right * _controller.collision.faceDir * actualRange);
         //list of enemy in hitting range
-        RaycastHit2D[] enemyHit = Physics2D.RaycastAll(transform.position, Vector3.right * _controller.collision.faceDir, actualRange, enemyLayerMask);
+        RaycastHit2D[] enemyHit = Physics2D.RaycastAll(transform.parent.parent.position, Vector3.right * _controller.collision.faceDir, actualRange, enemyLayerMask);
         if(enemyHit.Length > penetrate)
             Array.Resize(ref enemyHit, penetrate);
         foreach(RaycastHit2D e in enemyHit) {
             Rigidbody2D rb_this = e.transform.GetComponent<Rigidbody2D>();
             e.transform.GetComponent<DamageEffect>().DoEffect(e.transform.position + Vector3.forward);
-            e.transform.GetComponent<EnemyDamageDetection>().receiveDamage(_attack.rangedDmg, null, null);
+            e.transform.GetComponent<EnemyDamageDetection>().receiveDamage(_attack.rangedDmg, _status, null);
             Vector2 dir = new Vector2(e.transform.position.x - playerTransform.position.x, 0f).normalized;
             rb_this.AddForce(Vector2.right * dir * 2.25f, ForceMode2D.Impulse);
         }

@@ -3,12 +3,22 @@ using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.SceneManagement;
 using UnityEngine.Playables;
+using TMPro;
 
 public class LoadManager : MonoBehaviour
 {
     public PlayableAsset duringLoadAsset;
     public PlayableDirector loadSequenceController;
     private AsyncOperation loadOperation;
+    [SerializeField] private TextMeshProUGUI killCnt;
+
+    void Start() {
+        if(!PlayerPrefs.HasKey("KillCount")) {
+            PlayerPrefs.SetInt("KillCount", 0);
+        }
+        killCnt.text = PlayerPrefs.GetInt("KillCount").ToString();
+    }
+
     public void StartLoadingScene() {
         loadSequenceController.Play();
     }
