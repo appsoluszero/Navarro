@@ -58,3 +58,8 @@ MonoBehaviour:
   frameCount: 4
   blood_particle: {fileID: 1691118145, guid: 387ba5a8cf010164f8020a1a8ca3288c, type: 3}
   relativePosition: {x: -0.2, y: 0.64, z: 1}
+  bloodBombParticle: {fileID: 1691118145, guid: 3612a865a605e4c4383482b4b927a219, type: 3}
+  bloodDensity: 2
+  bloodSpawnMask:
+    serializedVersion: 2
+    m_Bits: 384

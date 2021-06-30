@@ -16,7 +16,7 @@ public class EnemyDamageDetection : MonoBehaviour
                 atk._statusUI.UpdateBullet();
             }
             int chance_heal = Random.Range(0, 101);
-            if(chance_heal <= 30 && stat) {
+            if(chance_heal <= 50 && stat) {
                 stat.IncreaseHealth(1);
             }
             PlayerPrefs.SetInt("KillCount", PlayerPrefs.GetInt("KillCount")+1);
