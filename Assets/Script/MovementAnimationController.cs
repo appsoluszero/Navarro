@@ -33,9 +33,7 @@ public class MovementAnimationController : MonoBehaviour
     {
         if(_status.playerState != State.Death && _status.playerState != State.MeleeAttack && _status.playerState != State.RangedAttack && _status.playerState != State.Hurt) {
             transform.localScale = new Vector3(_controller.collision.faceDir, 1f, 1f);
-            //if(_status.playerState == State.Rolling)
-            //    _playerAnimation.Play("Rolling");
-            if(_status.playerState != State.MeleeAttack && _status.playerState != State.RangedAttack && _status.playerState != State.Hurt && _status.playerState != State.Rolling) {
+            if(_status.playerState != State.Rolling) {
                 if(_status.worldState == State.Floating_Crouch || _status.worldState == State.Floating_Stand) {
                     if(!startFloating) {
                         startFloating = true;
@@ -74,7 +72,7 @@ public class MovementAnimationController : MonoBehaviour
             frameCount++;
             yield return new WaitForEndOfFrame();
         }
-        if(_status.playerState != State.MeleeAttack && _status.playerState != State.RangedAttack && frameCount == targetCheckFrame) {
+        if(_status.playerState != State.MeleeAttack && _status.playerState != State.RangedAttack && _status.playerState != State.Hurt && frameCount == targetCheckFrame) {
             if(_status.worldState == State.Floating_Stand) {
                 if(_controller.collision.verticalDir == 1) 
                     _playerAnimation.Play("FloatingUp_Stand");
@@ -98,6 +96,7 @@ public class MovementAnimationController : MonoBehaviour
         _attack.isHurt = true;
         _playerAnimation.Play("Hurt_Stand");
         _status.playerState = State.Hurt;
+        StopCoroutine(floatingFrameCount());
     }
 
     public void RollAnimation(object sender, PlayerAction.ActionEventArgs e) {

@@ -13,7 +13,7 @@ public class PlayerAttack : MonoBehaviour
     private Controller2D _controller;
     private AttackDetection _rangedDetection;
     private PlayerCameraController _camController;
-    private StatusHandler _statusUI;
+    [HideInInspector] public StatusHandler _statusUI;
     private Animator _playerAnimator;
     private BulletEffect _bulletEffect;
 
@@ -33,6 +33,7 @@ public class PlayerAttack : MonoBehaviour
     [SerializeField] int attackPhase = 1;
     public bool isHitThisAttack = false;
 
+    [HideInInspector] public float meleeDmg, rangedDmg;
     float range, force;
     int penetrate;
     public bool isHurt;
@@ -58,6 +59,7 @@ public class PlayerAttack : MonoBehaviour
         _status.playerState = State.Idle;
         yield return new WaitForSeconds(delayBetweenAttack); //small delay to let the animation do its work
         waitingForInput = true;
+        isHitThisAttack = false;
         attackPhase = 1;
     }
 
@@ -68,6 +70,7 @@ public class PlayerAttack : MonoBehaviour
     #region Melee
     void MeleeAttacking(object sender, PlayerAction.ActionEventArgs e) {
         frameNextAttack = e.frameNextAttack;
+        meleeDmg = e.meleeAttackDamage;
         if(isRunning)
             goingNextPhase = true;
         else if(attackPhase == 1) {
@@ -131,6 +134,7 @@ public class PlayerAttack : MonoBehaviour
     public void RangedAttacking(object sender, PlayerAction.ActionEventArgs e) {
         force = e.rangedAttackForce;
         range = e.rangedAttackRange;
+        rangedDmg = e.rangedAttackDamage;
         penetrate = e.rangedAttackPenetration;
         if(_status.playerState == State.Idle || _status.playerState == State.Move) {
             waitingForInput = false;

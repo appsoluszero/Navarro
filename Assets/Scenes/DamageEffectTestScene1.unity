@@ -2437,10 +2437,13 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   _audio: {fileID: 0}
   gunshot_SFX: {fileID: 0}
+  melee_miss_SFX: {fileID: 0}
+  melee_hit_SFX: {fileID: 0}
   delayBetweenAttack: 0
   waitingForInput: 1
   goingNextPhase: 0
   attackPhase: 1
+  isHitThisAttack: 0
   isHurt: 0
 --- !u!114 &738859883
 MonoBehaviour:
@@ -2541,6 +2544,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   bulletShell: {fileID: 2741054703334079843, guid: c9438617c4722bf49b67f39404d4aeb3, type: 3}
   spawnPoint: {fileID: 791467927}
+  traceLine: {fileID: 0}
   isDebug: 1
 --- !u!1 &759754733
 GameObject:
@@ -2921,15 +2925,15 @@ SpriteRenderer:
   m_SortingLayerID: 0
   m_SortingLayer: 0
   m_SortingOrder: 0
-  m_Sprite: {fileID: -2321079010312025059, guid: 7e1a171b23bfebe4982cba1a5fe69634, type: 3}
+  m_Sprite: {fileID: -2584142575224547136, guid: ae8889efdebc9c242829daa1cc5eb5fa, type: 3}
   m_Color: {r: 1, g: 1, b: 1, a: 1}
   m_FlipX: 0
   m_FlipY: 0
   m_DrawMode: 0
-  m_Size: {x: 10.24, y: 10.24}
+  m_Size: {x: 1, y: 1}
   m_AdaptiveModeThreshold: 0.5
   m_SpriteTileMode: 0
-  m_WasSpriteAssigned: 0
+  m_WasSpriteAssigned: 1
   m_MaskInteraction: 0
   m_SpriteSortPoint: 0
 --- !u!61 &851139402
@@ -2948,9 +2952,9 @@ BoxCollider2D:
   m_Offset: {x: -0.03860569, y: 0.59194565}
   m_SpriteTilingProperty:
     border: {x: 0, y: 0, z: 0, w: 0}
-    pivot: {x: 0.57, y: 0.25}
-    oldSize: {x: 1.75, y: 2.45}
-    newSize: {x: 10.24, y: 10.24}
+    pivot: {x: 0.5, y: 0.5}
+    oldSize: {x: 1.72, y: 1.72}
+    newSize: {x: 1, y: 1}
     adaptiveTilingThreshold: 0.5
     drawMode: 0
     adaptiveTiling: 0
@@ -5136,6 +5140,7 @@ MonoBehaviour:
   health_Background: {fileID: 603749948}
   stamina_Foreground: {fileID: 1308065852}
   stamina_Background: {fileID: 767308518}
+  bullet_Text: {fileID: 0}
   timeToChange: 0.2
   curve:
     serializedVersion: 2

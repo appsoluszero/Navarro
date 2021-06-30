@@ -3,6 +3,7 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.UI;
+using UnityEngine.SceneManagement;
 
 public class PlayerStatus : MonoBehaviour
 {
@@ -70,7 +71,6 @@ public class PlayerStatus : MonoBehaviour
         {
             healthDecreaseHandler?.Invoke(this, new StatChangeEventArgs
             {
-
                 healthUse = amt
             });
         }
@@ -108,14 +108,24 @@ public class PlayerStatus : MonoBehaviour
         bulletCount--;
     }
 
+    public void GainBullet() {
+        bulletCount++;
+    }
+
     void PlayerDieEvent()
     {
         GetComponent<PlayerStatus>().playerState = State.Death;
         _manager.currentGameState = gameState.Ending;
         _playerAnimation.Play("Dying");
+        transform.GetChild(3).gameObject.SetActive(true);
+        transform.GetChild(3).localScale = new Vector3(_controller.collision.faceDir, 1f, 1f);
         transform.GetChild(4).gameObject.SetActive(true);
-        transform.GetChild(4).localScale = new Vector3(_controller.collision.faceDir, 1f, 1f);
-        transform.GetChild(5).gameObject.SetActive(true);
+        StartCoroutine(countDownBackMainMenu());
+    }
+
+    IEnumerator countDownBackMainMenu() {
+        yield return new WaitForSeconds(5f);
+        SceneManager.LoadScene(0, LoadSceneMode.Single);
     }
 }
 

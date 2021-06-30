@@ -20,10 +20,12 @@ public class PlayerAction : MonoBehaviour
     [SerializeField] private float crouchSpeedMultiplier = 0.5f; 
     [Header("Melee Attack Parameters")]
     [SerializeField] private int frameToNextAttack = 20;
+    [SerializeField] private float meleeDamage = 25f;
     [Header("Ranged Attack Parameters")]
     [SerializeField] private float maxAttackRange = 25f;
     [SerializeField] private int maxPenetration = 3;
     [SerializeField] private float forceRangedAttack = 20f;
+    [SerializeField] private float rangedDamage = 65f;
 
     //Reference
     private PlayerMovement _movement;
@@ -51,6 +53,8 @@ public class PlayerAction : MonoBehaviour
         public float rangedAttackForce;
         public int rangedAttackPenetration;
         public int frameNextAttack;
+        public float meleeAttackDamage;
+        public float rangedAttackDamage;
     }
 
     public event EventHandler<PlayerStatus.StatChangeEventArgs> staminaHandler;
@@ -78,12 +82,14 @@ public class PlayerAction : MonoBehaviour
                 if(Input.GetKeyDown(InputManager.actionsMap["attack"])) {
                     if(_attack.waitingForInput && _status.playerState != State.RangedAttack) 
                         meleeAttackEventHandler?.Invoke(this, new ActionEventArgs {
+                            meleeAttackDamage = meleeDamage,
                             frameNextAttack = frameToNextAttack
                         });
                 } 
                 else if(Input.GetKeyDown(InputManager.actionsMap["attackRanged"])) {
                     if(_attack.waitingForInput && _status.bulletCount > 0 && _status.playerState != State.MeleeAttack) 
                         rangedAttackEventHandler?.Invoke(this, new ActionEventArgs {
+                            rangedAttackDamage = rangedDamage,
                             rangedAttackRange = maxAttackRange,
                             rangedAttackForce = forceRangedAttack,
                             rangedAttackPenetration = maxPenetration

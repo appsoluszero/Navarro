@@ -35,8 +35,8 @@ public class IntroText_Sequence : MonoBehaviour
     }
 
     void CodeGenerator() {
-        string code_alphabet = "" + alphabet[Random.Range(1, 28)-1] + alphabet[Random.Range(1, 28)-1];
-        string code_num = "" + num[Random.Range(1, 11)-1] + num[Random.Range(1, 11)-1] + num[Random.Range(1, 11)-1];
+        string code_alphabet = "" + alphabet[Random.Range(1, 27)-1] + alphabet[Random.Range(1, 27)-1];
+        string code_num = "" + num[Random.Range(1, 10)-1] + num[Random.Range(1, 10)-1] + num[Random.Range(1, 10)-1];
         textEachLine[3] = "Subject: " + code_alphabet + "-" + code_num + " \"Lunette\"";
     }
 

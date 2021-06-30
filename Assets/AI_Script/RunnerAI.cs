@@ -29,6 +29,7 @@ public class RunnerAI : MonoBehaviour
     public bool jumpEnabled = true;
     public bool directionLookEnabled = true;
     public bool isAttacking = false;
+    public bool isHurting = false;
     public float xBoundMultiplier = 1.3f;
     public RaycastHit2D isGrounded;
     public RaycastHit2D rightGroundCheck;
@@ -70,7 +71,7 @@ public class RunnerAI : MonoBehaviour
         {
             rb.AddForce(Vector2.down * fallingForce);
         }
-        if (TargetInDistance() && followEnabled && !isAttacking)
+        if (TargetInDistance() && followEnabled && !isAttacking && !isHurting)
         {
             isFollowPath = true;
             if (TargetInAttackDistance())
@@ -78,7 +79,7 @@ public class RunnerAI : MonoBehaviour
                 Attack();
             }
         }
-        else if (!isAttacking)
+        else if (!isAttacking && !isHurting)
         {
             _animator.Play("Runner_Idle");
         }
@@ -331,6 +332,12 @@ public class RunnerAI : MonoBehaviour
         _animator.Play("Runner_Attack");
     }
 
+    public void TakeDamage() {
+        isAttacking = false;
+        isHurting = true;
+        _animator.Play("Runner_Hurt");
+    }
+
     public void CheckHitPlayer()
     {
         _audio.PlayOneShot(RunnerAttackSound);
@@ -350,9 +357,14 @@ public class RunnerAI : MonoBehaviour
         StartCoroutine(delayAttackCheck());
     }
 
+    public void ResetHurtState() {
+        isHurting = false;
+        _animator.Play("Runner_Idle");
+    }
+
     IEnumerator delayAttackCheck()
     {
-        yield return new WaitForSeconds(1);
+        yield return new WaitForSeconds(0.65f);
         isAttacking = false;
         _animator.Play("Runner_Idle");
     }
