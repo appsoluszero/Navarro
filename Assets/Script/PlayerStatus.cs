@@ -23,6 +23,8 @@ public class PlayerStatus : MonoBehaviour
     [Header("Status Parameters")]
     public float staminaRegenPerSecond = 2f;
     [Header("Dying Sequence/Reference")]
+    public AudioClip deathSound;
+    public float deathSoundVolume = 1f;
     public GameObject stamina_normal;
     public GameObject stamina_glitched;
     public TextMeshProUGUI bulletCount_text;
@@ -122,6 +124,7 @@ public class PlayerStatus : MonoBehaviour
     void PlayerDieEvent()
     {
         GetComponent<PlayerStatus>().playerState = State.Death;
+        GetComponent<AudioSource>().PlayOneShot(deathSound, deathSoundVolume);
         _manager.currentGameState = gameState.Ending;
         _playerAnimation.Play("Dying");
         stamina_normal.SetActive(false);
