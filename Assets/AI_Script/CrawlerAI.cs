@@ -56,11 +56,9 @@ public class CrawlerAI : MonoBehaviour, ArtificialIntelligence
     {
         seeker = GetComponent<Seeker>();
         rb = GetComponent<Rigidbody2D>();
-
-        currentAngle = this.transform.rotation.z;
-
         _animator = GetComponent<Animator>();
         _audio = GetComponent<AudioSource>();
+        currentAngle = this.transform.rotation.z;
 
         InvokeRepeating("UpdatePath", 0f, pathUpdateSeconds);
     }
@@ -81,6 +79,10 @@ public class CrawlerAI : MonoBehaviour, ArtificialIntelligence
             {
                 Attack();
             }
+        }
+        else if (!isAttacking && !isHurting)
+        {
+            _animator.Play("Crawler_Idle");
         }
     }
 
@@ -223,31 +225,48 @@ public class CrawlerAI : MonoBehaviour, ArtificialIntelligence
     {
         print("Beginning to attack");
         isAttacking = true;
-        // Attack stuffs
-        StartCoroutine(AttackRoutine());
-
+        _animator.Play("Crawler_Attack");
     }
 
     public void TakeDamage()
     {
         isAttacking = false;
         isHurting = true;
-        //_animator.Play("Runner_Hurt");
+        _animator.Play("Crawler_Hurt");
     }
 
-    IEnumerator AttackRoutine()
+    public void CheckHitPlayer()
     {
-        yield return new WaitForSeconds(1f);
-        if (TargetInAttackRange())
+        if (TargetInAttackRange() && target.GetComponent<PlayerStatus>().playerState != State.Rolling && target.GetComponent<PlayerStatus>().playerState != State.Hurt && target.GetComponent<PlayerStatus>().playerState != State.Death)
         {
             target.GetComponent<PlayerStatus>().DecreaseHealth(1);
             print("Health after attacked: " + target.GetComponent<PlayerStatus>().currentHealth);
         }
         else
         {
-            print("Runner missed");
+            print("Crawler missed");
         }
+    }
+
+    public void SetTarget(Transform target) {
+        this.target = target;
+    }
+
+    public void ResetAttackState()
+    {
+        StartCoroutine(delayAttackCheck());
+    }
+
+    public void ResetHurtState() {
+        isHurting = false;
+        _animator.Play("Crawler_Idle");
+    }
+
+    IEnumerator delayAttackCheck()
+    {
+        yield return new WaitForSeconds(0.65f);
         isAttacking = false;
+        _animator.Play("Crawler_Idle");
     }
 
     private void RotateToMovingDirection()

@@ -325,6 +325,10 @@ public class RunnerAI : MonoBehaviour, ArtificialIntelligence
         }
     }
 
+    public void SetTarget(Transform target) {
+        this.target = target;
+    }
+
     private void Attack()
     {
         print("Beginning to attack");

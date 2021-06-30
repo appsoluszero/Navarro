@@ -227,6 +227,10 @@ public class RangerAI : MonoBehaviour, ArtificialIntelligence
         return Vector2.Distance(transform.position, target.transform.position) <= attackDistance;
     }
 
+    public void SetTarget(Transform target) {
+        this.target = target;
+    }
+
     private bool TargetInAttackRange()
     {
         return Vector2.Distance(transform.position, target.transform.position) <= attackRange;
